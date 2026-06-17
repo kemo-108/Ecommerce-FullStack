@@ -1,0 +1,21 @@
+.advertisement {
+    padding: 60px 0;
+    position: relative;
+}
+
+.advertisement  h1 {
+    position: absolute;
+
+    top: 50%;
+    left: 38%;
+
+    transform: translateX(-50%);
+    color: black;
+    font-size: 50px;
+
+    font-family: 'Trebuchet MS',
+    'Lucida Sans Unicode',
+    'Lucida Grande',
+    'Lucida Sans',
+    sans-serif;
+}

@@ -1,0 +1,33 @@
+.now-items{
+padding: 60px 0;
+}
+
+.now-items .now-item img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+.now-items .container h1{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    opacity: 0.1;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 6rem;
+    
+}
+.now-items .container h4{
+    font-size: 1.2rem;
+    color: black;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.now-items .container .title-section{
+    position: relative;
+    height: 120px;
+padding-top: 10px;}
+

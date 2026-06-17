@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+:root{
+--main-color: #f8f9fa;
+--blue: #007bff;
+--indigo: #6610f2;
+--purple: #6f42c1;
+--pink: #e83e8c;
+--red: #dc3545;
+--orange: #fd7e14;
+--yellow: #ffc107;
+--green: #28a745;
+--teal: #20c997;
+--cyan: #17a2b8;
+--white: #fff;
+--gray: #6c757d;
+--gray-dark: #343a40;
+--primary: #fcbeca;
+--secondary: #6c757d;
+--success: #28a745;
+--info: #17a2b8;
+--warning: #ffc107;
+--danger: #dc3545;
+--light: #f8f9fa;
+--dark: #343a40;
+}
+span{
+    color: var(--primary);
+}
+p{
+    color: var(--dark);
+}
+h1,h2,h3,h4,h5,h6{
+    color: var(--dark);
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+}
+a{
+background-color: transparent;
+color: var(--dark);
+margin: 0;
+padding: 0;
+text-decoration: none;
+}
+
+ul li{
+    list-style: none;
+}
+body {
+    font-family: "Lato", sans-serif;
+    background: var(--main-color);
+}
+.container{
+    width: 90%;
+    margin: 0 auto;
+max-width: 1350px;
+}
+img{
+    max-width: 100%;
+    display: block;
+}

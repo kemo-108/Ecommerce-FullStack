@@ -1,0 +1,11 @@
+# Frontend
+node_modules/
+dist/
+
+# ASP.NET Core
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user

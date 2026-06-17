@@ -1,0 +1,27 @@
+.shopImg {
+    position: relative;
+}
+.shopImg h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+    font-size: 48px;
+    font-weight: bold;
+}
+.shopImg a {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    color: black;
+    text-decoration: none;
+    border:none;
+}
+.shop .shopImg img {
+    width: 100%;
+    display:block;
+    margin: 100px auto ;
+}

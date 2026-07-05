@@ -1,0 +1,87 @@
+.coupons-pagination{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:10px;
+
+    margin:30px 0;
+}
+
+.page-btn,
+.page-number{
+
+    width:44px;
+    height:44px;
+
+    border:1px solid #E4E7EC;
+
+    background:#fff;
+
+    border-radius:12px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.page-btn svg{
+
+    font-size:18px;
+}
+
+.page-number{
+
+    font-weight:600;
+
+    color:#344054;
+}
+
+.page-number.active{
+
+    background:#FF2D75;
+
+    color:#fff;
+
+    border-color:#FF2D75;
+}
+
+.page-btn:hover:not(:disabled),
+.page-number:hover{
+
+    background:#FF2D75;
+
+    color:#fff;
+
+    border-color:#FF2D75;
+}
+
+.page-btn:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+}
+
+@media(max-width:576px){
+
+.coupons-pagination{
+
+    gap:6px;
+
+    flex-wrap:wrap;
+}
+
+.page-btn,
+.page-number{
+
+    width:38px;
+    height:38px;
+}
+
+}

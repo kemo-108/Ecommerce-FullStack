@@ -2,10 +2,10 @@ import React from "react";
 import "./Footer.css";
 import { FaSquareFacebook } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa6";
-import { FaTwitter } from "react-icons/fa6";
 import { FaPhoneVolume } from "react-icons/fa6";
 import { BiLogoGmail } from "react-icons/bi";
 import { SiGooglemaps } from "react-icons/si";
+import { FaWhatsapp } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -25,7 +25,7 @@ const Footer = () => {
               </a>
 
               <a href="#">
-                <FaTwitter />
+                <FaWhatsapp />
               </a>
             </div>
           </div>

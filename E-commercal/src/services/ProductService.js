@@ -1,5 +1,4 @@
 import axios from "axios";
-import React from "react";
 const API = "https://localhost:7005/api/products";
 export const getProducts = async () => {
   try {

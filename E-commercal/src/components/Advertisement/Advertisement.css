@@ -1,21 +1,23 @@
 .advertisement {
-    padding: 60px 0;
     position: relative;
+    width: 100%;
 }
 
-.advertisement  h1 {
+.advertisement img {
+    width: 100%;
+    display: block;
+}
+
+.advertisement h1 {
     position: absolute;
-
     top: 50%;
-    left: 38%;
+    left: 8%; /* المسافة من الشمال */
+    transform: translateY(-50%);
 
-    transform: translateX(-50%);
-    color: black;
-    font-size: 50px;
+    color: #ffffff;
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 1.2;
 
-    font-family: 'Trebuchet MS',
-    'Lucida Sans Unicode',
-    'Lucida Grande',
-    'Lucida Sans',
-    sans-serif;
+    max-width: 500px;
 }

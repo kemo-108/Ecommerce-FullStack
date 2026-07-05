@@ -4,6 +4,7 @@ import Product from "../OurProduct/OurProduct";
 import Image from "../../image/image-cart.png";
 import { getProducts } from "../../services/ProductService";
 import "./Cart.css";
+import { Link } from "react-router-dom";
 const Cart = () => {
   // found error must be soled
   const [products, setProducts] = useState([]);
@@ -85,7 +86,9 @@ const Cart = () => {
                 .toFixed(2)}
             </p>
             <br />
-            <button className="checkout-btn">Proceed to Checkout</button>
+            <Link to="/CheckOut">
+              <button className="checkout-btn">Proceed to Checkout</button>
+            </Link>
           </div>
         </div>
       </div>

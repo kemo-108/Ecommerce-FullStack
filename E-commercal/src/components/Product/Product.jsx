@@ -1,50 +1,74 @@
-import { FaRegHeart } from "react-icons/fa";
-import { IoMdStarOutline } from "react-icons/io";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { IoMdStar, IoMdStarOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "./Product.css";
+import { useEffect, useState } from "react";
+
 const Product = ({ product, showExtraBtn }) => {
+  const [rating, setRating] = useState(0);
+  const [favorite, setFavorite] = useState(false);
+
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorite(favorites.includes(product.productId));
+  }, [product.productId]);
+
+  const handleFavorite = () => {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (favorites.includes(product.productId)) {
+      favorites = favorites.filter((id) => id !== product.productId);
+      setFavorite(false);
+    } else {
+      favorites.push(product.productId);
+      setFavorite(true);
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  };
+
   return (
     <div className="product-card">
-      <Link to={`/product/${product.productId}`}>
+      <Link to={`/single-product/${product.productId}`}>
         <img
           src={`https://localhost:7005/${product.imageUrl}`}
-          width={100}
-          height={100}
           alt={product.productName}
         />
       </Link>
+
       <h3>
-        <Link to={`/product/${product.productId}`}>{product.productName}</Link>
+        <Link to={`/single-product/${product.productId}`}>
+          {product.productName}
+        </Link>
       </h3>
+
       <div className="product-info">
-        <span className="price">Price: ${product.price}</span>
-        {showExtraBtn && (
-          <div className={`product-info ${showExtraBtn ? "full-card" : ""}`}>
-            <button>ADD TO CART +</button>
-            <span>
-              <FaRegHeart />
-            </span>
-          </div>
-        )}
+        <span className="price">{product.price} L.E</span>
+
         <div className="rating">
-          <span>
-            <IoMdStarOutline />
-          </span>
-          <span>
-            <IoMdStarOutline />
-          </span>
-          <span>
-            <IoMdStarOutline />
-          </span>
-          <span>
-            <IoMdStarOutline />
-          </span>
-          <span>
-            <IoMdStarOutline />
-          </span>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span key={star} onClick={() => setRating(star)}>
+              {star <= rating ? <IoMdStar /> : <IoMdStarOutline />}
+            </span>
+          ))}
         </div>
       </div>
+
+      {showExtraBtn && (
+        <>
+          <div className="product-divider"></div>
+
+          <div className="product-actions">
+            <button className="cart-btn">ADD TO CART +</button>
+
+            <button className="heart-btn" onClick={handleFavorite}>
+              {favorite ? <FaHeart className="favorite" /> : <FaRegHeart />}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
+
 export default Product;

@@ -1,4 +1,3 @@
-import React from "react";
 const API = "https://localhost:7005/api/contact";
 export const DeleteMessage = async (id) => {
     try {

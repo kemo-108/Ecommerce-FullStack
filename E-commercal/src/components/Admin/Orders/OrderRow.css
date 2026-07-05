@@ -1,0 +1,169 @@
+.order-row {
+  transition: 0.25s;
+}
+
+.order-row:hover {
+  background: #fafafa;
+}
+
+/* Order ID */
+
+.order-id {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 30px;
+  background: #f5f7fb;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Customer */
+
+.order-customer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.order-customer img,
+.customer-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.order-customer img {
+  object-fit: cover;
+}
+
+.customer-avatar {
+  background: linear-gradient(135deg, #ff4d8d, #ff7ca8);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.order-customer h4 {
+  font-size: 15px;
+  color: #222;
+  margin-bottom: 3px;
+}
+
+.order-customer span {
+  font-size: 13px;
+  color: #888;
+}
+
+/* Total */
+
+.order-total {
+  color: #ff4d8d;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* Date */
+
+.order-date {
+  color: #777;
+  font-size: 14px;
+}
+
+/* Badges */
+
+.payment-badge,
+.status-badge {
+  min-width: 95px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.payment-badge.paid {
+  background: #e8f9ef;
+  color: #16a34a;
+}
+
+.payment-badge.pending {
+  background: #fff4df;
+  color: #d97706;
+}
+
+.payment-badge.failed {
+  background: #fdecec;
+  color: #dc2626;
+}
+
+.status-badge.pending {
+  background: #fff4df;
+  color: #d97706;
+}
+
+.status-badge.processing {
+  background: #e9f2ff;
+  color: #2563eb;
+}
+
+.status-badge.delivered {
+  background: #e8f9ef;
+  color: #16a34a;
+}
+
+.status-badge.cancelled {
+  background: #fdecec;
+  color: #dc2626;
+}
+
+/* Actions */
+
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: .25s;
+  font-size: 17px;
+}
+
+.view-btn {
+  color: #3b82f6;
+}
+
+.view-btn:hover {
+  background: rgba(59, 130, 246, .12);
+}
+
+.edit-btn {
+  color: #f59e0b;
+}
+
+.edit-btn:hover {
+  background: rgba(245, 158, 11, .12);
+}
+
+.delete-btn {
+  color: #ef4444;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, .12);
+}

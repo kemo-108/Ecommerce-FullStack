@@ -1,0 +1,71 @@
+.orders-header {
+  margin-bottom: 30px;
+}
+
+.orders-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.orders-header h1 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 6px;
+}
+
+.orders-header p {
+  color: #667085;
+  font-size: 17px;
+}
+
+.add-order-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 15px 28px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(90deg, #ff4d8d, #ff2d75);
+  color: #fff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-order-btn svg {
+  font-size: 20px;
+}
+
+.add-order-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(255, 45, 117, 0.25);
+}
+
+@media (max-width: 768px) {
+  .orders-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .add-order-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .orders-header h1 {
+    font-size: 32px;
+  }
+
+  .orders-header p {
+    font-size: 15px;
+  }
+}

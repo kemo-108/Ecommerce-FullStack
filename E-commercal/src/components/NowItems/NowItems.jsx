@@ -25,7 +25,17 @@ const NowItems = () => {
           speed={1200}
           pagination={{ clickable: true }}
           spaceBetween={20}
-          slidesPerView={3}
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            992: {
+              slidesPerView: 3,
+            },
+          }}
         >
           {products.map((product) => (
             <SwiperSlide key={product.id}>

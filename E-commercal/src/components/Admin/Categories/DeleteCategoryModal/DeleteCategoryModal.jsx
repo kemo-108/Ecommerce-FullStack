@@ -1,0 +1,67 @@
+import { FiAlertTriangle, FiX } from "react-icons/fi";
+import "./DeleteCategoryModal.css";
+import { toast } from "react-toastify";
+const DeleteCategoryModal = ({
+  category,
+  setCategories,
+  setOpenDeleteModal,
+}) => {
+  if (!category) return null;
+
+  const closeModal = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleDelete = () => {
+    setCategories((prev) => prev.filter((item) => item.id !== category.id));
+
+    closeModal();
+
+    // API Later
+  };
+
+  return (
+    <div className="modal-overlay" onClick={closeModal}>
+      <div
+        className="delete-category-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-header">
+          <h2>Delete Category</h2>
+
+          <button type="button" className="close-btn" onClick={closeModal}>
+            <FiX />
+          </button>
+        </div>
+
+        <div className="delete-content">
+          <div className="delete-icon">
+            <FiAlertTriangle />
+          </div>
+
+          <h3>Are you sure?</h3>
+
+          <p>
+            You are about to permanently delete
+            <strong> "{category.name}" </strong>
+            from your categories.
+          </p>
+
+          <span>This action cannot be undone.</span>
+        </div>
+
+        <div className="delete-actions">
+          <button type="button" className="cancel-btn" onClick={closeModal}>
+            Cancel
+          </button>
+
+          <button type="button" className="delete-btn" onClick={handleDelete}>
+            Delete Category
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DeleteCategoryModal;

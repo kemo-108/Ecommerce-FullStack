@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../Form/Form.css";
 const Form = () => {
   const [name, setName] = useState("");
   const [Price, setPrice] = useState("");
@@ -30,22 +31,14 @@ const Form = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name">product name:</label>
-        <input
-          type="text"
-          placeholder="Name product"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        ></input>
-        <label htmlFor="price">product price:</label>
-        <input
-          type="number"
-          placeholder="Price product"
-          value={Price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <button type="submit">Add product</button>
+      <form className="contact-form" onSubmit={handleSubmit}>
+        <input type="text" placeholder="Your Name" value={name}></input>
+        <input type="Email" placeholder="Your Email" />
+        <input type="text" plذaceholder="Subject" />
+        <textarea placeholder="Your Message"></textarea>
+        <button className="send-massage-btn" type="submit">
+          Send Message
+        </button>
       </form>
     </div>
   );

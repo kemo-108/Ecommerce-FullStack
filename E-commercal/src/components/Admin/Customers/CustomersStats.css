@@ -1,0 +1,265 @@
+.customers-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin: 30px 0;
+}
+
+.customer-stat-card{
+    position:relative;
+    overflow:hidden;
+    padding:28px;
+    border-radius:24px;
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    color:#fff;
+}
+
+.customer-stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, .18);
+}
+
+.customer-stat-card::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .12);
+}
+
+.customer-stat-card::after {
+  content: "";
+  position: absolute;
+  bottom: -70px;
+  left: -70px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+}
+
+/* ================= Colors ================= */
+
+.customer-stat-card.total {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+.customer-stat-card.active {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.customer-stat-card.vip {
+  background: linear-gradient(135deg, #7e22ce, #9333ea);
+}
+
+.customer-stat-card.revenue {
+  background: linear-gradient(135deg, #ea580c, #f59e0b);
+}
+
+/* ================= Header ================= */
+
+.card-top{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+z-index:2;
+
+}
+
+.customer-stat-icon{
+
+width:60px;
+
+height:60px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.18);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:26px;
+
+backdrop-filter:blur(12px);
+
+}
+
+.trend-badge{
+
+height:34px;
+
+padding:0 14px;
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+border-radius:25px;
+
+background:rgba(255,255,255,.15);
+
+font-size:12px;
+
+}
+
+/* ================= Body ================= */
+
+.card-body{
+
+margin-top:30px;
+
+z-index:2;
+
+}
+
+.card-body h2{
+
+font-size:42px;
+
+margin-bottom:8px;
+
+}
+
+.card-body p{
+
+font-size:15px;
+
+opacity:.9;
+
+}
+
+/* ================= Progress ================= */
+
+.progress-bar{
+
+margin-top:28px;
+
+height:8px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.18);
+
+overflow:hidden;
+
+}
+
+.progress-bar span{
+
+display:block;
+
+height:100%;
+
+background:#fff;
+
+border-radius:30px;
+
+}
+
+/* ================= Footer ================= */
+
+.card-footer{
+
+margin-top:18px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+z-index:2;
+
+}
+
+.card-footer small{
+
+font-size:13px;
+
+opacity:.95;
+
+}
+
+/* ================= Number ================= */
+
+.card-number{
+
+position:absolute;
+
+right:18px;
+
+top:18px;
+
+font-size:85px;
+
+font-weight:800;
+
+line-height:1;
+
+color:rgba(255,255,255,.08);
+
+pointer-events:none;
+
+}
+
+/* ================= Hover ================= */
+
+.customer-stat-card:hover .customer-stat-icon {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+.customer-stat-card:hover .trend-badge {
+  transform: scale(1.05);
+}
+
+.customer-stat-card:hover .progress-bar span {
+  filter: brightness(1.05);
+}
+
+/* ================= Responsive ================= */
+
+@media (max-width: 1200px) {
+  .customers-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .customers-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-stat-card {
+    padding: 24px;
+  }
+
+  .customer-stat-icon {
+    width: 58px;
+    height: 58px;
+    font-size: 24px;
+  }
+
+  .card-body h2 {
+    font-size: 32px;
+  }
+
+  .card-number {
+    font-size: 55px;
+  }
+}

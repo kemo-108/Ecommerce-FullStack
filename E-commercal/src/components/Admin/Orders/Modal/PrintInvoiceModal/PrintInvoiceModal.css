@@ -1,0 +1,170 @@
+.invoice-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  z-index: 9999;
+}
+
+.invoice-modal {
+  width: 100%;
+  max-width: 1200px;
+  max-height: 95vh;
+  background: #f8fafc;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+}
+
+.invoice-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 28px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.invoice-title h2 {
+  font-size: 22px;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.invoice-title span {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.invoice-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.invoice-print-btn {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.invoice-print-btn:hover {
+  background: #1d4ed8;
+}
+
+.invoice-close-btn {
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background: #ef4444;
+  color: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.invoice-close-btn:hover {
+  background: #dc2626;
+}
+
+.invoice-preview {
+  flex: 1;
+  overflow-y: auto;
+  padding: 35px;
+  background: #edf2f7;
+}
+
+.invoice-print-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.invoice-bottom {
+  padding: 18px 25px;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.invoice-bottom p {
+  color: #64748b;
+}
+
+.invoice-bottom strong {
+  color: #111827;
+}
+
+@media (max-width:992px){
+
+  .invoice-overlay{
+    padding:15px;
+  }
+
+  .invoice-toolbar{
+    flex-direction:column;
+    gap:18px;
+    align-items:flex-start;
+  }
+
+  .invoice-actions{
+    width:100%;
+  }
+
+  .invoice-print-btn{
+    flex:1;
+    justify-content:center;
+  }
+
+}
+
+@media (max-width:768px){
+
+  .invoice-preview{
+    padding:15px;
+  }
+
+}
+
+@media print{
+
+  .invoice-overlay{
+    position:static;
+    padding:0;
+    background:white;
+  }
+
+  .invoice-modal{
+    box-shadow:none;
+    border-radius:0;
+    max-width:100%;
+    max-height:none;
+    overflow:visible;
+  }
+
+  .invoice-toolbar,
+  .invoice-bottom{
+    display:none !important;
+  }
+
+  .invoice-preview{
+    padding:0;
+    background:white;
+    overflow:visible;
+  }
+
+}

@@ -1,4 +1,4 @@
-import { FiEye, FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiEye, FiEdit2, FiTrash2, FiPrinter } from "react-icons/fi";
 import "./OrderRow.css";
 
 const OrderRow = ({
@@ -6,6 +6,7 @@ const OrderRow = ({
   setOpenViewModal,
   setOpenStatusModal,
   setOpenDeleteModal,
+  setOpenPrintModal,
   setSelectedOrder,
 }) => {
   const handleView = () => {
@@ -22,7 +23,10 @@ const OrderRow = ({
     setSelectedOrder(order);
     setOpenDeleteModal(true);
   };
-
+  const handlePrint = () => {
+    setSelectedOrder(order);
+    setOpenPrintModal(true);
+  };
   const firstLetter = order.customerName
     ? order.customerName.charAt(0).toUpperCase()
     : "?";
@@ -72,6 +76,13 @@ const OrderRow = ({
             title="View"
           >
             <FiEye />
+          </button>
+          <button
+            className="action-btn print-btn"
+            onClick={handlePrint}
+            title="Print Invoice"
+          >
+            <FiPrinter />
           </button>
 
           <button

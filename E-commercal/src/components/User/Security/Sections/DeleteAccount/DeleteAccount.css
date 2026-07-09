@@ -1,0 +1,46 @@
+.delete-account-card{
+    background:#fff;
+    border:1px solid #ffd8d8;
+    border-radius:18px;
+    padding:30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+}
+
+.delete-info p{
+    color:#777;
+    margin-top:12px;
+    line-height:1.7;
+    max-width:550px;
+}
+
+.delete-account-btn{
+    border:none;
+    background:#e53935;
+    color:#fff;
+    padding:14px 28px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+    white-space:nowrap;
+}
+
+.delete-account-btn:hover{
+    background:#c62828;
+}
+
+@media(max-width:768px){
+
+.delete-account-card{
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+.delete-account-btn{
+    width:100%;
+}
+
+}

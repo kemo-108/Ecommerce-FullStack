@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Shop from "./components/Shop/Shop";
 import SingleProduct from "./components/SingleProduct/SingleProduct";
@@ -23,6 +23,13 @@ import Reports from "./components/Admin/Reports/Reports";
 import Settings from "./components/Admin/Settings/Settings";
 import Inventory from "./components/Admin/Inventory/Inventory";
 import Profile from "./components/User/Profile/Profile";
+import Account from "./components/User/Account/Account";
+import MyOrder from "./components/User/MyOrder/MyOrder";
+import WishList from "./components/User/WishList/WishList";
+import Addresses from "./components/User/Addresses/Addresses";
+import Security from "./components/User/Security/Security";
+import Returns from "./components/User/Returns/Returns";
+import Refunds from "./components/Admin/Refunds/Refunds";
 function App() {
   const location = useLocation();
 
@@ -31,10 +38,12 @@ function App() {
   // أي صفحة تبدأ بـ /admin تعتبر صفحة أدمن
   const isAdminPage = location.pathname.startsWith("/admin");
 
+  const isAccountPage = location.pathname.startsWith("/account");
+
   return (
     <>
-      {!isLoginPage && !isAdminPage && <Header />}
-      {!isLoginPage && !isAdminPage && <Sidebar />}
+      {!isLoginPage && !isAdminPage && !isAccountPage && <Header />}
+      {!isLoginPage && !isAdminPage && !isAccountPage && <Sidebar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -46,8 +55,25 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/service" element={<Service />} />
-        <Route path="/profile" element={<Profile />} />
+
+        <Route path="/account" element={<Account />}>
+          <Route index element={<Navigate to="/account/profile" replace />} />
+
+          <Route path="profile" element={<Profile />} />
+
+          <Route path="orders" element={<MyOrder />} />
+
+          <Route path="wishlist" element={<WishList />} />
+
+          <Route path="addresses" element={<Addresses />} />
+
+          <Route path="security" element={<Security />} />
+
+          <Route path="returns" element={<Returns />} />
+        </Route>
+
         <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="orders" element={<Orders />} />
@@ -57,11 +83,12 @@ function App() {
           <Route path="inventory" element={<Inventory />} />
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="refunds" element={<Refunds />} />
         </Route>
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
 
-      {!isLoginPage && !isAdminPage && <Footer />}
+      {!isLoginPage && !isAdminPage && !isAccountPage && <Footer />}
     </>
   );
 }

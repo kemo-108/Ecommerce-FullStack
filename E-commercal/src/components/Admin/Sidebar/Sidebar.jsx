@@ -10,6 +10,7 @@ import {
   FaTags,
   FaTicketAlt,
   FaWarehouse,
+  FaUndoAlt,
 } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 
@@ -48,6 +49,15 @@ const Sidebar = () => {
       >
         <FaShoppingCart />
         <span>Orders</span>
+      </NavLink>
+      <NavLink
+        to="/admin/Refunds"
+        className={({ isActive }) =>
+          isActive ? "sidebar-link active" : "sidebar-link"
+        }
+      >
+        <FaUndoAlt />
+        <span>Refunds</span>
       </NavLink>
 
       <NavLink

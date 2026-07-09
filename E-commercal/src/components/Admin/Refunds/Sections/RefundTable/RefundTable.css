@@ -1,0 +1,44 @@
+.refund-table{
+    background:#fff;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 35px rgba(0,0,0,.05);
+}
+
+.refund-table-head{
+    display:grid;
+    grid-template-columns:
+    2.3fr
+    1.2fr
+    1fr
+    1.4fr
+    1fr
+    1fr
+    1.5fr;
+
+    padding:22px 30px;
+
+    font-weight:700;
+
+    color:#ec4899;
+
+    border-bottom:1px solid #f1f1f1;
+}
+
+.refund-table-body{
+    display:flex;
+    flex-direction:column;
+}
+
+@media(max-width:1200px){
+
+.refund-table{
+overflow-x:auto;
+}
+
+.refund-table-head,
+.refund-row{
+min-width:1200px;
+}
+
+}

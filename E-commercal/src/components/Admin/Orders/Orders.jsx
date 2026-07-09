@@ -7,18 +7,17 @@ import OrdersFilters from "./OrdersFilters";
 import OrdersStats from "./OrdersStats";
 import OrdersTable from "./OrdersTable";
 import OrdersPagination from "./OrdersPagination";
-
 import AddOrderModal from "./Modal/AddOrderModal/AddOrderModal";
 import ViewOrderModal from "./Modal/ViewOrderModal/ViewOrderModal";
 import UpdateOrderStatusModal from "./Modal/UpdateOrderStatusModal/UpdateOrderStatusModal";
 import DeleteOrderModal from "./Modal/DeleteOrderModal/DeleteOrderModal";
-
+import PrintInvoiceModal from "./Modal/PrintInvoiceModal/PrintInvoiceModal";
 const Orders = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openStatusModal, setOpenStatusModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
+  const [openPrintModal, setOpenPrintModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -139,6 +138,7 @@ const Orders = () => {
         setOpenViewModal={setOpenViewModal}
         setOpenStatusModal={setOpenStatusModal}
         setOpenDeleteModal={setOpenDeleteModal}
+        setOpenPrintModal={setOpenPrintModal}
         setSelectedOrder={setSelectedOrder}
       />
 
@@ -170,6 +170,12 @@ const Orders = () => {
         <DeleteOrderModal
           order={selectedOrder}
           setOpenDeleteModal={setOpenDeleteModal}
+        />
+      )}
+      {openPrintModal && (
+        <PrintInvoiceModal
+          order={selectedOrder}
+          setOpenPrintModal={setOpenPrintModal}
         />
       )}
     </div>

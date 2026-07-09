@@ -1,5 +1,6 @@
 import "./OrdersTable.css";
 import OrderRow from "./OrderRow";
+import { MdPadding } from "react-icons/md";
 
 const OrdersTable = ({
   orders,
@@ -8,6 +9,7 @@ const OrdersTable = ({
   setOpenViewModal,
   setOpenStatusModal,
   setOpenDeleteModal,
+  setOpenPrintModal,
   setSelectedOrder,
 }) => {
   const indexOfLast = currentPage * ordersPerPage;
@@ -39,6 +41,7 @@ const OrdersTable = ({
                 setOpenViewModal={setOpenViewModal}
                 setOpenStatusModal={setOpenStatusModal}
                 setOpenDeleteModal={setOpenDeleteModal}
+                setOpenPrintModal={setOpenPrintModal}
                 setSelectedOrder={setSelectedOrder}
               />
             ))

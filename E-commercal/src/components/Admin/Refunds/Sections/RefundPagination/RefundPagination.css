@@ -1,0 +1,58 @@
+.refund-pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+    margin-top:35px;
+}
+
+.page-btn,
+.page-number{
+
+width:46px;
+height:46px;
+
+border:none;
+
+border-radius:12px;
+
+background:#fff;
+
+box-shadow:0 6px 20px rgba(0,0,0,.05);
+
+cursor:pointer;
+
+transition:.3s;
+
+font-size:15px;
+
+font-weight:600;
+
+}
+
+.page-btn:hover,
+.page-number:hover{
+
+background:#ec4899;
+color:#fff;
+
+}
+
+.page-number.active{
+
+background:#ec4899;
+color:#fff;
+
+}
+
+@media(max-width:768px){
+
+.page-btn,
+.page-number{
+
+width:42px;
+height:42px;
+
+}
+
+}

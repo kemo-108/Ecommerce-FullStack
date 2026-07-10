@@ -3,10 +3,13 @@ import { IoMdStar, IoMdStarOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 import "./Product.css";
 import { useEffect, useState } from "react";
+import { AddToCart } from "../../services/CartService";
+import { toast } from "react-toastify";
 
 const Product = ({ product, showExtraBtn }) => {
   const [rating, setRating] = useState(0);
   const [favorite, setFavorite] = useState(false);
+  const [addingToCart, setAddingToCart] = useState(false);
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -25,6 +28,26 @@ const Product = ({ product, showExtraBtn }) => {
     }
 
     localStorage.setItem("favorites", JSON.stringify(favorites));
+  };
+
+  const handleAddToCart = async () => {
+    if (addingToCart) return;
+    setAddingToCart(true);
+    try {
+      await AddToCart({
+        productId: product.productId,
+        productName: product.productName,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        Qty: 1,
+      });
+      toast.success(`${product.productName} added to cart`);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Could not add product to cart");
+    } finally {
+      setAddingToCart(false);
+    }
   };
 
   return (
@@ -59,7 +82,13 @@ const Product = ({ product, showExtraBtn }) => {
           <div className="product-divider"></div>
 
           <div className="product-actions">
-            <button className="cart-btn">ADD TO CART +</button>
+            <button
+              className="cart-btn"
+              onClick={handleAddToCart}
+              disabled={addingToCart}
+            >
+              {addingToCart ? "ADDING..." : "ADD TO CART +"}
+            </button>
 
             <button className="heart-btn" onClick={handleFavorite}>
               {favorite ? <FaHeart className="favorite" /> : <FaRegHeart />}

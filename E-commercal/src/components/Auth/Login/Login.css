@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
     background: url("../../../image/img-form.jpg") no-repeat center center/cover;
 }
 
@@ -10,10 +11,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 .wrapper{
     width: 420px;
+    max-width: 100%;
     background: rgba(255,255,255,0.1);
     border: 2px solid rgba(255,255,255,0.2);
     -webkit-backdrop-filter: blur(20px);
@@ -138,4 +141,12 @@
 }
 .link-home:hover{
     color: var(--primary);
+}
+@media (max-width: 480px){
+    .wrapper{
+        padding: 25px 22px;
+    }
+    .wrapper h1{
+        font-size: 28px;
+    }
 }

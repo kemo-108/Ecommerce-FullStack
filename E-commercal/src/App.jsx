@@ -10,6 +10,8 @@ import Contact from "./components/Contact/Contact";
 import Footer from "./components/Footer/Footer";
 import Sidebar from "./components/Header/Sidebar";
 import Login from "./components/Auth/Login/Login";
+import Register from "./components/Auth/Register/Register";
+import ForgotPassword from "./components/Auth/ForgotPassword/ForgotPassword";
 import About from "./components/About/About";
 import Service from "./components/Service/Service";
 import Dashboard from "./components/Admin/DashBoard/DashBoard";
@@ -33,7 +35,10 @@ import Refunds from "./components/Admin/Refunds/Refunds";
 function App() {
   const location = useLocation();
 
-  const isLoginPage = location.pathname === "/login";
+  const isAuthPage =
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/forgot-password";
 
   // أي صفحة تبدأ بـ /admin تعتبر صفحة أدمن
   const isAdminPage = location.pathname.startsWith("/admin");
@@ -42,8 +47,8 @@ function App() {
 
   return (
     <>
-      {!isLoginPage && !isAdminPage && !isAccountPage && <Header />}
-      {!isLoginPage && !isAdminPage && !isAccountPage && <Sidebar />}
+      {!isAuthPage && !isAdminPage && !isAccountPage && <Header />}
+      {!isAuthPage && !isAdminPage && !isAccountPage && <Sidebar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -54,6 +59,8 @@ function App() {
         <Route path="/single-product/:productId" element={<SingleProduct />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/service" element={<Service />} />
 
         <Route path="/account" element={<Account />}>
@@ -88,7 +95,7 @@ function App() {
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
 
-      {!isLoginPage && !isAdminPage && !isAccountPage && <Footer />}
+      {!isAuthPage && !isAdminPage && !isAccountPage && <Footer />}
     </>
   );
 }

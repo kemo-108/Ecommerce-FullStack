@@ -9,6 +9,18 @@ import { Link, useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const query = searchTerm.trim();
+    if (query) {
+      navigate(`/shop?search=${encodeURIComponent(query)}`);
+    } else {
+      navigate("/shop");
+    }
+  };
+
   const handleScroll = () => {
     if (window.scrollY > window.innerHeight) {
       setScrolled(true);
@@ -33,12 +45,14 @@ const Header = () => {
           </Link>
           <h4>Art Corner</h4>
 
-          <form action="" className="search-box">
+          <form className="search-box" onSubmit={handleSearchSubmit}>
             <input
               type="text"
               placeholder="Search..."
               name="search"
               id="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button type="submit">
               <MdSavedSearch size={30} />

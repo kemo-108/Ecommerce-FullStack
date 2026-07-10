@@ -38,7 +38,7 @@ const NowItems = () => {
           }}
         >
           {products.map((product) => (
-            <SwiperSlide key={product.id}>
+            <SwiperSlide key={product.productId}>
               <Product product={product} showExtraBtn={false} />
             </SwiperSlide>
           ))}

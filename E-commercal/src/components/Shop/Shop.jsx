@@ -2,27 +2,55 @@ import React, { useState, useEffect } from "react";
 import Image from "../../image/image-Collection.png";
 import axios from "axios";
 import "./Shop.css";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+
 const Shop = () => {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const pageSize = 12;
 
   useEffect(() => {
+    setPage(1);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(false);
     axios
-      .get(
-        `https://localhost:7005/api/products?page=${page}&pageSize=${pageSize}`,
-      )
-      .then((response) => {
-        setProducts(response.data.products);
-        setTotalProducts(response.data.totalProducts);
+      .get(`https://localhost:7005/api/products`, {
+        params: {
+          page,
+          pageSize,
+          search: searchQuery || undefined,
+        },
       })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [page]);
+      .then((response) => {
+        const data = response.data;
+        // Backend may return either a plain array or a paginated shape.
+        if (Array.isArray(data)) {
+          setProducts(data);
+          setTotalProducts(data.length);
+        } else {
+          setProducts(data.products || []);
+          setTotalProducts(data.totalProducts || 0);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(true);
+        setProducts([]);
+      })
+      .finally(() => setLoading(false));
+  }, [page, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
 
   return (
     <div className="shop">
@@ -33,54 +61,71 @@ const Shop = () => {
       </div>
 
       <div className="container">
-        <div className="product-grid">
-          {products.map((product) => (
-            <Link
-              to={`/single-product/${product.productId}`}
-              key={product.productId}
-              className="product-card"
-            >
-              <img
-                src={`https://localhost:7005/${product.imageUrl}`}
-                alt={product.productName}
-              />
+        {searchQuery && (
+          <p className="shop-search-info">
+            Search results for: <strong>{searchQuery}</strong>
+          </p>
+        )}
 
-              <h2>{product.productName}</h2>
-              <p>${product.price.toFixed(2)}</p>
-            </Link>
-          ))}
-        </div>
+        {loading && <p className="shop-status">Loading products...</p>}
 
-        <div className="pagination">
-          {/* Previous Button */}
-          <button
-            onClick={() => setPage((prev) => prev - 1)}
-            disabled={page === 1}
-          >
-            {"<"}
-          </button>
+        {!loading && error && (
+          <p className="shop-status">
+            Something went wrong while loading products. Please try again.
+          </p>
+        )}
 
-          {/* Page Numbers */}
-          {[...Array(Math.ceil(totalProducts / pageSize)).keys()].map(
-            (pageNumber) => (
+        {!loading && !error && products.length === 0 && (
+          <p className="shop-status">No products found.</p>
+        )}
+
+        {!loading && !error && products.length > 0 && (
+          <>
+            <div className="product-grid">
+              {products.map((product) => (
+                <Link
+                  to={`/single-product/${product.productId}`}
+                  key={product.productId}
+                  className="product-card"
+                >
+                  <img
+                    src={`https://localhost:7005/${product.imageUrl}`}
+                    alt={product.productName}
+                  />
+
+                  <h2>{product.productName}</h2>
+                  <p>${Number(product.price || 0).toFixed(2)}</p>
+                </Link>
+              ))}
+            </div>
+
+            <div className="pagination">
               <button
-                key={pageNumber}
-                onClick={() => setPage(pageNumber + 1)}
-                className={page === pageNumber + 1 ? "active" : ""}
+                onClick={() => setPage((prev) => prev - 1)}
+                disabled={page === 1}
               >
-                {pageNumber + 1}
+                {"<"}
               </button>
-            ),
-          )}
 
-          {/* Next Button */}
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={page === Math.ceil(totalProducts / pageSize)}
-          >
-            {">"}
-          </button>
-        </div>
+              {[...Array(totalPages).keys()].map((pageNumber) => (
+                <button
+                  key={pageNumber}
+                  onClick={() => setPage(pageNumber + 1)}
+                  className={page === pageNumber + 1 ? "active" : ""}
+                >
+                  {pageNumber + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setPage((prev) => prev + 1)}
+                disabled={page === totalPages}
+              >
+                {">"}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

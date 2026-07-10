@@ -113,6 +113,37 @@ const Orders = () => {
     },
   ];
 
+  const filteredOrders = orders
+    .filter((order) => {
+      const term = searchTerm.toLowerCase().trim();
+      const matchesSearch =
+        !term ||
+        order.customerName.toLowerCase().includes(term) ||
+        order.customerEmail.toLowerCase().includes(term) ||
+        String(order.orderId).includes(term);
+
+      const matchesStatus =
+        selectedStatus === "All Status" || order.status === selectedStatus;
+
+      const matchesPayment =
+        selectedPayment === "All Payment" ||
+        order.paymentStatus === selectedPayment;
+
+      return matchesSearch && matchesStatus && matchesPayment;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "Oldest":
+          return new Date(a.orderDate) - new Date(b.orderDate);
+        case "AmountHigh":
+          return b.total - a.total;
+        case "AmountLow":
+          return a.total - b.total;
+        default:
+          return new Date(b.orderDate) - new Date(a.orderDate);
+      }
+    });
+
   return (
     <div className="orders-page">
       <OrdersHeader setOpenAddModal={setOpenAddModal} />
@@ -129,10 +160,10 @@ const Orders = () => {
         setSortBy={setSortBy}
       />
 
-      <OrdersStats orders={orders} />
+      <OrdersStats orders={filteredOrders} />
 
       <OrdersTable
-        orders={orders}
+        orders={filteredOrders}
         currentPage={currentPage}
         ordersPerPage={ORDERS_PER_PAGE}
         setOpenViewModal={setOpenViewModal}
@@ -145,7 +176,7 @@ const Orders = () => {
       <OrdersPagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        totalOrders={orders.length}
+        totalOrders={filteredOrders.length}
         ordersPerPage={ORDERS_PER_PAGE}
       />
 

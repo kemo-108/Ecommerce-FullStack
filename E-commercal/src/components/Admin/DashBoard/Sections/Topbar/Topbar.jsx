@@ -1,15 +1,33 @@
 import "./Topbar.css";
 import { FaSearch, FaBell, FaEnvelope } from "react-icons/fa";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const term = query.trim();
+    if (term) {
+      navigate(`/admin/products?search=${encodeURIComponent(term)}`);
+    }
+  };
+
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <div className="search-box">
-          <FaSearch />
+        <form className="search-box" onSubmit={handleSearch}>
+          <FaSearch onClick={handleSearch} style={{ cursor: "pointer" }} />
 
-          <input type="text" placeholder="Search..." />
-        </div>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </form>
       </div>
 
       <div className="topbar-right">

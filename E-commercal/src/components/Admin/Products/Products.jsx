@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import "./Products.css";
 import { getProducts } from "../../../services/ProductService";
@@ -15,6 +16,8 @@ import EditProductModal from "./Modal/EditProductModal/EditProductModal";
 import DeleteProductModal from "./Modal/DeleteProductModal/DeleteProductModal";
 
 const Products = () => {
+  const [searchParams] = useSearchParams();
+
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -26,7 +29,7 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [sortBy, setSortBy] = useState("Newest");

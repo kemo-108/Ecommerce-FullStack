@@ -65,7 +65,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
         <div className="price-summary">
           <div>
             <span>Subtotal</span>
-            <h4>{order.total}</h4>
+            <h4>${Number(order.total).toFixed(2)}</h4>
           </div>
 
           <div>

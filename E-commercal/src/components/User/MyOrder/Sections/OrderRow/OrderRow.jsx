@@ -18,7 +18,7 @@ const OrderRow = ({ order, setSelectedOrder }) => {
 
       <div className="order-date">{order.date}</div>
 
-      <div className="order-total">{order.total}</div>
+      <div className="order-total">${Number(order.total).toFixed(2)}</div>
 
       <div className={`order-status ${order.status.toLowerCase()}`}>
         {order.status}

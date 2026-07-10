@@ -1,7 +1,14 @@
 import "./OrdersToolbar.css";
 import { FiSearch } from "react-icons/fi";
 
-const OrdersToolbar = () => {
+const OrdersToolbar = ({
+  searchTerm,
+  setSearchTerm,
+  selectedStatus,
+  setSelectedStatus,
+  sortBy,
+  setSortBy,
+}) => {
   return (
     <div className="orders-toolbar">
       <div className="toolbar-title">
@@ -13,10 +20,18 @@ const OrdersToolbar = () => {
         <div className="search-box">
           <FiSearch />
 
-          <input type="text" placeholder="Search Order..." />
+          <input
+            type="text"
+            placeholder="Search Order..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
-        <select>
+        <select
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+        >
           <option>All Orders</option>
           <option>Pending</option>
           <option>Processing</option>
@@ -24,7 +39,7 @@ const OrdersToolbar = () => {
           <option>Delivered</option>
           <option>Cancelled</option>
         </select>
-        <select>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
           <option>Latest</option>
 
           <option>Oldest</option>

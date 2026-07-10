@@ -21,7 +21,7 @@ const RefundRow = ({ refund }) => {
 
       <span>{refund.reason}</span>
 
-      <strong>{refund.amount}</strong>
+      <strong>${Number(refund.amount).toFixed(2)}</strong>
 
       <span className={`refund-status ${refund.status.toLowerCase()}`}>
         {refund.status}

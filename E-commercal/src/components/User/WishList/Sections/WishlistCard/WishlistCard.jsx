@@ -24,9 +24,9 @@ const WishlistCard = ({ product }) => {
         <h3>{product.name}</h3>
 
         <div className="wishlist-price">
-          <span>{product.price}</span>
+          <span>${Number(product.price).toFixed(2)}</span>
 
-          <del>{product.oldPrice}</del>
+          <del>${Number(product.oldPrice).toFixed(2)}</del>
         </div>
 
         <div

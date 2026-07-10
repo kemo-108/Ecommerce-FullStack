@@ -1,7 +1,7 @@
 import "./WishlistToolbar.css";
 import { FiSearch } from "react-icons/fi";
 
-const WishlistToolbar = () => {
+const WishlistToolbar = ({ searchTerm, setSearchTerm, sortBy, setSortBy }) => {
   return (
     <section className="wishlist-toolbar">
       <div className="wishlist-title">
@@ -14,10 +14,15 @@ const WishlistToolbar = () => {
         <div className="wishlist-search">
           <FiSearch />
 
-          <input type="text" placeholder="Search product..." />
+          <input
+            type="text"
+            placeholder="Search product..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
-        <select>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
           <option>All Products</option>
 
           <option>Newest</option>

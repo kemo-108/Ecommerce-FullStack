@@ -1,4 +1,4 @@
-namespace API
+namespace E_commercal_APi
 {
     public class WeatherForecast
     {

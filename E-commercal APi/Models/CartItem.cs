@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
-    public class Wishlist
+    public class CartItem
     {
         [Key]
         public int Id { get; set; }
@@ -18,6 +18,10 @@ namespace E_commercal_APi.Models
         public int ProductId { get; set; }
         public Product Product { get; set; }
 
+        [Range(1, int.MaxValue)]
+        public int Qty { get; set; } = 1;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     }
 }

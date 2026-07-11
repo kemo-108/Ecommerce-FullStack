@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
-    public class product_images
+    public class ProductImage
     {
         [Key]
         public int Id { get; set; }
@@ -11,7 +11,7 @@ namespace E_commercal_APi.Models
         [Required]
         [ForeignKey(nameof(Product))]
         public int ProductId { get; set; }
-        public products Product { get; set; }
+        public Product Product { get; set; }
 
         [Required, MaxLength(300)]
         public string ImageUrl { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_commercal_APi.Models
 {
-    public class Categories
+    public class Category
     {
         [Key]
         public int Id { get; set; }
@@ -28,6 +28,7 @@ namespace E_commercal_APi.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public ICollection<products> products { get; set; }
+        public ICollection<Product> Products { get; set; }
+
     }
 }

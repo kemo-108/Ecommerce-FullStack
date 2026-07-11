@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
-    public class Wishlist
+    public class RefreshToken
     {
         [Key]
         public int Id { get; set; }
@@ -13,10 +13,12 @@ namespace E_commercal_APi.Models
         public int UserId { get; set; }
         public User User { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(Product))]
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
+        [Required, MaxLength(500)]
+        public string Token { get; set; }
+
+        public DateTime ExpiresAt { get; set; }
+
+        public bool Revoked { get; set; } = false;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

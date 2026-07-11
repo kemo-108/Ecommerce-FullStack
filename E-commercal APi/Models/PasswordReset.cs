@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
-    public class password_resets
+    public class PasswordReset
     {
         [Key]
         public int Id { get; set; }

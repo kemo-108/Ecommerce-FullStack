@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
-    public class stock_movements
+    public class StockMovement
     {
         [Key]
         public int Id { get; set; }

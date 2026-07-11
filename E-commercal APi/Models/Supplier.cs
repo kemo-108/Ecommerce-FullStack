@@ -2,7 +2,7 @@
 
 namespace E_commercal_APi.Models
 {
-    public class suppliers
+    public class Supplier
     {
         [Key]
         public int Id { get; set; }

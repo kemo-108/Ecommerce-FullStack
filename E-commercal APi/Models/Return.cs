@@ -19,7 +19,7 @@ namespace E_commercal_APi.Models
         public User User { get; set; }
 
         [Range(1, int.MaxValue)]
-        public int Qty { get; set; }
+        public int Qty { get; set; } 
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }

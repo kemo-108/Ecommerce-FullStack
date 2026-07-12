@@ -1,4 +1,5 @@
 ﻿using E_commercal_APi.Data;
+using E_commercal_APi.Models;
 using E_commercal_APi.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,11 @@ namespace E_commercal_APi.Services
                 Rating = p.Rating,
                 Stock = p.InventoryRecords?.Sum(i => i.Stock) ?? 0
             });
+        }
+        public async Task<Product?> GetProductByIdAsync(int id)
+        {
+            return await _context.Products
+                .FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
     }

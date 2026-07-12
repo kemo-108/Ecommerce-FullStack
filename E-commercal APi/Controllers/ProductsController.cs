@@ -22,6 +22,17 @@ namespace E_commercal_APi.Controllers
             var products = await _productService.GetAllProductsAsync();
             return Ok(products);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProduct(int id)
+        {
+            var Product = await _productService.GetProductByIdAsync(id);
+            if (Product == null)
+                return NotFound();
+            return Ok(Product);
+        }
+
     }
+
 
 }

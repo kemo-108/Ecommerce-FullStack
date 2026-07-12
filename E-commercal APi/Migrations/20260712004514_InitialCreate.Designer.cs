@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commercal_APi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260712001436_initialcreate")]
-    partial class initialcreate
+    [Migration("20260712004514_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1208,7 +1208,7 @@ namespace E_commercal_APi.Migrations
                     b.HasOne("E_commercal_APi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -1227,7 +1227,7 @@ namespace E_commercal_APi.Migrations
                     b.HasOne("E_commercal_APi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");

@@ -1205,7 +1205,7 @@ namespace E_commercal_APi.Migrations
                     b.HasOne("E_commercal_APi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -1224,7 +1224,7 @@ namespace E_commercal_APi.Migrations
                     b.HasOne("E_commercal_APi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");

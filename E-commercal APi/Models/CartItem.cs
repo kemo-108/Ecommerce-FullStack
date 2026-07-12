@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
+    [Index(nameof(UserId), nameof(ProductId), IsUnique = true)]
+
     public class CartItem
     {
         [Key]

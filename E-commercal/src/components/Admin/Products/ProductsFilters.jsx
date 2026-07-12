@@ -17,7 +17,7 @@ const ProductsFilters = ({
     <div className="products-filters">
       <input
         type="text"
-        placeholder="Search product..."
+        placeholder="Search Product..."
         className="search-input"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

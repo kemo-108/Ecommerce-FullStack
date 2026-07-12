@@ -44,7 +44,7 @@ const ProductsTable = ({
           ) : (
             <tr>
               <td colSpan="7" className="no-data">
-                No products found.
+                No Products found.
               </td>
             </tr>
           )}

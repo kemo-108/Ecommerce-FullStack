@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { createProduct } from "../../../../../services/ProductService";
 import "./AddProductModal.css";
 
-const AddProductModal = ({ setOpenAddModal }) => {
+const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -19,6 +20,7 @@ const AddProductModal = ({ setOpenAddModal }) => {
 
   const [previewImages, setPreviewImages] = useState([]);
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,14 +77,36 @@ const AddProductModal = ({ setOpenAddModal }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
-    if (!validateForm()) return;
+  const handleSave = async () => {
+    if (!validateForm() || saving) return;
 
-    console.log(formData);
+    setSaving(true);
+    try {
+      const payload = new FormData();
+      payload.append("productName", formData.name);
+      payload.append("category", formData.category);
+      payload.append("brand", formData.brand);
+      payload.append("price", formData.price);
+      payload.append("discount", formData.discount || 0);
+      payload.append("qty", formData.stock);
+      payload.append("code", formData.sku);
+      payload.append("weight", formData.weight || "");
+      payload.append("description", formData.description);
+      formData.images.forEach((file) => payload.append("images", file));
 
-    toast.success("Product added successfully.");
+      await createProduct(payload);
 
-    setOpenAddModal(false);
+      toast.success("Product added successfully.");
+      onSaved?.();
+      setOpenAddModal(false);
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || "Could not add the product."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -107,6 +131,7 @@ const AddProductModal = ({ setOpenAddModal }) => {
                 type="file"
                 hidden
                 multiple
+                accept="image/*"
                 onChange={handleImage}
               />
 
@@ -170,10 +195,19 @@ const AddProductModal = ({ setOpenAddModal }) => {
                   onChange={handleChange}
                 >
                   <option value="">Select Category</option>
-                  <option value="Phones">Phones</option>
-                  <option value="Laptops">Laptops</option>
-                  <option value="Shoes">Shoes</option>
-                  <option value="Accessories">Accessories</option>
+                  {categories.length > 0 ? (
+                    categories.map((cat) => (
+                      <option key={cat.id || cat.name} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))
+                  ) : (
+                    <>
+                      <option value="Stationery">Stationery</option>
+                      <option value="Art Supplies">Art Supplies</option>
+                      <option value="Office">Office</option>
+                    </>
+                  )}
                 </select>
 
                 {errors.category && (
@@ -285,8 +319,8 @@ const AddProductModal = ({ setOpenAddModal }) => {
             Cancel
           </button>
 
-          <button className="save-btn" onClick={handleSave}>
-            Save Product
+          <button className="save-btn" onClick={handleSave} disabled={saving}>
+            {saving ? "Saving..." : "Save Product"}
           </button>
         </div>
       </div>

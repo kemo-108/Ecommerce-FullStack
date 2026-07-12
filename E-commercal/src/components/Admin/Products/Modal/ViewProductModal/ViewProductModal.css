@@ -241,3 +241,23 @@
     }
 
 }
+/* ================= Stock status badge ================= */
+.status{
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+    display: inline-block;
+}
+.status.in-stock{
+    background:#e8fff0;
+    color:#14a44d;
+}
+.status.low-stock{
+    background:#fff5dd;
+    color:#ff9800;
+}
+.status.out-of-stock{
+    background:#ffeef1;
+    color:#ff4d6d;
+}

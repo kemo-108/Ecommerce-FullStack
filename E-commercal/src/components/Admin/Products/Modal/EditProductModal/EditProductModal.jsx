@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { updateProduct } from "../../../../../services/ProductService";
 import "./EditProductModal.css";
 
-const EditProductModal = ({ setOpenEditModal, product }) => {
+const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved }) => {
   const [formData, setFormData] = useState({
     productName: "",
     category: "",
@@ -15,6 +16,7 @@ const EditProductModal = ({ setOpenEditModal, product }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -59,18 +61,26 @@ const EditProductModal = ({ setOpenEditModal, product }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validateForm() || saving || !product) return;
 
-    console.log(formData);
+    setSaving(true);
+    try {
+      await updateProduct(product.productId, formData);
 
-    // هنربط الـ API هنا بعدين
-
-    toast.success("Product updated successfully.");
-
-    setOpenEditModal(false);
+      toast.success("Product updated successfully.");
+      onSaved?.();
+      setOpenEditModal(false);
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || "Could not update the product."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -107,12 +117,27 @@ const EditProductModal = ({ setOpenEditModal, product }) => {
             <div className="input-group">
               <label>Category</label>
 
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-              />
+              {categories.length > 0 ? (
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id || cat.name} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                />
+              )}
             </div>
 
             <div className="input-group">
@@ -186,8 +211,8 @@ const EditProductModal = ({ setOpenEditModal, product }) => {
               Cancel
             </button>
 
-            <button type="submit" className="save-btn">
-              Save Changes
+            <button type="submit" className="save-btn" disabled={saving}>
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

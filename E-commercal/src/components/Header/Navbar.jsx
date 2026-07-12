@@ -3,6 +3,7 @@ import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { FiMenu, FiX } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import "./Header.css";
 const links = [
   { id: 1, title: "Home", Url: "/" },
@@ -12,7 +13,19 @@ const links = [
   { id: 5, title: "Contact", Url: "/contact" },
 ];
 const Navber = () => {
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const goToLastProduct = async () => {
+    const lastViewed = localStorage.getItem("lastViewedProduct");
+
+    if (lastViewed) {
+      navigate(`/single-product/${lastViewed}`);
+    } else {
+      navigate("/shop");
+    }
+    setMobileOpen(false);
+  };
 
   const closeMobileMenu = () => setMobileOpen(false);
 
@@ -40,32 +53,23 @@ const Navber = () => {
             )}
             {link.title === "Shop" && (
               <div className="dropdown-menu">
-                <Link
-                  to="/shop"
-                  className="dropdown-item"
-                  onClick={closeMobileMenu}
-                >
+                <Link to="/shop" className="dropdown-item" onClick={closeMobileMenu}>
                   Shop
                 </Link>
                 <Link
-                  to="/Category"
-                  onClick={closeMobileMenu}
+                  to=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goToLastProduct();
+                  }}
                   className="dropdown-item"
                 >
-                  Category
+                  Single Product
                 </Link>
-                <Link
-                  to="/cart"
-                  className="dropdown-item"
-                  onClick={closeMobileMenu}
-                >
+                <Link to="/cart" className="dropdown-item" onClick={closeMobileMenu}>
                   Cart
                 </Link>
-                <Link
-                  to="/checkout"
-                  className="dropdown-item"
-                  onClick={closeMobileMenu}
-                >
+                <Link to="/checkout" className="dropdown-item" onClick={closeMobileMenu}>
                   Checkout
                 </Link>
               </div>
@@ -73,11 +77,7 @@ const Navber = () => {
           </div>
         ))}
 
-        <Link
-          to="/login"
-          className="login-icon-mobile"
-          onClick={closeMobileMenu}
-        >
+        <Link to="/login" className="login-icon-mobile" onClick={closeMobileMenu}>
           <CgProfile className="login-icon" />
         </Link>
       </div>

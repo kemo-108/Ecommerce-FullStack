@@ -43,7 +43,7 @@ const Cart = () => {
     if (newQty < 1) return;
 
     setItems((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, Qty: newQty } : i)),
+      prev.map((i) => (i.id === item.id ? { ...i, Qty: newQty } : i))
     );
 
     try {
@@ -57,7 +57,7 @@ const Cart = () => {
 
   const subtotal = items.reduce(
     (total, item) => total + (item.price || 0) * (item.Qty || 1),
-    0,
+    0
   );
   const delivery = items.length > 0 ? 50 : 0;
   const discount = 0;
@@ -81,7 +81,7 @@ const Cart = () => {
 
         {!loading && items.length > 0 && (
           <>
-            <div className="cart-Products">
+            <div className="cart-products">
               <div className="table-wrapper">
                 <div className="cart-table">
                   <table>
@@ -105,12 +105,12 @@ const Cart = () => {
                               X
                             </button>
                           </td>
-                          <td className="Product-cell">
+                          <td className="product-cell">
                             <img
                               src={`https://localhost:7069/${item.imageUrl}`}
-                              alt={item.ProductName}
+                              alt={item.productName}
                             />
-                            <span>{item.ProductName}</span>
+                            <span>{item.productName}</span>
                           </td>
                           <td>${Number(item.price || 0).toFixed(2)}</td>
                           <td>
@@ -131,10 +131,7 @@ const Cart = () => {
                             </div>
                           </td>
                           <td>
-                            $
-                            {(
-                              Number(item.price || 0) * (item.Qty || 1)
-                            ).toFixed(2)}
+                            ${(Number(item.price || 0) * (item.Qty || 1)).toFixed(2)}
                           </td>
                         </tr>
                       ))}

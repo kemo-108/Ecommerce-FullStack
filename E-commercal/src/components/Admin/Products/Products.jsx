@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import "./Products.css";
 import { getProducts } from "../../../services/ProductService";
+import { getCategories } from "../../../services/CategoryService";
 
 import ProductsHeader from "./ProductsHeader";
 import ProductsFilters from "./ProductsFilters";
@@ -15,6 +16,8 @@ import ViewProductModal from "./Modal/ViewProductModal/ViewProductModal";
 import EditProductModal from "./Modal/EditProductModal/EditProductModal";
 import DeleteProductModal from "./Modal/DeleteProductModal/DeleteProductModal";
 
+const PRODUCTS_PER_PAGE = 8;
+
 const Products = () => {
   const [searchParams] = useSearchParams();
 
@@ -23,42 +26,43 @@ const Products = () => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
-  const [product, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") || ""
+  );
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [sortBy, setSortBy] = useState("Newest");
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const PRODUCTS_PER_PAGE = 8;
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await getProducts();
+      setProducts(data || []);
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load products.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory, selectedStatus, sortBy]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-
-        const data = await getProducts();
-
-        setProducts(data);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load products.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProducts();
+    getCategories().then(setCategories);
   }, []);
 
   if (loading) {
@@ -82,7 +86,7 @@ const Products = () => {
   }
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.productName
+    const matchesSearch = (product.productName || "")
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
@@ -161,11 +165,17 @@ const Products = () => {
         productsPerPage={PRODUCTS_PER_PAGE}
       />
 
-      {openAddModal && <AddProductModal setOpenAddModal={setOpenAddModal} />}
+      {openAddModal && (
+        <AddProductModal
+          setOpenAddModal={setOpenAddModal}
+          categories={categories}
+          onSaved={fetchProducts}
+        />
+      )}
 
       {openViewModal && (
         <ViewProductModal
-          product={product}
+          product={selectedProduct}
           setOpenViewModal={setOpenViewModal}
           setOpenEditModal={setOpenEditModal}
         />
@@ -173,15 +183,18 @@ const Products = () => {
 
       {openEditModal && (
         <EditProductModal
-          product={product}
+          product={selectedProduct}
+          categories={categories}
           setOpenEditModal={setOpenEditModal}
+          onSaved={fetchProducts}
         />
       )}
 
       {openDeleteModal && (
         <DeleteProductModal
-          product={product}
+          product={selectedProduct}
           setOpenDeleteModal={setOpenDeleteModal}
+          onDeleted={fetchProducts}
         />
       )}
     </div>

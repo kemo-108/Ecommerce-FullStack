@@ -4,7 +4,7 @@ const ProductsStats = ({ products }) => {
   const inStock = products.filter((product) => product.qty > 10).length;
 
   const lowStock = products.filter(
-    (product) => product.qty > 0 && product.qty <= 10,
+    (product) => product.qty > 0 && product.qty <= 10
   ).length;
 
   const outOfStock = products.filter((product) => product.qty === 0).length;

@@ -15,7 +15,7 @@ const ProductsPagination = ({
     <div className="products-footer">
       <p>
         Showing <strong>{start}</strong> to <strong>{end}</strong> of{" "}
-        <strong>{totalProducts}</strong> products
+        <strong>{totalProducts}</strong> Products
       </p>
 
       <div className="pagination">

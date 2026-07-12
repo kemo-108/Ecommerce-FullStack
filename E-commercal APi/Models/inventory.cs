@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
+    [Index(nameof(ProductId), nameof(WarehouseId), IsUnique = true)]
+    [Index(nameof(Sku), IsUnique = true)]
     public class Inventory
     {
         [Key]

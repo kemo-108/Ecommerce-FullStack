@@ -63,6 +63,10 @@ namespace E_commercal_APi.Models
         public string Notes { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+        public ICollection<OrderItem> Items { get; set; }
+        public Payment Payment { get; set; }
+        public ICollection<Refund> Refunds { get; set; }
+        public ICollection<Return> Returns { get; set; }
 
     }
 }

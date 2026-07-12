@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace E_commercal_APi.Models
 {
+    [Index(nameof(Key), IsUnique = true)]
+
     public class StoreSetting
     {
         [Key]

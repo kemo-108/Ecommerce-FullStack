@@ -54,7 +54,7 @@ const Product = ({ product, showExtraBtn }) => {
     <div className="product-card">
       <Link to={`/single-product/${product.productId}`}>
         <img
-          src={`https://localhost:7005/${product.imageUrl}`}
+          src={`https://localhost:7069/${product.imageUrl}`}
           alt={product.productName}
         />
       </Link>

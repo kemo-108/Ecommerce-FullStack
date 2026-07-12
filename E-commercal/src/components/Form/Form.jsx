@@ -10,7 +10,7 @@ const Form = () => {
       price: Number(Price),
     };
     try {
-      const response = await fetch("https://localhost:7005/api/products", {
+      const response = await fetch("https://localhost:7069/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

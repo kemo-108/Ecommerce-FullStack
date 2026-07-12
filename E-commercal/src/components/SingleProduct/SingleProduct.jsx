@@ -21,10 +21,10 @@ import { toast } from "react-toastify";
 const TABS = ["Description", "Specifications", "Reviews"];
 
 const SingleProduct = () => {
-  const { productId } = useParams();
+  const { ProductId } = useParams();
   const navigate = useNavigate();
 
-  const [product, setProduct] = useState(null);
+  const [Product, setProduct] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("Description");
@@ -33,8 +33,8 @@ const SingleProduct = () => {
   const [addingToWishlist, setAddingToWishlist] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("lastViewedProduct", productId);
-  }, [productId]);
+    localStorage.setItem("lastViewedProduct", ProductId);
+  }, [ProductId]);
 
   useEffect(() => {
     setProduct(null);
@@ -43,7 +43,7 @@ const SingleProduct = () => {
     setActiveTab("Description");
 
     axios
-      .get(`https://localhost:7005/api/products/${productId}`)
+      .get(`https://localhost:7069/api/Products/${ProductId}`)
       .then((res) => {
         setProduct(res.data);
       })
@@ -51,30 +51,29 @@ const SingleProduct = () => {
         console.error(err);
         setNotFound(true);
       });
-  }, [productId]);
+  }, [ProductId]);
 
   useEffect(() => {
     getProducts()
       .then((all) => {
         const filtered = (all || [])
-          .filter((p) => String(p.productId) !== String(productId))
+          .filter((p) => String(p.ProductId) !== String(ProductId))
           .slice(0, 4);
         setRelatedProducts(filtered);
       })
       .catch((err) => console.error(err));
-  }, [productId]);
+  }, [ProductId]);
 
-  const activeImage = product?.imageUrl
-    ? `https://localhost:7005/${product.imageUrl}`
+  const activeImage = Product?.imageUrl
+    ? `https://localhost:7069/${Product.imageUrl}`
     : "https://placehold.co/700x700?text=No+Image";
 
-  const inStock = product ? (product.stock ?? 1) > 0 : false;
-
+  const inStock = Product ? (Product.stock ?? 1) > 0 : false;
   const handleQuantityChange = (delta) => {
     setQuantity((prev) => {
       const next = prev + delta;
       if (next < 1) return 1;
-      if (product?.stock && next > product.stock) return product.stock;
+      if (Product?.stock && next > Product.stock) return Product.stock;
       return next;
     });
   };
@@ -84,16 +83,16 @@ const SingleProduct = () => {
     setAddingToCart(true);
     try {
       await AddToCart({
-        productId: product.productId,
-        productName: product.productName,
-        imageUrl: product.imageUrl,
-        price: product.price,
+        ProductId: Product.ProductId,
+        ProductName: Product.ProductName,
+        imageUrl: Product.imageUrl,
+        price: Product.price,
         Qty: quantity,
       });
-      toast.success(`${product.productName} added to cart`);
+      toast.success(`${Product.ProductName} added to cart`);
     } catch (error) {
       console.error(error);
-      toast.error("Could not add product to cart");
+      toast.error("Could not add Product to cart");
     } finally {
       setAddingToCart(false);
     }
@@ -109,7 +108,7 @@ const SingleProduct = () => {
     if (addingToWishlist) return;
     setAddingToWishlist(true);
     try {
-      await AddToWishlist(product.productId);
+      await AddToWishlist(Product.ProducttId);
       toast.success("Added to wishlist");
     } catch (error) {
       console.error(error);
@@ -127,14 +126,14 @@ const SingleProduct = () => {
     );
   }
 
-  if (!product) {
+  if (!Product) {
     return <div className="sp-loading">Loading Product...</div>;
   }
 
-  const roundedRating = Math.round(product.rating || 0);
-  const hasDiscount = product.oldPrice && product.oldPrice > product.price;
+  const roundedRating = Math.round(Product.rating || 0);
+  const hasDiscount = Product.oldPrice && Product.oldPrice > Product.price;
   const discountPercent = hasDiscount
-    ? Math.round(100 - (product.price / product.oldPrice) * 100)
+    ? Math.round(100 - (Product.price / Product.oldPrice) * 100)
     : 0;
 
   return (
@@ -158,7 +157,7 @@ const SingleProduct = () => {
 
             <span>/</span>
 
-            <span>{product.productName}</span>
+            <span>{Product.ProductName}</span>
           </div>
         </div>
       </div>
@@ -171,18 +170,16 @@ const SingleProduct = () => {
 
           <div className="sp-gallery">
             <div className="sp-gallery-main">
-              <img src={activeImage} alt={product.productName} />
+              <img src={activeImage} alt={Product.ProductName} />
             </div>
           </div>
 
           {/* ================= Right ================= */}
 
           <div className="sp-details">
-            <span className="sp-category">
-              {product.category || "General"}
-            </span>
+            <span className="sp-category">{Product.category || "General"}</span>
 
-            <h2 className="sp-title">{product.productName}</h2>
+            <h2 className="sp-title">{Product.ProductName}</h2>
 
             <div className="sp-rating">
               {[1, 2, 3, 4, 5].map((star) =>
@@ -190,20 +187,24 @@ const SingleProduct = () => {
                   <FiStar key={star} className="sp-star-filled" />
                 ) : (
                   <FiStar key={star} />
-                )
+                ),
               )}
 
               <span>
-                {product.rating ? `(${product.rating.toFixed(1)})` : "(No ratings yet)"}
+                {Product.rating
+                  ? `(${Product.rating.toFixed(1)})`
+                  : "(No ratings yet)"}
               </span>
             </div>
 
             <div className="sp-price-wrapper">
-              <h3 className="sp-price">${Number(product.price || 0).toFixed(2)}</h3>
+              <h3 className="sp-price">
+                ${Number(Product.price || 0).toFixed(2)}
+              </h3>
 
               {hasDiscount && (
                 <>
-                  <del>${Number(product.oldPrice).toFixed(2)}</del>
+                  <del>${Number(Product.oldPrice).toFixed(2)}</del>
                   <span className="sp-discount">-{discountPercent}%</span>
                 </>
               )}
@@ -213,7 +214,7 @@ const SingleProduct = () => {
               {inStock ? "In Stock" : "Out of Stock"}
             </div>
 
-            <p className="sp-description">{product.description}</p>
+            <p className="sp-description">{Product.description}</p>
 
             {/* ================= Quantity ================= */}
 
@@ -273,17 +274,17 @@ const SingleProduct = () => {
 
             {/* ================= Product Info ================= */}
 
-            <div className="sp-product-meta">
+            <div className="sp-Product-meta">
               <div className="sp-meta-item">
                 <span>Code</span>
 
-                <p>{product.code || "N/A"}</p>
+                <p>{Product.code || "N/A"}</p>
               </div>
 
               <div className="sp-meta-item">
                 <span>Category</span>
 
-                <p>{product.category || "General"}</p>
+                <p>{Product.category || "General"}</p>
               </div>
             </div>
 
@@ -347,27 +348,30 @@ const SingleProduct = () => {
 
         <div className="sp-tab-content">
           {activeTab === "Description" && (
-            <p>{product.description || "No description available for this product."}</p>
+            <p>
+              {Product.description ||
+                "No description available for this Product."}
+            </p>
           )}
 
           {activeTab === "Specifications" && (
             <ul className="sp-specs-list">
               <li>
-                <strong>Code:</strong> {product.code || "N/A"}
+                <strong>Code:</strong> {Product.code || "N/A"}
               </li>
               <li>
-                <strong>Category:</strong> {product.category || "General"}
+                <strong>Category:</strong> {Product.category || "General"}
               </li>
               <li>
                 <strong>Stock:</strong>{" "}
-                {inStock ? `${product.stock ?? "Available"} units` : "Out of stock"}
+                {inStock
+                  ? `${Product.stock ?? "Available"} units`
+                  : "Out of stock"}
               </li>
             </ul>
           )}
 
-          {activeTab === "Reviews" && (
-            <p>No reviews yet for this product.</p>
-          )}
+          {activeTab === "Reviews" && <p>No reviews yet for this Product.</p>}
         </div>
       </div>
 
@@ -378,22 +382,22 @@ const SingleProduct = () => {
           <div className="sp-section-title">
             <h2>Related Products</h2>
 
-            <p>You may also like these products.</p>
+            <p>You may also like these Products.</p>
           </div>
 
           <div className="sp-related-grid">
             {relatedProducts.map((related) => (
               <Link
-                to={`/single-product/${related.productId}`}
+                to={`/single-Product/${related.ProductId}`}
                 className="sp-related-card"
-                key={related.productId}
+                key={related.ProductId}
               >
                 <img
-                  src={`https://localhost:7005/${related.imageUrl}`}
-                  alt={related.productName}
+                  src={`https://localhost:7069/${related.imageUrl}`}
+                  alt={related.ProductName}
                 />
 
-                <h4>{related.productName}</h4>
+                <h4>{related.ProductName}</h4>
 
                 <span>${Number(related.price || 0).toFixed(2)}</span>
               </Link>

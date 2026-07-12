@@ -1,7 +1,7 @@
 import { FiEye, FiEdit, FiTrash2 } from "react-icons/fi";
 
 const ProductRow = ({
-  product,
+  Product,
   setOpenViewModal,
   setOpenEditModal,
   setOpenDeleteModal,
@@ -9,39 +9,39 @@ const ProductRow = ({
 }) => {
   return (
     <tr>
-      <td className="product-info">
+      <td className="Product-info">
         <img
-          src={`https://localhost:7005/${product.imageUrl}`}
-          alt={product.productName}
+          src={`https://localhost:7069/${Product.imageUrl}`}
+          alt={Product.ProductName}
         />
         <div>
-          <h4>{product.productName}</h4>
-          <span>{product.code}</span>
+          <h4>{Product.ProductName}</h4>
+          <span>{Product.code}</span>
         </div>
       </td>
 
-      <td>{product.category}</td>
+      <td>{Product.category}</td>
 
-      <td className="price">{product.price}</td>
+      <td className="price">{Product.price}</td>
 
-      <td>{product.qty}</td>
+      <td>{Product.qty}</td>
 
       <td>
         <span
-          className={`status ${product.qty > 10 ? "in-stock" : "low-stock"}`}
+          className={`status ${Product.qty > 10 ? "in-stock" : "low-stock"}`}
         >
-          {product.qty > 10 ? "In Stock" : "Low Stock"}
+          {Product.qty > 10 ? "In Stock" : "Low Stock"}
         </span>
       </td>
 
-      <td>{product.createdAt}</td>
+      <td>{Product.createdAt}</td>
 
       <td>
         <div className="actions">
           <button
             className="view-btn"
             onClick={() => {
-              setSelectedProduct(product);
+              setSelectedProduct(Product);
               setOpenViewModal(true);
             }}
           >
@@ -51,7 +51,7 @@ const ProductRow = ({
           <button
             className="edit-btn"
             onClick={() => {
-              setSelectedProduct(product);
+              setSelectedProduct(Product);
               setOpenEditModal(true);
             }}
           >
@@ -61,7 +61,7 @@ const ProductRow = ({
           <button
             className="delete-btn"
             onClick={() => {
-              setSelectedProduct(product);
+              setSelectedProduct(Product);
               setOpenDeleteModal(true);
             }}
           >

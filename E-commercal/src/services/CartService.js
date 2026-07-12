@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-const API = "https://localhost:7005/api/cart";
+const API = "https://localhost:7069/api/cart";
 export const GetCart=async()=>{
     const respons= await axios.get(API);
     return respons.data;

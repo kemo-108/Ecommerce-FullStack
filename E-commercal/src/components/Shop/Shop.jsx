@@ -24,7 +24,7 @@ const Shop = () => {
     setLoading(true);
     setError(false);
     axios
-      .get(`https://localhost:7005/api/products`, {
+      .get(`https://localhost:7069/api/products`, {
         params: {
           page,
           pageSize,
@@ -89,7 +89,7 @@ const Shop = () => {
                   className="product-card"
                 >
                   <img
-                    src={`https://localhost:7005/${product.imageUrl}`}
+                    src={`https://localhost:7069/${product.imageUrl}`}
                     alt={product.productName}
                   />
 

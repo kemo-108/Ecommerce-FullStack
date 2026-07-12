@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://localhost:7005/api/auth";
+const API = "https://localhost:7069/api/auth";
 
 export const Login = async (credentials) => {
   const response = await axios.post(`${API}/login`, credentials);

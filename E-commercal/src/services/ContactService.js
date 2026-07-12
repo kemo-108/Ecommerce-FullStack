@@ -1,7 +1,7 @@
-const API = "https://localhost:7005/api/contact";
+const API = "https://localhost:7069/api/contact";
 export const DeleteMessage = async (id) => {
     try {
-        const response = await fetch(`https://localhost:7005/api/contact/${id}`, {
+        const response = await fetch(`https://localhost:7069/api/contact/${id}`, {
             method: "DELETE"
         });
         if (!response.ok) {

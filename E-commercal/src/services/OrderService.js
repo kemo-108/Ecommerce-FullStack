@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://localhost:7005/api/orders";
+const API = "https://localhost:7069/api/orders";
 
 export const PlaceOrder = async (orderData) => {
   const response = await axios.post(API, orderData);

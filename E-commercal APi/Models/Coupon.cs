@@ -22,6 +22,6 @@ namespace E_commercal_APi.Models
 
         public ICollection<Order> Orders { get; set; }
         public ICollection<CouponRedemption> Redemptions { get; set; }
-
+            
     }
 }

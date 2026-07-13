@@ -1,43 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Playfair+Display:wght@500;600;700;800&display=swap');
 * {
     margin:0;
     padding:0;
     box-sizing:border-box;
 
 }
+html{
+    scroll-behavior: smooth;
+}
 :root{
---main-color: #f8f9fa;
---blue: #007bff;
---indigo: #6610f2;
---purple: #6f42c1;
---pink: #e83e8c;
---red: #dc3545;
---orange: #fd7e14;
---yellow: #ffc107;
---green: #28a745;
---teal: #20c997;
---cyan: #17a2b8;
+/* ============ Art Corner design system ============ */
+/* Warm, calm palette built around terracotta + sage, used across the whole site */
+--main-color: #FAF6F0;       /* warm cream page background */
+--surface: #FFFFFF;          /* card/panel background */
+--primary: #E07A5F;          /* terracotta - main brand accent */
+--primary-dark: #C9573D;     /* hover/active state for primary */
+--primary-light: #F3C9BC;    /* soft tint for badges/backgrounds */
+--secondary: #81B29A;        /* sage green - secondary accent */
+--accent: #F2CC8F;           /* warm sand - highlights, ratings, badges */
+--dark: #33313D;             /* deep charcoal-navy for text */
+--gray: #8D8A85;             /* warm neutral gray for secondary text */
+--gray-light: #E8E3DC;       /* borders / dividers */
+--success: #6FA26D;
+--warning: #E0A458;
+--danger: #C1523B;
 --white: #fff;
---gray: #6c757d;
---gray-dark: #343a40;
---primary: #fcbeca;
---secondary: #6c757d;
---success: #28a745;
---info: #17a2b8;
---warning: #ffc107;
---danger: #dc3545;
---light: #f8f9fa;
---dark: #343a40;
+--light: #FAF6F0;
+
+/* legacy variables kept so older components referencing them still resolve
+   to the new palette instead of the old pink/blue clash */
+--blue: var(--secondary);
+--indigo: var(--primary);
+--purple: var(--primary);
+--pink: var(--primary-light);
+--red: var(--danger);
+--orange: var(--accent);
+--yellow: var(--accent);
+--green: var(--success);
+--teal: var(--secondary);
+--cyan: var(--secondary);
+--gray-dark: var(--dark);
+--info: var(--secondary);
 }
 span{
     color: var(--primary);
 }
 p{
-    color: var(--dark);
+    color: var(--gray);
+    line-height: 1.6;
 }
 h1,h2,h3,h4,h5,h6{
     color: var(--dark);
-    font-family: 'Roboto Condensed', Arial, sans-serif;
+    font-family: 'Playfair Display', 'Roboto Condensed', Arial, sans-serif;
 }
 a{
 background-color: transparent;
@@ -45,6 +59,11 @@ color: var(--dark);
 margin: 0;
 padding: 0;
 text-decoration: none;
+transition: color .25s ease, background-color .25s ease, transform .25s ease;
+}
+
+button{
+    transition: background-color .25s ease, color .25s ease, transform .25s ease, box-shadow .25s ease;
 }
 
 ul li{

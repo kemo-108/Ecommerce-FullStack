@@ -12,7 +12,7 @@ const Account = () => {
           <h1>My Account</h1>
 
           <p>
-            Manage your profile information, orders and wishlist from one place.
+            Manage your profile information, orders and addresses from one place.
           </p>
         </div>
 

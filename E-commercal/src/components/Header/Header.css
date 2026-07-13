@@ -153,6 +153,16 @@
     display: flex;
     align-items: center;
 }
+
+.wishlist-icon-mobile {
+    display: none;
+}
+
+.wishlist-icon-desktop {
+    display: flex;
+    align-items: center;
+    margin-right: 14px;
+}
 /* ================= NAVBAR ================= */
 
 .navbar {
@@ -307,11 +317,13 @@
 }
 
 .sidebar h3 {
-    font-family: cursive;
-    color: #F77FA8;
-    font-size: 22px;
-    letter-spacing: 2px;
+    font-family: 'Playfair Display', serif;
+    color: var(--primary);
+    font-size: 15px;
+    letter-spacing: 3px;
     font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.85;
 }
 /* ================= RESPONSIVE ================= */
 
@@ -388,6 +400,10 @@
         display: none;
     }
 
+    .wishlist-icon-desktop{
+        display: none;
+    }
+
     .nav-links{
         position: fixed;
         top: 70px;
@@ -436,6 +452,12 @@
     }
 
     .login-icon-mobile{
+        display: flex;
+        align-items: center;
+        padding: 12px 24px;
+    }
+
+    .wishlist-icon-mobile{
         display: flex;
         align-items: center;
         padding: 12px 24px;

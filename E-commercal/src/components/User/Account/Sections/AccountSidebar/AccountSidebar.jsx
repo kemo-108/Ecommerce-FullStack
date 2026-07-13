@@ -1,24 +1,44 @@
 import "./AccountSidebar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiUser,
   FiShoppingBag,
-  FiHeart,
+  FiRotateCcw,
   FiMapPin,
   FiShield,
   FiLogOut,
 } from "react-icons/fi";
+import { GetCurrentUser, Logout, ClearSession } from "../../../../../services/AuthService";
+import { toast } from "react-toastify";
 
 const AccountSidebar = () => {
+  const navigate = useNavigate();
+  const user = GetCurrentUser();
+
+  const handleLogout = async () => {
+    try {
+      await Logout();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      ClearSession();
+      toast.success("Logged out successfully");
+      navigate("/login");
+    }
+  };
+
   return (
     <aside className="account-sidebar">
       <div className="account-user">
         <div className="account-avatar">
-          <img src="https://i.pravatar.cc/150?img=12" alt="User" />
+          <img
+            src={user?.avatar || "https://i.pravatar.cc/150?img=12"}
+            alt={user?.name || "User"}
+          />
         </div>
 
-        <h3>Kemo Mostafa</h3>
-        <p>kemo@example.com</p>
+        <h3>{user?.name || "Guest"}</h3>
+        <p>{user?.email || ""}</p>
       </div>
 
       <nav className="account-menu">
@@ -43,22 +63,13 @@ const AccountSidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/account/wishlist"
-          className={({ isActive }) =>
-            isActive ? "menu-link active" : "menu-link"
-          }
-        >
-          <FiHeart />
-          <span>Wishlist</span>
-        </NavLink>
-        <NavLink
           to="/account/returns"
           className={({ isActive }) =>
             isActive ? "menu-link active" : "menu-link"
           }
         >
-          <FiHeart />
-          <span>returns</span>
+          <FiRotateCcw />
+          <span>Returns</span>
         </NavLink>
 
         <NavLink
@@ -82,7 +93,7 @@ const AccountSidebar = () => {
         </NavLink>
       </nav>
 
-      <button className="logout-btn">
+      <button className="logout-btn" onClick={handleLogout}>
         <FiLogOut />
         <span>Logout</span>
       </button>

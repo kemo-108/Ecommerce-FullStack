@@ -12,14 +12,14 @@ import Sidebar from "./components/Header/Sidebar";
 import Login from "./components/Auth/Login/Login";
 import Register from "./components/Auth/Register/Register";
 import ForgotPassword from "./components/Auth/ForgotPassword/ForgotPassword";
-import About from "./components/About/About";
-import Service from "./components/Service/Service";
+import PublicCategory from "./components/Category/Category";
+import WishList from "./components/User/WishList/WishList";
 import Dashboard from "./components/Admin/DashBoard/DashBoard";
 import AdminLayout from "./components/Admin/Layout/AdminLayout";
 import Products from "./components/Admin/Products/Products";
 import Orders from "./components/Admin/Orders/Orders";
 import Customers from "./components/Admin/Customers/Customers";
-import Category from "./components/Admin/Categories/Categories";
+import AdminCategories from "./components/Admin/Categories/Categories";
 import Coupons from "./components/Admin/Coupons/Coupons";
 import Reports from "./components/Admin/Reports/Reports";
 import Settings from "./components/Admin/Settings/Settings";
@@ -27,11 +27,11 @@ import Inventory from "./components/Admin/Inventory/Inventory";
 import Profile from "./components/User/Profile/Profile";
 import Account from "./components/User/Account/Account";
 import MyOrder from "./components/User/MyOrder/MyOrder";
-import WishList from "./components/User/WishList/WishList";
 import Addresses from "./components/User/Addresses/Addresses";
 import Security from "./components/User/Security/Security";
 import Returns from "./components/User/Returns/Returns";
 import Refunds from "./components/Admin/Refunds/Refunds";
+
 function App() {
   const location = useLocation();
 
@@ -53,15 +53,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/checkout" element={<CheckOut />} />
-        <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/category" element={<PublicCategory />} />
+        <Route path="/wishlist" element={<WishList />} />
         <Route path="/single-product/:productId" element={<SingleProduct />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/service" element={<Service />} />
 
         <Route path="/account" element={<Account />}>
           <Route index element={<Navigate to="/account/profile" replace />} />
@@ -69,8 +69,6 @@ function App() {
           <Route path="profile" element={<Profile />} />
 
           <Route path="orders" element={<MyOrder />} />
-
-          <Route path="wishlist" element={<WishList />} />
 
           <Route path="addresses" element={<Addresses />} />
 
@@ -85,7 +83,7 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="orders" element={<Orders />} />
           <Route path="customers" element={<Customers />} />
-          <Route path="category" element={<Category />} />
+          <Route path="category" element={<AdminCategories />} />
           <Route path="coupons" element={<Coupons />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="reports" element={<Reports />} />

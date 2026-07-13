@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiHeart } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
 const links = [
   { id: 1, title: "Home", Url: "/" },
   { id: 2, title: "Shop", Url: "/shop" },
-  { id: 3, title: "About", Url: "/about" },
-  { id: 4, title: "Service", Url: "/service" },
-  { id: 5, title: "Contact", Url: "/contact" },
+  { id: 3, title: "Category", Url: "/category" },
+  { id: 4, title: "Contact", Url: "/contact" },
 ];
 const Navber = () => {
   const navigate = useNavigate();
@@ -80,7 +79,14 @@ const Navber = () => {
         <Link to="/login" className="login-icon-mobile" onClick={closeMobileMenu}>
           <CgProfile className="login-icon" />
         </Link>
+        <Link to="/wishlist" className="wishlist-icon-mobile" onClick={closeMobileMenu}>
+          <FiHeart className="login-icon" />
+        </Link>
       </div>
+
+      <Link to="/wishlist" className="wishlist-icon-desktop">
+        <FiHeart className="login-icon" />
+      </Link>
 
       <Link to="/login" className="login-icon-desktop">
         <CgProfile className="login-icon" />

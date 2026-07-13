@@ -1,13 +1,4 @@
-:root {
-    --main-color: #FFF8FB;
-    --primary: #F77FA8;
-    --pink: #F77FA8;
-    --red: #ff4d6d;
-    --white: #ffffff;
-    --dark: #222;
-    --gray: #777;
-    --light: #fdfdfd;
-}
+/* Color variables now come from the global index.css design system */
 
 /* ================= HEADER ================= */
 
@@ -64,7 +55,7 @@
 }
 
 .header .search-box:focus-within {
-    border-color: #F77FA8;
+    border-color: var(--primary);
 }
 
 .header .search-box input {
@@ -93,7 +84,7 @@
 }
 
 .header .search-box button:hover {
-    color: #F77FA8;
+    color: var(--primary);
 }
 
 /* ================= HEADER ICONS ================= */
@@ -119,7 +110,7 @@
 }
 
 .header .Header_icons .icon:hover {
-    background: #F77FA8;
+    background: var(--primary);
     color: #fff;
     transform: translateY(-3px);
 }
@@ -131,7 +122,7 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: #ff4d6d;
+    background: var(--primary-dark);
     color: #fff;
     display: flex;
     justify-content: center;
@@ -205,7 +196,7 @@
 }
 
 .nav-link:hover {
-    color: #F77FA8;
+    color: var(--primary);
 }
 
 .nav-link::after {
@@ -215,7 +206,7 @@
     bottom: -6px;
     width: 0;
     height: 3px;
-    background: #F77FA8;
+    background: var(--primary);
     border-radius: 5px;
     transition: .3s;
 }
@@ -231,7 +222,7 @@
 }
 
 .nav-item:hover .shop-icon {
-    color: #F77FA8;
+    color: var(--primary);
 }
 
 /* ================= DROPDOWN ================= */
@@ -287,7 +278,7 @@
 
 .dropdown-menu a:hover {
     background: #FFF1F5;
-    color: #F77FA8;
+    color: var(--primary);
     padding-left: 20px;
 }
 

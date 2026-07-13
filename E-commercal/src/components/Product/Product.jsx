@@ -1,36 +1,65 @@
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { IoMdStar, IoMdStarOutline } from "react-icons/io";
+import { FiPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import "./Product.css";
 import { useEffect, useState } from "react";
 import { AddToCart } from "../../services/CartService";
+import { AddToWishlist, RemoveFromWishlist, GetWishlist } from "../../services/WishlistService";
+import { IsAuthenticated } from "../../services/AuthService";
 import { toast } from "react-toastify";
 
 const Product = ({ product, showExtraBtn }) => {
-  const [rating, setRating] = useState(0);
   const [favorite, setFavorite] = useState(false);
+  const [wishlistId, setWishlistId] = useState(null);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [togglingWishlist, setTogglingWishlist] = useState(false);
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorite(favorites.includes(product.productId));
+    if (!IsAuthenticated()) return;
+    GetWishlist()
+      .then((items) => {
+        const match = (items || []).find(
+          (item) => item.productId === product.productId
+        );
+        if (match) {
+          setFavorite(true);
+          setWishlistId(match.id);
+        }
+      })
+      .catch(() => {});
   }, [product.productId]);
 
-  const handleFavorite = () => {
-    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  const handleFavorite = async (e) => {
+    e.preventDefault();
+    if (togglingWishlist) return;
 
-    if (favorites.includes(product.productId)) {
-      favorites = favorites.filter((id) => id !== product.productId);
-      setFavorite(false);
-    } else {
-      favorites.push(product.productId);
-      setFavorite(true);
+    if (!IsAuthenticated()) {
+      toast.info("Please log in to save items to your wishlist");
+      return;
     }
 
-    localStorage.setItem("favorites", JSON.stringify(favorites));
+    setTogglingWishlist(true);
+    try {
+      if (favorite) {
+        await RemoveFromWishlist(wishlistId);
+        setFavorite(false);
+        setWishlistId(null);
+      } else {
+        const created = await AddToWishlist(product.productId);
+        setFavorite(true);
+        setWishlistId(created?.id);
+      }
+      window.dispatchEvent(new Event("wishlist-updated"));
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not update wishlist");
+    } finally {
+      setTogglingWishlist(false);
+    }
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
     if (addingToCart) return;
     setAddingToCart(true);
     try {
@@ -42,6 +71,7 @@ const Product = ({ product, showExtraBtn }) => {
         Qty: 1,
       });
       toast.success(`${product.productName} added to cart`);
+      window.dispatchEvent(new Event("cart-updated"));
     } catch (error) {
       console.error("Error adding to cart:", error);
       toast.error("Could not add product to cart");
@@ -50,53 +80,60 @@ const Product = ({ product, showExtraBtn }) => {
     }
   };
 
+  const hasDiscount = product.oldPrice && product.oldPrice > product.price;
+  const savings = hasDiscount ? product.oldPrice - product.price : 0;
+
   return (
-    <div className="product-card">
-      <Link to={`/single-product/${product.productId}`}>
+    <Link to={`/single-product/${product.productId}`} className="product-card">
+      <div className="product-image">
+        {hasDiscount && (
+          <span className="save-badge">Save {savings.toFixed(0)} EGP</span>
+        )}
+
+        <button
+          type="button"
+          className="icon-btn favorite-btn"
+          onClick={handleFavorite}
+          disabled={togglingWishlist}
+          aria-label="Add to wishlist"
+        >
+          {favorite ? <FaHeart className="favorite" /> : <FaRegHeart />}
+        </button>
+
+        {showExtraBtn && (
+          <button
+            type="button"
+            className="icon-btn add-btn"
+            onClick={handleAddToCart}
+            disabled={addingToCart}
+            aria-label="Add to cart"
+          >
+            <FiPlus />
+          </button>
+        )}
+
         <img
           src={`https://localhost:7069/${product.imageUrl}`}
           alt={product.productName}
         />
-      </Link>
-
-      <h3>
-        <Link to={`/single-product/${product.productId}`}>
-          {product.productName}
-        </Link>
-      </h3>
-
-      <div className="product-info">
-        <span className="price">{product.price} L.E</span>
-
-        <div className="rating">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <span key={star} onClick={() => setRating(star)}>
-              {star <= rating ? <IoMdStar /> : <IoMdStarOutline />}
-            </span>
-          ))}
-        </div>
       </div>
 
-      {showExtraBtn && (
-        <>
-          <div className="product-divider"></div>
+      <div className="product-info">
+        {product.category && <span className="brand">{product.category}</span>}
 
-          <div className="product-actions">
-            <button
-              className="cart-btn"
-              onClick={handleAddToCart}
-              disabled={addingToCart}
-            >
-              {addingToCart ? "ADDING..." : "ADD TO CART +"}
-            </button>
+        <h3>{product.productName}</h3>
 
-            <button className="heart-btn" onClick={handleFavorite}>
-              {favorite ? <FaHeart className="favorite" /> : <FaRegHeart />}
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+        <div className="price-row">
+          <span className="price">EGP {Number(product.price || 0).toFixed(0)}</span>
+
+          {hasDiscount && (
+            <del className="old-price">
+              EGP {Number(product.oldPrice).toFixed(0)}
+            </del>
+          )}
+        </div>
+      </div>
+    </Link>
   );
 };
 

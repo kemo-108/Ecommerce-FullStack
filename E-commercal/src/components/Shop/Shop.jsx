@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Image from "../../image/image-Collection.png";
 import axios from "axios";
 import "./Shop.css";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import Product from "../Product/Product";
 
 const Shop = () => {
   const [searchParams] = useSearchParams();
@@ -83,19 +84,11 @@ const Shop = () => {
           <>
             <div className="product-grid">
               {products.map((product) => (
-                <Link
-                  to={`/single-product/${product.productId}`}
+                <Product
                   key={product.productId}
-                  className="product-card"
-                >
-                  <img
-                    src={`https://localhost:7069/${product.imageUrl}`}
-                    alt={product.productName}
-                  />
-
-                  <h2>{product.productName}</h2>
-                  <p>${Number(product.price || 0).toFixed(2)}</p>
-                </Link>
+                  product={product}
+                  showExtraBtn={true}
+                />
               ))}
             </div>
 

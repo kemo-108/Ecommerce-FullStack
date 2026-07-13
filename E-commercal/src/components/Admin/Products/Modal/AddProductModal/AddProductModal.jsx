@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
+
 import { createProduct } from "../../../../../services/ProductService";
+import { getCategories } from "../../../../../services/CategoryService";
+
 import "./AddProductModal.css";
 
-const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
+const AddProductModal = ({ setOpenAddModal, onSaved }) => {
+  const [categories, setCategories] = useState([]);
+
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -21,6 +26,20 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
   const [previewImages, setPreviewImages] = useState([]);
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      const data = await getCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load categories.");
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,7 +74,6 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
       images: prev.images.filter((_, i) => i !== index),
     }));
   };
-
   const validateForm = () => {
     const newErrors = {};
 
@@ -65,9 +83,6 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
 
     if (!formData.price || Number(formData.price) <= 0)
       newErrors.price = "Enter a valid price";
-
-    if (!formData.stock || Number(formData.stock) < 0)
-      newErrors.stock = "Enter a valid stock";
 
     if (formData.images.length === 0)
       newErrors.images = "Please upload at least one image";
@@ -81,34 +96,40 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
     if (!validateForm() || saving) return;
 
     setSaving(true);
+
     try {
       const payload = new FormData();
-      payload.append("productName", formData.name);
-      payload.append("category", formData.category);
-      payload.append("brand", formData.brand);
-      payload.append("price", formData.price);
-      payload.append("discount", formData.discount || 0);
-      payload.append("qty", formData.stock);
-      payload.append("code", formData.sku);
-      payload.append("weight", formData.weight || "");
-      payload.append("description", formData.description);
-      formData.images.forEach((file) => payload.append("images", file));
+
+      payload.append("ProductName", formData.name);
+      payload.append("Price", formData.price);
+      payload.append("OldPrice", 0);
+      payload.append("Discount", formData.discount || 0);
+      payload.append("Brand", formData.brand);
+      payload.append("Sku", formData.sku);
+      payload.append("Description", formData.description);
+      payload.append("CategoryId", formData.category);
+
+      formData.images.forEach((file) => {
+        payload.append("Images", file);
+      });
 
       await createProduct(payload);
 
       toast.success("Product added successfully.");
+
       onSaved?.();
+
       setOpenAddModal(false);
     } catch (error) {
       console.error(error);
+
       toast.error(
-        error.response?.data?.message || "Could not add the product."
+        error.response?.data?.message || "Could not add the product.",
       );
     } finally {
       setSaving(false);
     }
   };
-
   return (
     <div className="modal-overlay">
       <div className="add-product-modal">
@@ -195,19 +216,12 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
                   onChange={handleChange}
                 >
                   <option value="">Select Category</option>
-                  {categories.length > 0 ? (
-                    categories.map((cat) => (
-                      <option key={cat.id || cat.name} value={cat.name}>
-                        {cat.name}
-                      </option>
-                    ))
-                  ) : (
-                    <>
-                      <option value="Stationery">Stationery</option>
-                      <option value="Art Supplies">Art Supplies</option>
-                      <option value="Office">Office</option>
-                    </>
-                  )}
+
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
                 </select>
 
                 {errors.category && (
@@ -227,9 +241,7 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
                 />
               </div>
             </div>
-
             <div className="double-input">
-              {" "}
               <div className="input-group">
                 <label>Price</label>
 
@@ -245,6 +257,7 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
                   <span className="error-text">{errors.price}</span>
                 )}
               </div>
+
               <div className="input-group">
                 <label>Discount %</label>
 
@@ -269,10 +282,6 @@ const AddProductModal = ({ setOpenAddModal, categories = [], onSaved }) => {
                   onChange={handleChange}
                   placeholder="0"
                 />
-
-                {errors.stock && (
-                  <span className="error-text">{errors.stock}</span>
-                )}
               </div>
 
               <div className="input-group">

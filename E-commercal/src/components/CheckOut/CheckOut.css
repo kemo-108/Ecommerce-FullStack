@@ -60,7 +60,7 @@
 
 .billing-details input:focus,
 .billing-details select:focus {
-  border-color: #d88ca0;
+  border-color: var(--primary);
 }
 
 .checkboxes {
@@ -125,7 +125,7 @@
   height: 50px;
   border: none;
   border-radius: 30px;
-  background: #f4a6b7;
+  background: var(--primary);
   color: white;
   font-size: 15px;
   cursor: pointer;

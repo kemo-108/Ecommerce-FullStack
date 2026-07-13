@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { MdOutlineKeyboardDoubleArrowDown } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { FiMenu, FiX, FiHeart } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
 import "./Header.css";
 const links = [
   { id: 1, title: "Home", Url: "/" },
@@ -12,19 +10,7 @@ const links = [
   { id: 4, title: "Contact", Url: "/contact" },
 ];
 const Navber = () => {
-  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const goToLastProduct = async () => {
-    const lastViewed = localStorage.getItem("lastViewedProduct");
-
-    if (lastViewed) {
-      navigate(`/single-product/${lastViewed}`);
-    } else {
-      navigate("/shop");
-    }
-    setMobileOpen(false);
-  };
 
   const closeMobileMenu = () => setMobileOpen(false);
 
@@ -46,33 +32,6 @@ const Navber = () => {
             <Link to={link.Url} className="nav-link" onClick={closeMobileMenu}>
               {link.title}
             </Link>
-
-            {link.title === "Shop" && (
-              <MdOutlineKeyboardDoubleArrowDown className="shop-icon" />
-            )}
-            {link.title === "Shop" && (
-              <div className="dropdown-menu">
-                <Link to="/shop" className="dropdown-item" onClick={closeMobileMenu}>
-                  Shop
-                </Link>
-                <Link
-                  to=""
-                  onClick={(e) => {
-                    e.preventDefault();
-                    goToLastProduct();
-                  }}
-                  className="dropdown-item"
-                >
-                  Single Product
-                </Link>
-                <Link to="/cart" className="dropdown-item" onClick={closeMobileMenu}>
-                  Cart
-                </Link>
-                <Link to="/checkout" className="dropdown-item" onClick={closeMobileMenu}>
-                  Checkout
-                </Link>
-              </div>
-            )}
           </div>
         ))}
 

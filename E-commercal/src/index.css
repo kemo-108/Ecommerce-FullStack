@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Playfair+Display:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 * {
     margin:0;
     padding:0;
@@ -9,23 +9,22 @@ html{
     scroll-behavior: smooth;
 }
 :root{
-/* ============ Art Corner design system ============ */
-/* Warm, calm palette built around terracotta + sage, used across the whole site */
---main-color: #FAF6F0;       /* warm cream page background */
+/* ============ Art Corner design system — B-Tech style retail look ============ */
+--main-color: #F3F4F6;       /* light gray page background */
 --surface: #FFFFFF;          /* card/panel background */
---primary: #E07A5F;          /* terracotta - main brand accent */
---primary-dark: #C9573D;     /* hover/active state for primary */
---primary-light: #F3C9BC;    /* soft tint for badges/backgrounds */
---secondary: #81B29A;        /* sage green - secondary accent */
---accent: #F2CC8F;           /* warm sand - highlights, ratings, badges */
---dark: #33313D;             /* deep charcoal-navy for text */
---gray: #8D8A85;             /* warm neutral gray for secondary text */
---gray-light: #E8E3DC;       /* borders / dividers */
---success: #6FA26D;
---warning: #E0A458;
---danger: #C1523B;
+--primary: #E31E24;          /* bold red - main brand accent */
+--primary-dark: #B8151A;     /* hover/active state for primary */
+--primary-light: #FCE4E4;    /* soft tint for badges/backgrounds */
+--secondary: #1A1A1A;        /* near-black - header/footer/dark UI */
+--accent: #FFB800;           /* gold - deal badges, ratings */
+--dark: #1A1A1A;             /* text / dark surfaces */
+--gray: #6B7280;             /* secondary text */
+--gray-light: #E5E7EB;       /* borders / dividers */
+--success: #16A34A;
+--warning: #F59E0B;
+--danger: #DC2626;
 --white: #fff;
---light: #FAF6F0;
+--light: #F3F4F6;
 
 /* legacy variables kept so older components referencing them still resolve
    to the new palette instead of the old pink/blue clash */
@@ -51,7 +50,7 @@ p{
 }
 h1,h2,h3,h4,h5,h6{
     color: var(--dark);
-    font-family: 'Playfair Display', 'Roboto Condensed', Arial, sans-serif;
+    font-family: 'Inter', 'Roboto Condensed', Arial, sans-serif;
 }
 a{
 background-color: transparent;

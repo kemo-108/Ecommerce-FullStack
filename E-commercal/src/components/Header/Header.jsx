@@ -1,76 +1,121 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../image/image.png";
-import Sidebar from "./Sidebar";
 import Navber from "./Navbar";
-import { MdSavedSearch } from "react-icons/md";
-import { FaCartShopping } from "react-icons/fa6";
+import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiPhone, FiTruck } from "react-icons/fi";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
+import { GetCart } from "../../services/CartService";
+import { GetWishlist } from "../../services/WishlistService";
+import { IsAuthenticated } from "../../services/AuthService";
+
 const Header = () => {
   const navigate = useNavigate();
-  const [scrolled, setScrolled] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const query = searchTerm.trim();
-    if (query) {
-      navigate(`/shop?search=${encodeURIComponent(query)}`);
-    } else {
-      navigate("/shop");
-    }
+    navigate(query ? `/shop?search=${encodeURIComponent(query)}` : "/shop");
   };
 
-  const handleScroll = () => {
-    if (window.scrollY > window.innerHeight) {
-      setScrolled(true);
-    } else {
-      setScrolled(false);
-    }
+  const refreshCartCount = () => {
+    if (!IsAuthenticated()) return setCartCount(0);
+    GetCart()
+      .then((data) =>
+        setCartCount(
+          Array.isArray(data)
+            ? data.reduce((sum, item) => sum + (item.Qty || 1), 0)
+            : 0
+        )
+      )
+      .catch(() => setCartCount(0));
+  };
+
+  const refreshWishlistCount = () => {
+    if (!IsAuthenticated()) return setWishlistCount(0);
+    GetWishlist()
+      .then((data) => setWishlistCount(Array.isArray(data) ? data.length : 0))
+      .catch(() => setWishlistCount(0));
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
+    refreshCartCount();
+    refreshWishlistCount();
+
+    window.addEventListener("cart-updated", refreshCartCount);
+    window.addEventListener("wishlist-updated", refreshWishlistCount);
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("cart-updated", refreshCartCount);
+      window.removeEventListener("wishlist-updated", refreshWishlistCount);
     };
   }, []);
 
   return (
-    <>
-      <div className={scrolled ? "header active" : "header"}>
-        <div className="container">
+    <div className="header">
+      {/* ================= Top utility bar ================= */}
+      <div className="header-topbar">
+        <div className="container topbar-inner">
+          <span className="topbar-item">
+            <FiTruck /> Free shipping on orders over $100
+          </span>
+
+          <a href="tel:+11234567890" className="topbar-item">
+            <FiPhone /> (123) 456-7890
+          </a>
+        </div>
+      </div>
+
+      {/* ================= Main header ================= */}
+      <div className="header-main">
+        <div className="container header-main-inner">
           <Link to="/" className="logo">
-            <img src={logo} alt="logo" width={90} />
+            <img src={logo} alt="Art Corner logo" />
+            <span>Art Corner</span>
           </Link>
-          <h4>Art Corner</h4>
 
           <form className="search-box" onSubmit={handleSearchSubmit}>
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search for products..."
               name="search"
-              id="search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button type="submit">
-              <MdSavedSearch size={30} />
+              <FiSearch size={20} />
             </button>
           </form>
 
-          <div className="Header_icons">
-            <div className="icon">
-              <FaCartShopping size={30} onClick={() => navigate("/cart")} />
-              <span className="count">
-                {"["}0{"]"}
-              </span>
-            </div>
+          <div className="header-icons">
+            <Link to="/wishlist" className="icon-link">
+              <FiHeart size={22} />
+              {wishlistCount > 0 && <span className="count">{wishlistCount}</span>}
+              <span className="icon-label">Wishlist</span>
+            </Link>
+
+            <Link to="/cart" className="icon-link">
+              <FiShoppingCart size={22} />
+              {cartCount > 0 && <span className="count">{cartCount}</span>}
+              <span className="icon-label">Cart</span>
+            </Link>
+
+            <Link
+              to={IsAuthenticated() ? "/account/profile" : "/login"}
+              className="icon-link"
+            >
+              <FiUser size={22} />
+              <span className="icon-label">Account</span>
+            </Link>
           </div>
         </div>
-        <Navber />
       </div>
-    </>
+
+      {/* ================= Category / nav bar ================= */}
+      <Navber />
+    </div>
   );
 };
 

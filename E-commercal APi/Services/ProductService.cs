@@ -25,6 +25,7 @@ namespace E_commercal_APi.Services
                 OldPrice = dto.OldPrice,
                 Discount = dto.Discount,
                 Brand = dto.Brand,
+                Code = dto.Code,
                 Sku = dto.Sku,
                 Description = dto.Description,
                 CategoryId = dto.CategoryId,

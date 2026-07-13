@@ -34,6 +34,7 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpPost]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateProduct([FromForm] ProductCreateVM dto)
         {
             var created = await _productService.CreateAsync(dto);

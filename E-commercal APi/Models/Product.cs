@@ -48,6 +48,15 @@ namespace E_commercal_APi.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
+        [MaxLength(100)]
+        public string? Brand { get; set; }
+
+        [MaxLength(50)]
+        public string? Sku { get; set; }
+
+        [Column(TypeName = "decimal(5,2)")]
+        [Range(0, 100)]
+        public decimal? Discount { get; set; }
 
         // Navigation
         public ICollection<ProductImage> Images { get; set; }

@@ -6,6 +6,9 @@ namespace E_commercal_APi.Services
     public interface IProductService
     {
         Task<IEnumerable<ProductVM>> GetAllProductsAsync();
-        Task<Product?> GetProductByIdAsync(int id);
+        Task<ProductVM?> GetProductByIdAsync(int id);
+        Task<ProductVM> CreateAsync(ProductCreateVM dto);
+        Task<bool> UpdateAsync(int id, ProductUpdateVM dto);
+        Task<bool> DeleteAsync(int id);
     }
 }

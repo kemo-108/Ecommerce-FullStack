@@ -1,0 +1,187 @@
+.update-stock-modal {
+  width: 520px;
+  max-width: 95%;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .15);
+  animation: modalScale .25s ease;
+}
+
+.update-form {
+  padding: 30px;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.product-image {
+  width: 90px;
+  height: 90px;
+  border-radius: 16px;
+  background: #f8f9fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-image img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.product-info h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.product-info p {
+  margin-top: 6px;
+  color: #888;
+}
+
+.stock-card {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.stock-card div {
+  background: #f8f9fc;
+  padding: 18px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.stock-card span {
+  display: block;
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.stock-card h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.quantity-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 0 16px;
+  height: 52px;
+}
+
+.quantity-input svg {
+  color: #ff4d6d;
+  font-size: 20px;
+}
+
+.quantity-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+}
+
+.new-stock {
+  background: #fff5f7;
+  border: 1px dashed #ff4d6d;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.new-stock span {
+  color: #666;
+}
+
+.new-stock strong {
+  font-size: 28px;
+  color: #ff4d6d;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.cancel-btn,
+.save-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 13px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.cancel-btn {
+  background: #f3f4f6;
+}
+
+.cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+.save-btn {
+  background: #ff4d6d;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #e6395c;
+}
+
+@keyframes modalScale {
+  from {
+    opacity: 0;
+    transform: scale(.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media(max-width:768px){
+
+.stock-card{
+grid-template-columns:1fr;
+}
+
+.modal-actions{
+flex-direction:column;
+}
+
+.cancel-btn,
+.save-btn{
+width:100%;
+}
+
+}

@@ -1,0 +1,18 @@
+.returns-page{
+    width:100%;
+    animation:fade .3s ease;
+}
+
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(15px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}

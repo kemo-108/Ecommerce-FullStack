@@ -1,0 +1,174 @@
+.coupons-table-container {
+  background: #fff;
+  border-radius: 20px;
+  padding: 25px;
+  margin-top: 25px;
+  border: 1px solid #f2f4f7;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.table-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.table-info h3 {
+  font-size: 24px;
+  color: #101828;
+  margin-bottom: 6px;
+}
+
+.table-info p {
+  color: #667085;
+  font-size: 14px;
+}
+
+.table-view {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.table-view span {
+  color: #667085;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.table-view button {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid #e4e7ec;
+  background: #fff;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.table-view button svg {
+  font-size: 18px;
+}
+
+.table-view button.active,
+.table-view button:hover {
+  background: #ff2d75;
+  color: #fff;
+  border-color: #ff2d75;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.coupons-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px;
+}
+
+.coupons-table thead tr {
+  border-bottom: 1px solid #eaecf0;
+}
+
+.coupons-table th {
+  padding: 18px;
+  text-align: left;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #667085;
+  white-space: nowrap;
+}
+
+.coupons-table td {
+  padding: 22px 18px;
+  border-bottom: 1px solid #f2f4f7;
+  vertical-align: middle;
+}
+
+.coupons-table tbody tr {
+  transition: 0.3s;
+}
+
+.coupons-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.empty-table {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-table h3 {
+  font-size: 24px;
+  color: #101828;
+  margin-bottom: 10px;
+}
+
+.empty-table p {
+  color: #667085;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 1200px) {
+  .table-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 992px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .coupons-table {
+    min-width: 1000px;
+  }
+}
+
+@media (max-width: 768px) {
+  .coupons-table-container {
+    padding: 20px;
+  }
+
+  .table-info h3 {
+    font-size: 22px;
+  }
+
+  .table-view span {
+    display: none;
+  }
+
+  .table-view button {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 576px) {
+  .coupons-table-container {
+    padding: 16px;
+  }
+
+  .table-info h3 {
+    font-size: 20px;
+  }
+
+  .table-info p {
+    font-size: 13px;
+  }
+}

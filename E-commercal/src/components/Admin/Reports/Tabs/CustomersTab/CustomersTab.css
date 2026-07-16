@@ -1,0 +1,34 @@
+.customers-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.customers-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1200px) {
+  .customers-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .customers-stats {
+    grid-template-columns: 1fr;
+  }
+}
+.customers-charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 992px) {
+  .customers-charts {
+    grid-template-columns: 1fr;
+  }
+}

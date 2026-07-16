@@ -1,0 +1,162 @@
+.order-row {
+  transition: 0.25s;
+}
+
+.order-row:hover {
+  background: #fafafa;
+}
+
+.order-row td {
+  padding: 22px 1px;
+  vertical-align: middle;
+  white-space: nowrap;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.order-customer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 250px;
+}
+
+.order-customer img,
+.customer-avatar {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  min-height: 46px;
+  border-radius: 50%;
+}
+
+.order-customer img {
+  object-fit: cover;
+}
+
+.customer-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ff4d8d, #ff7ca8);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.order-customer h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 3px;
+}
+
+.order-customer span {
+  display: block;
+  font-size: 13px;
+  color: #888;
+}
+
+.order-total {
+  color: #ff4d8d;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.order-date {
+  color: #777;
+  font-size: 14px;
+}
+
+.payment-badge,
+.status-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100px;
+  padding: 8px 15px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.payment-badge.paid {
+  background: #e8f9ef;
+  color: #16a34a;
+}
+
+.payment-badge.pending {
+  background: #fff4df;
+  color: #d97706;
+}
+
+.payment-badge.failed {
+  background: #fdecec;
+  color: #dc2626;
+}
+
+.status-badge.pending {
+  background: #fff4df;
+  color: #d97706;
+}
+
+.status-badge.processing {
+  background: #e9f2ff;
+  color: #2563eb;
+}
+
+.status-badge.delivered {
+  background: #e8f9ef;
+  color: #16a34a;
+}
+
+.status-badge.cancelled {
+  background: #fdecec;
+  color: #dc2626;
+}
+
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 17px;
+}
+
+.view-btn {
+  color: #3b82f6;
+}
+
+.view-btn:hover {
+  background: rgba(59,130,246,.12);
+}
+
+.edit-btn {
+  color: #f59e0b;
+}
+
+.edit-btn:hover {
+  background: rgba(245,158,11,.12);
+}
+
+.delete-btn {
+  color: #ef4444;
+}
+
+.delete-btn:hover {
+  background: rgba(239,68,68,.12);
+}

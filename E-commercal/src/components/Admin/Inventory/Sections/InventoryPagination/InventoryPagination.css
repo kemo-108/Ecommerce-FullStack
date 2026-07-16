@@ -1,0 +1,32 @@
+.inventory-pagination{
+    margin-top:25px;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+.inventory-pagination button{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:12px;
+    background:#fff;
+    border:1px solid #eee;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.inventory-pagination button:hover{
+    background:#ff4d6d;
+    color:#fff;
+}
+
+.inventory-pagination button.active{
+    background:#ff4d6d;
+    color:#fff;
+}
+
+.inventory-pagination button:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}

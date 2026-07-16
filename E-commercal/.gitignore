@@ -7,17 +7,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Frontend
+node_modules/
+dist/
+dist-ssr/
 *.local
 
-# Editor directories and files
+# ASP.NET Core
+bin/
+obj/
+
+# Visual Studio
+.vs/
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
+*.user
 *.suo
 *.ntvs*
 *.njsproj
 *.sw?
+.DS_Store

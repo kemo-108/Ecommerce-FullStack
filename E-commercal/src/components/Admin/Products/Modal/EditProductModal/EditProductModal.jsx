@@ -1,36 +1,68 @@
 import { useEffect, useState } from "react";
-import { FiX } from "react-icons/fi";
+import { FiUploadCloud, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
+
 import { updateProduct } from "../../../../../services/ProductService";
+import { getCategories } from "../../../../../services/CategoryService";
+
 import "./EditProductModal.css";
 
-const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved }) => {
+const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
+  const [categories, setCategories] = useState([]);
+
   const [formData, setFormData] = useState({
     productName: "",
-    category: "",
+    categoryId: "",
     brand: "",
+    code: "",
+    sku: "",
     price: "",
-    qty: "",
-    imageUrl: "",
+    oldPrice: "",
+    discount: "",
     description: "",
+    image: null,
   });
 
+  const [previewImage, setPreviewImage] = useState("");
+
   const [errors, setErrors] = useState({});
+
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (product) {
-      setFormData({
-        productName: product.productName || "",
-        category: product.category || "",
-        brand: product.brand || "",
-        price: product.price || "",
-        qty: product.qty || "",
-        imageUrl: product.imageUrl || "",
-        description: product.description || "",
-      });
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    if (!product) return;
+
+    setFormData({
+      productName: product.productName || "",
+      categoryId: product.categoryId || "",
+      brand: product.brand || "",
+      code: product.code || "",
+      sku: product.sku || "",
+      price: product.price || "",
+      oldPrice: product.oldPrice || "",
+      discount: product.discount || "",
+      description: product.description || "",
+      image: null,
+    });
+
+    if (product.imageUrl) {
+      setPreviewImage(`https://localhost:7069${product.imageUrl}`);
     }
   }, [product]);
+
+  const loadCategories = async () => {
+    try {
+      const data = await getCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load categories.");
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +73,18 @@ const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved 
     }));
   };
 
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      image: file,
+    }));
+
+    setPreviewImage(URL.createObjectURL(file));
+  };
   const validateForm = () => {
     const newErrors = {};
 
@@ -48,12 +92,12 @@ const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved 
       newErrors.productName = "Product name is required";
     }
 
-    if (!formData.price || Number(formData.price) <= 0) {
-      newErrors.price = "Enter a valid price";
+    if (!formData.categoryId) {
+      newErrors.categoryId = "Category is required";
     }
 
-    if (!formData.qty || Number(formData.qty) < 0) {
-      newErrors.qty = "Enter a valid quantity";
+    if (!formData.price || Number(formData.price) <= 0) {
+      newErrors.price = "Enter a valid price";
     }
 
     setErrors(newErrors);
@@ -64,25 +108,47 @@ const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm() || saving || !product) return;
+    if (!product || !validateForm() || saving) return;
 
     setSaving(true);
+
     try {
-      await updateProduct(product.productId, formData);
+      const payload = new FormData();
+
+      payload.append("ProductName", formData.productName);
+      payload.append("Price", formData.price);
+      payload.append("OldPrice", formData.oldPrice || 0);
+      payload.append("Discount", formData.discount || 0);
+      payload.append("Brand", formData.brand);
+      payload.append("Code", formData.code);
+      payload.append("Sku", formData.sku);
+      payload.append("Description", formData.description);
+      payload.append("CategoryId", formData.categoryId);
+
+      // ارفع صورة جديدة فقط إذا المستخدم اختار واحدة
+      if (formData.image) {
+        payload.append("Images", formData.image);
+      }
+
+      await updateProduct(product.productId, payload);
 
       toast.success("Product updated successfully.");
+
       onSaved?.();
+
       setOpenEditModal(false);
     } catch (error) {
       console.error(error);
+
       toast.error(
-        error.response?.data?.message || "Could not update the product."
+        error.response?.data?.message ||
+          error.response?.data?.title ||
+          "Could not update the product.",
       );
     } finally {
       setSaving(false);
     }
   };
-
   return (
     <div className="modal-overlay">
       <div className="edit-product-modal">
@@ -117,26 +183,22 @@ const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved 
             <div className="input-group">
               <label>Category</label>
 
-              {categories.length > 0 ? (
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id || cat.name} value={cat.name}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type="text"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                />
+              <select
+                name="categoryId"
+                value={formData.categoryId}
+                onChange={handleChange}
+              >
+                <option value="">Select Category</option>
+
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+
+              {errors.categoryId && (
+                <span className="error-text">{errors.categoryId}</span>
               )}
             </div>
 
@@ -147,6 +209,28 @@ const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved 
                 type="text"
                 name="brand"
                 value={formData.brand}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Code</label>
+
+              <input
+                type="text"
+                name="code"
+                value={formData.code}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="input-group">
+              <label>SKU</label>
+
+              <input
+                type="text"
+                name="sku"
+                value={formData.sku}
                 onChange={handleChange}
               />
             </div>
@@ -167,25 +251,23 @@ const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved 
             </div>
 
             <div className="input-group">
-              <label>Quantity</label>
+              <label>Old Price</label>
 
               <input
                 type="number"
-                name="qty"
-                value={formData.qty}
+                name="oldPrice"
+                value={formData.oldPrice}
                 onChange={handleChange}
               />
-
-              {errors.qty && <span className="error-text">{errors.qty}</span>}
             </div>
 
             <div className="input-group">
-              <label>Image URL</label>
+              <label>Discount</label>
 
               <input
-                type="text"
-                name="imageUrl"
-                value={formData.imageUrl}
+                type="number"
+                name="discount"
+                value={formData.discount}
                 onChange={handleChange}
               />
             </div>
@@ -200,13 +282,27 @@ const EditProductModal = ({ setOpenEditModal, product, categories = [], onSaved 
                 onChange={handleChange}
               />
             </div>
-          </div>
 
+            <div className="input-group full-width">
+              <label>Product Image</label>
+
+              <input type="file" accept="image/*" onChange={handleImage} />
+
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="preview-image"
+                />
+              )}
+            </div>
+          </div>{" "}
           <div className="modal-actions">
             <button
               type="button"
               className="cancel-btn"
               onClick={() => setOpenEditModal(false)}
+              disabled={saving}
             >
               Cancel
             </button>

@@ -37,10 +37,15 @@ export const createProduct = async (formData) => {
   }
 };
 
-export const updateProduct = async (id, data) => {
+export const updateProduct = async (id, formData) => {
   try {
-    const response = await axios.put(`${API}/${id}`, data);
-    return response.data;
+    const { data } = await axios.put(`${API}/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return data;
   } catch (error) {
     console.error("Error updating product:", error);
     throw error;
@@ -49,8 +54,8 @@ export const updateProduct = async (id, data) => {
 
 export const deleteProduct = async (id) => {
   try {
-    const response = await axios.delete(`${API}/${id}`);
-    return response.data;
+    await axios.delete(`${API}/${id}`);
+    return true;
   } catch (error) {
     console.error("Error deleting product:", error);
     throw error;

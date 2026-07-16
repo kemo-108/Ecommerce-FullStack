@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 import HeroImage from "../../image/image-Home.png";
 import AboutImage from "../../image/image-about.png";
@@ -7,10 +7,15 @@ import Category2 from "../../image/category2.png";
 import Category3 from "../../image/category3.png";
 import Category4 from "../../image/category4.png";
 import { Link } from "react-router-dom";
-import { FiTruck, FiShield, FiRefreshCw, FiHeadphones } from "react-icons/fi";
-import NowItems from "../NowItems/NowItems";
-import OurProducts from "../OurProduct/OurProduct";
-import Advertisement from "../Advertisement/Advertisement";
+import {
+  FiTruck,
+  FiShield,
+  FiRefreshCw,
+  FiHeadphones,
+  FiChevronRight,
+} from "react-icons/fi";
+import getProducts from "../../services/ProductService";
+import Product from "../Product/Product";
 
 const CATEGORIES = [
   { name: "Art Supplies", image: Category1, query: "Art Supplies" },
@@ -20,31 +25,57 @@ const CATEGORIES = [
 ];
 
 const Home = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getProducts().then((data) => setProducts(data || []));
+  }, []);
+
+  const dealsProducts = products.slice(0, 10);
+  const newProducts = products.slice(10, 20);
+
   return (
     <>
-      {/* ================= Hero ================= */}
-      <section className="hero">
-        <div className="container hero-inner">
-          <div className="hero-text">
-            <span className="hero-eyebrow">Art Corner</span>
-            <h1>Everything you need to create, learn and organize.</h1>
-            <p>
-              Quality stationery, art supplies and school essentials,
-              carefully picked and delivered to your door.
-            </p>
-            <div className="hero-actions">
+      {/* ================= Hero banner ================= */}
+      <section className="hero-banner">
+        <div className="container">
+          <div className="hero-banner-inner">
+            <img src={HeroImage} alt="Art Corner" />
+
+            <div className="hero-banner-content">
+              <span className="hero-tag">New Season</span>
+              <h1>Everything for school, office &amp; art — in one place</h1>
+              <p>Top brands, best prices, fast delivery all over Egypt.</p>
               <Link to="/shop" className="btn-primary">
-                Shop Now
-              </Link>
-              <Link to="/category" className="btn-outline">
-                Browse Categories
+                Shop Now <FiChevronRight />
               </Link>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="hero-image">
-            <img src={HeroImage} alt="Art Corner stationery" />
-          </div>
+      {/* ================= Category strip ================= */}
+      <section className="category-strip">
+        <div className="container category-strip-inner">
+          {CATEGORIES.map((cat) => (
+            <Link
+              to={`/shop?search=${encodeURIComponent(cat.query)}`}
+              className="category-chip"
+              key={cat.name}
+            >
+              <div className="category-chip-icon">
+                <img src={cat.image} alt={cat.name} />
+              </div>
+              <span>{cat.name}</span>
+            </Link>
+          ))}
+
+          <Link to="/category" className="category-chip category-chip-all">
+            <div className="category-chip-icon all-icon">
+              <FiChevronRight />
+            </div>
+            <span>All Categories</span>
+          </Link>
         </div>
       </section>
 
@@ -85,31 +116,70 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ================= Categories ================= */}
-      <section className="home-categories">
+      {/* ================= Deals grid ================= */}
+      <section className="home-section">
         <div className="container">
-          <div className="section-heading">
-            <h2>Shop by Category</h2>
-            <p>Find exactly what you're looking for</p>
+          <div className="section-head">
+            <h2>Today's Deals</h2>
+            <Link to="/shop" className="view-all">
+              View All <FiChevronRight />
+            </Link>
           </div>
 
-          <div className="categories-grid">
-            {CATEGORIES.map((cat) => (
-              <Link
-                to={`/shop?search=${encodeURIComponent(cat.query)}`}
-                className="category-card"
-                key={cat.name}
-              >
-                <img src={cat.image} alt={cat.name} />
-                <span>{cat.name}</span>
-              </Link>
+          <div className="home-product-grid">
+            {dealsProducts.map((product) => (
+              <Product
+                key={product.productId}
+                product={product}
+                showExtraBtn={true}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ================= New Arrivals ================= */}
-      <NowItems />
+      {/* ================= Promo tiles ================= */}
+      <section className="promo-tiles">
+        <div className="container promo-tiles-grid">
+          <Link to="/shop" className="promo-tile promo-tile-dark">
+            <span className="hero-tag">Limited Offer</span>
+            <h3>Back To School Essentials</h3>
+            <span className="tile-cta">
+              Shop now <FiChevronRight />
+            </span>
+          </Link>
+
+          <Link to="/shop" className="promo-tile promo-tile-primary">
+            <span className="hero-tag">New In</span>
+            <h3>Premium Art Supplies</h3>
+            <span className="tile-cta">
+              Shop now <FiChevronRight />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ================= New arrivals ================= */}
+      <section className="home-section">
+        <div className="container">
+          <div className="section-head">
+            <h2>New Arrivals</h2>
+            <Link to="/shop" className="view-all">
+              View All <FiChevronRight />
+            </Link>
+          </div>
+
+          <div className="home-product-grid">
+            {newProducts.map((product) => (
+              <Product
+                key={product.productId}
+                product={product}
+                showExtraBtn={true}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ================= Brand story ================= */}
       <section className="about-strip">
@@ -119,7 +189,7 @@ const Home = () => {
           </div>
 
           <div className="about-content">
-            <span className="hero-eyebrow">Since 2010</span>
+            <span className="hero-tag">Since 2010</span>
             <h2>A company for selling all stationery online</h2>
             <p>
               Your All-In-One Educational Partner For over 15 years, Art Corner
@@ -142,12 +212,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* ================= Featured Products ================= */}
-      <OurProducts />
-
-      {/* ================= Promo ================= */}
-      <Advertisement />
 
       {/* ================= Newsletter ================= */}
       <section className="newsletter">

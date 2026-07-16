@@ -14,10 +14,12 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
     name: "",
     category: "",
     brand: "",
+    code: "",
+    sku: "",
     price: "",
+    oldPrice: "",
     discount: "",
     stock: "",
-    sku: "",
     weight: "",
     description: "",
     images: [],
@@ -102,9 +104,13 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
 
       payload.append("ProductName", formData.name);
       payload.append("Price", formData.price);
-      payload.append("OldPrice", 0);
+      payload.append("OldPrice", formData.oldPrice || 0);
       payload.append("Discount", formData.discount || 0);
       payload.append("Brand", formData.brand);
+
+      // مهم جدًا
+      payload.append("Code", formData.code);
+
       payload.append("Sku", formData.sku);
       payload.append("Description", formData.description);
       payload.append("CategoryId", formData.category);
@@ -112,6 +118,12 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
       formData.images.forEach((file) => {
         payload.append("Images", file);
       });
+
+      console.log("Sending Product Data...");
+
+      for (const pair of payload.entries()) {
+        console.log(pair[0], pair[1]);
+      }
 
       await createProduct(payload);
 
@@ -123,8 +135,12 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
     } catch (error) {
       console.error(error);
 
+      console.log(error.response?.data);
+
       toast.error(
-        error.response?.data?.message || "Could not add the product.",
+        error.response?.data?.title ||
+          error.response?.data?.message ||
+          "Could not add the product.",
       );
     } finally {
       setSaving(false);
@@ -241,46 +257,17 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                 />
               </div>
             </div>
-            <div className="double-input">
-              <div className="input-group">
-                <label>Price</label>
-
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="Price"
-                />
-
-                {errors.price && (
-                  <span className="error-text">{errors.price}</span>
-                )}
-              </div>
-
-              <div className="input-group">
-                <label>Discount %</label>
-
-                <input
-                  type="number"
-                  name="discount"
-                  value={formData.discount}
-                  onChange={handleChange}
-                  placeholder="10"
-                />
-              </div>
-            </div>
 
             <div className="double-input">
               <div className="input-group">
-                <label>Stock</label>
+                <label>Code</label>
 
                 <input
-                  type="number"
-                  name="stock"
-                  value={formData.stock}
+                  type="text"
+                  name="code"
+                  value={formData.code}
                   onChange={handleChange}
-                  placeholder="0"
+                  placeholder="PRD-001"
                 />
               </div>
 
@@ -292,7 +279,62 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                   name="sku"
                   value={formData.sku}
                   onChange={handleChange}
-                  placeholder="PRD-001"
+                  placeholder="SKU-001"
+                />
+              </div>
+            </div>
+            <div className="double-input">
+              <div className="input-group">
+                <label>Price</label>
+
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  placeholder="0.00"
+                />
+
+                {errors.price && (
+                  <span className="error-text">{errors.price}</span>
+                )}
+              </div>
+
+              <div className="input-group">
+                <label>Old Price</label>
+
+                <input
+                  type="number"
+                  name="oldPrice"
+                  value={formData.oldPrice}
+                  onChange={handleChange}
+                  placeholder="0.00"
+                />
+              </div>
+            </div>
+
+            <div className="double-input">
+              <div className="input-group">
+                <label>Discount %</label>
+
+                <input
+                  type="number"
+                  name="discount"
+                  value={formData.discount}
+                  onChange={handleChange}
+                  placeholder="0"
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Stock</label>
+
+                <input
+                  type="number"
+                  name="stock"
+                  value={formData.stock}
+                  onChange={handleChange}
+                  placeholder="0"
                 />
               </div>
             </div>
@@ -305,7 +347,7 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                 name="weight"
                 value={formData.weight}
                 onChange={handleChange}
-                placeholder="1.5"
+                placeholder="0"
               />
             </div>
 

@@ -8,19 +8,25 @@ const DeleteProductModal = ({ product, setOpenDeleteModal, onDeleted }) => {
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!product || deleting) return;
+    if (!product?.productId || deleting) return;
 
     setDeleting(true);
+
     try {
       await deleteProduct(product.productId);
 
       toast.success("Product deleted successfully.");
+
       onDeleted?.();
+
       setOpenDeleteModal(false);
     } catch (error) {
       console.error(error);
+
       toast.error(
-        error.response?.data?.message || "Failed to delete product."
+        error.response?.data?.message ||
+          error.response?.data?.title ||
+          "Failed to delete product.",
       );
     } finally {
       setDeleting(false);
@@ -38,7 +44,7 @@ const DeleteProductModal = ({ product, setOpenDeleteModal, onDeleted }) => {
 
         <p>
           Are you sure you want to delete
-          <strong> {product?.productName}</strong>?
+          <strong> {product?.productName}</strong> ?
         </p>
 
         <span>This action cannot be undone.</span>

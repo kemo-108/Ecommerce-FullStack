@@ -1,0 +1,198 @@
+.account-sidebar {
+  background: #fff;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .05);
+  position: sticky;
+  top: 120px;
+}
+
+.account-user {
+  text-align: center;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.account-avatar {
+  width: 110px;
+  height: 110px;
+  margin: auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #ffd8e7;
+  box-shadow: 0 10px 25px rgba(255, 92, 138, .15);
+}
+
+.account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-user h3 {
+  margin-top: 18px;
+  font-size: 22px;
+  color: #222;
+}
+
+.account-user p {
+  margin-top: 6px;
+  color: #888;
+  font-size: 14px;
+}
+
+.account-menu {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: #444;
+  padding: 15px 18px;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: .3s;
+}
+
+.menu-link svg {
+  font-size: 20px;
+}
+
+.menu-link:hover {
+  background: #fdebf3;
+  color: #ff4f86;
+}
+
+.menu-link.active {
+  background: linear-gradient(135deg, #ff5c8a, #ff8eb1);
+  color: #fff;
+}
+
+.logout-btn {
+  margin-top: 35px;
+  width: 100%;
+  height: 52px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 12px;
+  background: #f5f5f5;
+  color: #444;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: .3s;
+}
+
+.logout-btn:hover {
+  background: #ff4f86;
+  color: white;
+}
+
+/* ============================= */
+/* Tablet */
+/* ============================= */
+
+@media (max-width:992px) {
+
+  .account-sidebar {
+    position: static;
+    padding: 20px;
+  }
+
+  .account-user {
+    display: none;
+  }
+
+  .account-menu {
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .account-menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  .menu-link {
+    min-width: 170px;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logout-btn {
+    display: none;
+  }
+
+}
+
+/* ============================= */
+/* Mobile */
+/* ============================= */
+
+@media (max-width:768px) {
+
+  .account-sidebar {
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .account-menu {
+    gap: 10px;
+  }
+
+  .menu-link {
+    min-width: 145px;
+    height: 50px;
+    padding: 0 16px;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .menu-link svg {
+    font-size: 18px;
+  }
+
+}
+
+/* ============================= */
+/* Small Mobile */
+/* ============================= */
+
+@media (max-width:480px) {
+
+  .account-sidebar {
+    padding: 12px;
+  }
+
+  .account-menu {
+    gap: 8px;
+  }
+
+  .menu-link {
+    min-width: 120px;
+    height: 46px;
+    padding: 0 14px;
+    font-size: 13px;
+    gap: 8px;
+  }
+
+  .menu-link span {
+    white-space: nowrap;
+  }
+
+}

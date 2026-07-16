@@ -1,0 +1,84 @@
+.delete-category-modal{
+    width:420px;
+    background:#fff;
+    border-radius:20px;
+    padding:35px 30px;
+    text-align:center;
+    animation:fade .3s;
+}
+
+.delete-icon{
+    width:80px;
+    height:80px;
+    margin:auto;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#FEF3F2;
+    color:#D92D20;
+
+    border-radius:50%;
+    margin-bottom:20px;
+}
+
+.delete-icon svg{
+    font-size:38px;
+}
+
+.delete-category-modal h2{
+    color:#101828;
+    margin-bottom:15px;
+}
+
+.delete-category-modal p{
+    color:#475467;
+    line-height:1.7;
+    margin-bottom:8px;
+}
+
+.delete-category-modal strong{
+    color:#101828;
+}
+
+.delete-category-modal span{
+    color:#98A2B3;
+    font-size:14px;
+}
+
+.delete-actions{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:35px;
+}
+
+.delete-actions button{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.delete-actions .cancel-btn{
+    background:#F2F4F7;
+    color:#344054;
+}
+
+.delete-actions .delete-btn{
+    background:#D92D20;
+    color:#fff;
+}
+
+.delete-actions .cancel-btn:hover{
+    background:#E4E7EC;
+}
+
+.delete-actions .delete-btn:hover{
+    background:#B42318;
+}

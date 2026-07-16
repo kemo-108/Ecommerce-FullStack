@@ -1,0 +1,68 @@
+.reports-tabs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.reports-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.report-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  padding: 12px 20px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+
+  white-space: nowrap;
+
+  color: #666;
+
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.report-tab svg {
+  font-size: 18px;
+}
+
+.report-tab:hover {
+  background: #f4f6fb;
+}
+
+.report-tab.active {
+  background: #ff4d8d;
+  color: white;
+
+  box-shadow: 0 8px 20px rgba(255, 77, 141, 0.25);
+}
+
+.report-tab.active svg {
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .report-tab {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}

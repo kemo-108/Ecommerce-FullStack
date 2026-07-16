@@ -1,0 +1,427 @@
+/* ================= Hero banner ================= */
+
+.hero-banner{
+    padding-top: 20px;
+}
+
+.hero-banner-inner{
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--secondary);
+}
+
+.hero-banner-inner img{
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    opacity: 0.55;
+}
+
+.hero-banner-content{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 60px;
+    max-width: 620px;
+}
+
+.hero-tag{
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    width: fit-content;
+}
+
+.hero-banner-content h1{
+    color: #fff;
+    font-size: 38px;
+    line-height: 1.25;
+    margin-bottom: 14px;
+}
+
+.hero-banner-content p{
+    color: #e7e7ea;
+    font-size: 15px;
+    margin-bottom: 26px;
+}
+
+.btn-primary{
+    background: var(--primary);
+    color: #fff;
+    padding: 13px 26px;
+    border-radius: 8px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+}
+
+.btn-primary:hover{
+    background: var(--primary-dark);
+    color: #fff;
+}
+
+.btn-outline{
+    border: 2px solid var(--dark);
+    color: var(--dark);
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.btn-outline:hover{
+    background: var(--dark);
+    color: #fff;
+}
+
+/* ================= Category strip ================= */
+
+.category-strip{
+    padding: 30px 0 10px;
+}
+
+.category-strip-inner{
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.category-chip{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    width: 96px;
+    text-align: center;
+}
+
+.category-chip-icon{
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.category-chip-icon img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category-chip span{
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.category-chip:hover .category-chip-icon{
+    border-color: var(--primary);
+}
+
+.all-icon{
+    background: var(--primary);
+    color: #fff;
+    font-size: 22px;
+}
+
+/* ================= Trust bar ================= */
+
+.trust-bar{
+    background: var(--surface);
+    padding: 26px 0;
+    margin: 30px 0 0;
+    border-top: 1px solid var(--gray-light);
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.trust-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.trust-item{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.trust-item svg{
+    font-size: 26px;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.trust-item h4{
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.trust-item p{
+    font-size: 12.5px;
+    color: var(--gray);
+}
+
+/* ================= Home sections ================= */
+
+.home-section{
+    padding: 40px 0;
+}
+
+.section-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.section-head h2{
+    font-size: 22px;
+}
+
+.view-all{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13.5px;
+}
+
+.home-product-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+/* ================= Promo tiles ================= */
+
+.promo-tiles{
+    padding: 10px 0 40px;
+}
+
+.promo-tiles-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.promo-tile{
+    position: relative;
+    border-radius: 12px;
+    padding: 34px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.promo-tile-dark{
+    background: var(--secondary);
+}
+
+.promo-tile-primary{
+    background: var(--primary);
+}
+
+.promo-tile h3{
+    color: #fff;
+    font-size: 22px;
+    max-width: 320px;
+}
+
+.tile-cta{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* ================= About strip ================= */
+
+.about-strip{
+    background: var(--surface);
+    padding: 60px 0;
+}
+
+.about-strip-inner{
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.about-image{
+    flex: 1;
+    max-width: 460px;
+}
+
+.about-image img{
+    border-radius: 12px;
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+}
+
+.about-content{
+    flex: 1;
+}
+
+.about-content h2{
+    font-size: 26px;
+    margin-bottom: 14px;
+}
+
+.about-content p{
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+/* ================= Newsletter ================= */
+
+.newsletter{
+    background: var(--secondary);
+    padding: 50px 0;
+}
+
+.newsletter-inner{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.newsletter h2{
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.newsletter p{
+    color: #cfcfd4;
+}
+
+.newsletter-form{
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    max-width: 420px;
+    width: 100%;
+}
+
+.newsletter-form input{
+    flex: 1;
+    padding: 13px 18px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+.newsletter-form button{
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.newsletter-form button:hover{
+    background: var(--primary-dark);
+}
+
+/* ================= Responsive ================= */
+
+@media (max-width: 1200px){
+    .home-product-grid{
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px){
+    .hero-banner-inner img{
+        height: 300px;
+    }
+    .hero-banner-content{
+        padding: 0 30px;
+    }
+    .hero-banner-content h1{
+        font-size: 28px;
+    }
+    .trust-grid{
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .home-product-grid{
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .promo-tiles-grid{
+        grid-template-columns: 1fr;
+    }
+    .about-strip-inner{
+        flex-direction: column;
+    }
+    .about-image{
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px){
+    .hero-banner-inner img{
+        height: 240px;
+    }
+    .hero-banner-content{
+        padding: 0 20px;
+    }
+    .hero-banner-content h1{
+        font-size: 21px;
+    }
+    .hero-banner-content p{
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+    .btn-primary{
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+    .home-product-grid{
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .section-head h2{
+        font-size: 18px;
+    }
+    .newsletter-inner{
+        text-align: center;
+        justify-content: center;
+    }
+    .newsletter-form{
+        flex-direction: column;
+    }
+}

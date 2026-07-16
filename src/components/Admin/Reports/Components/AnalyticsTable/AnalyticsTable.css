@@ -1,0 +1,111 @@
+.analytics-table {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .05);
+}
+
+.analytics-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.analytics-table-header h3 {
+  font-size: 20px;
+  color: #222;
+}
+
+.analytics-table-header button {
+  border: none;
+  background: #fff0f6;
+  color: #ff4d8d;
+
+  padding: 8px 14px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: .3s;
+}
+
+.analytics-table-header button:hover {
+  background: #ff4d8d;
+  color: #fff;
+}
+
+.analytics-table-wrapper {
+  overflow-x: auto;
+}
+
+.analytics-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analytics-table th {
+  text-align: left;
+  padding: 16px;
+
+  color: #888;
+
+  font-size: 14px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.analytics-table td {
+  padding: 18px 16px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.analytics-table tbody tr {
+  transition: .3s;
+}
+
+.analytics-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.product-info img {
+  width: 46px;
+  height: 46px;
+
+  border-radius: 12px;
+
+  object-fit: cover;
+}
+
+.product-info span {
+  font-weight: 600;
+  color: #333;
+}
+
+.category-badge {
+  background: #fff4f8;
+  color: #ff4d8d;
+
+  padding: 6px 12px;
+
+  border-radius: 30px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.revenue {
+  color: #22c55e;
+  font-weight: 700;
+}

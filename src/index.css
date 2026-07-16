@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+html{
+    scroll-behavior: smooth;
+}
+:root{
+/* ============ Art Corner design system — B-Tech style retail look ============ */
+--main-color: #F3F4F6;       /* light gray page background */
+--surface: #FFFFFF;          /* card/panel background */
+--primary: #E31E24;          /* bold red - main brand accent */
+--primary-dark: #B8151A;     /* hover/active state for primary */
+--primary-light: #FCE4E4;    /* soft tint for badges/backgrounds */
+--secondary: #1A1A1A;        /* near-black - header/footer/dark UI */
+--accent: #FFB800;           /* gold - deal badges, ratings */
+--dark: #1A1A1A;             /* text / dark surfaces */
+--gray: #6B7280;             /* secondary text */
+--gray-light: #E5E7EB;       /* borders / dividers */
+--success: #16A34A;
+--warning: #F59E0B;
+--danger: #DC2626;
+--white: #fff;
+--light: #F3F4F6;
+
+/* legacy variables kept so older components referencing them still resolve
+   to the new palette instead of the old pink/blue clash */
+--blue: var(--secondary);
+--indigo: var(--primary);
+--purple: var(--primary);
+--pink: var(--primary-light);
+--red: var(--danger);
+--orange: var(--accent);
+--yellow: var(--accent);
+--green: var(--success);
+--teal: var(--secondary);
+--cyan: var(--secondary);
+--gray-dark: var(--dark);
+--info: var(--secondary);
+}
+span{
+    color: var(--primary);
+}
+p{
+    color: var(--gray);
+    line-height: 1.6;
+}
+h1,h2,h3,h4,h5,h6{
+    color: var(--dark);
+    font-family: 'Inter', 'Roboto Condensed', Arial, sans-serif;
+}
+a{
+background-color: transparent;
+color: var(--dark);
+margin: 0;
+padding: 0;
+text-decoration: none;
+transition: color .25s ease, background-color .25s ease, transform .25s ease;
+}
+
+button{
+    transition: background-color .25s ease, color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+
+ul li{
+    list-style: none;
+}
+body {
+    font-family: "Lato", sans-serif;
+    background: var(--main-color);
+}
+.container{
+    width: 90%;
+    margin: 0 auto;
+max-width: 1350px;
+}
+img{
+    max-width: 100%;
+    display: block;
+}

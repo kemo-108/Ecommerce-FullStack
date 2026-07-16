@@ -1,0 +1,59 @@
+.settings-tabs {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+}
+
+.settings-tab {
+  height: 55px;
+  border: 1px solid #ececec;
+  background: #fff;
+  border-radius: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: .25s;
+}
+
+.settings-tab svg {
+  font-size: 18px;
+}
+
+.settings-tab:hover {
+  border-color: #ff3b7d;
+  color: #ff3b7d;
+}
+
+.settings-tab.active {
+  background: linear-gradient(135deg,#ff4f8b,#ff2d6f);
+  color: white;
+  border: none;
+}
+
+@media(max-width:1200px){
+
+.settings-tabs{
+
+grid-template-columns:repeat(3,1fr);
+
+}
+
+}
+
+@media(max-width:700px){
+
+.settings-tabs{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}

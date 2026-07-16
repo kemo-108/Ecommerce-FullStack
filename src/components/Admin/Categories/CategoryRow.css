@@ -1,0 +1,236 @@
+.category-cell{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.category-image{
+
+    width:65px;
+    height:65px;
+
+    border-radius:14px;
+
+    object-fit:cover;
+}
+
+.category-details h4{
+    font-size:18px;
+    color:#101828;
+    margin-bottom:5px;
+}
+
+.category-details p{
+    color:#667085;
+    font-size:14px;
+    line-height:1.5;
+    max-width:260px;
+}
+
+.products-box{
+    text-align:center;
+}
+
+.products-box h4{
+    font-size:22px;
+    color:#101828;
+}
+
+.products-box span{
+    color:#667085;
+    font-size:13px;
+}
+
+.featured-badge{
+
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-size:13px;
+    font-weight:600;
+}
+
+.featured-badge svg{
+    font-size:14px;
+}
+
+.featured-badge.yes{
+    background:#FFF7E6;
+    color:#F59E0B;
+}
+
+.featured-badge.no{
+    background:#F2F4F7;
+    color:#667085;
+}
+
+.status-badge{
+
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+
+    padding:8px 16px;
+
+    border-radius:30px;
+
+    font-size:13px;
+    font-weight:600;
+}
+
+.status-dot{
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+}
+
+.status-badge.active{
+    background:#ECFDF3;
+    color:#16A34A;
+}
+
+.status-badge.active .status-dot{
+    background:#16A34A;
+}
+
+.status-badge.hidden{
+    background:#FEF3F2;
+    color:#DC2626;
+}
+
+.status-badge.hidden .status-dot{
+    background:#DC2626;
+}
+
+.created-box h5{
+    font-size:15px;
+    color:#101828;
+    margin-bottom:4px;
+}
+
+.created-box span{
+    color:#667085;
+    font-size:13px;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+}
+
+.actions button{
+
+    width:40px;
+    height:40px;
+
+    border:none;
+
+    border-radius:10px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.actions svg{
+    font-size:18px;
+}
+
+.view-btn{
+    background:#EEF4FF;
+    color:#2563EB;
+}
+
+.edit-btn{
+    background:#FFF7E6;
+    color:#F59E0B;
+}
+
+.delete-btn{
+    background:#FEF3F2;
+    color:#DC2626;
+}
+
+.view-btn:hover{
+    background:#2563EB;
+    color:#fff;
+}
+
+.edit-btn:hover{
+    background:#F59E0B;
+    color:#fff;
+}
+
+.delete-btn:hover{
+    background:#DC2626;
+    color:#fff;
+}
+
+/* ================= Responsive ================= */
+
+@media(max-width:1200px){
+
+.category-details p{
+    max-width:180px;
+}
+
+}
+
+@media(max-width:992px){
+
+.category-cell{
+    min-width:260px;
+}
+
+.actions{
+    min-width:150px;
+}
+
+}
+
+@media(max-width:768px){
+
+.category-image{
+    width:55px;
+    height:55px;
+}
+
+.category-details h4{
+    font-size:16px;
+}
+
+.category-details p{
+    font-size:13px;
+}
+
+.products-box h4{
+    font-size:18px;
+}
+
+}
+
+@media(max-width:576px){
+
+.actions button{
+
+    width:36px;
+    height:36px;
+
+}
+
+.actions svg{
+    font-size:16px;
+}
+
+}

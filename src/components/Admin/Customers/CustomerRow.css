@@ -1,0 +1,171 @@
+.customer-column {
+  min-width: 340px;
+}
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.customer-avatar-wrapper {
+  position: relative;
+}
+
+.customer-avatar-wrapper img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f5f5f5;
+}
+
+.customer-online {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.customer-online.active {
+  background: #22c55e;
+}
+
+.customer-online.blocked {
+  background: #ef4444;
+}
+
+.customer-details h4 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #222;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.customer-details p,
+.customer-details small {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.customer-details small {
+  color: #999;
+}
+
+.vip-badge {
+  background: #9333ea;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.new-badge {
+  background: #3b82f6;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.orders-badge,
+.spent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.orders-badge {
+  background: #eef4ff;
+  color: #2563eb;
+}
+
+.spent-badge {
+  background: #eaf8ef;
+  color: #16a34a;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 95px;
+  padding: 7px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status.active {
+  background: #e8f9ef;
+  color: #16a34a;
+}
+
+.status.blocked {
+  background: #fdecec;
+  color: #dc2626;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions button {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 10px;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.view-btn:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .customer-column {
+    min-width: 300px;
+  }
+
+  .customer-details h4 {
+    font-size: 15px;
+  }
+
+  .customer-details p,
+  .customer-details small {
+    font-size: 12px;
+  }
+}

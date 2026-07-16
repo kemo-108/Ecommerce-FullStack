@@ -1,0 +1,35 @@
+.coupons-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.coupons-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.coupons-charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width:1200px) {
+  .coupons-stats {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@media (max-width:992px) {
+  .coupons-charts {
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:768px) {
+  .coupons-stats {
+    grid-template-columns:1fr;
+  }
+}

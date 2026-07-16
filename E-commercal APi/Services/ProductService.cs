@@ -127,7 +127,8 @@ namespace E_commercal_APi.Services
 
         public async Task<bool> UpdateAsync(int id, ProductUpdateVM dto)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.ProductId == id);
 
             if (product == null)
                 return false;
@@ -137,12 +138,45 @@ namespace E_commercal_APi.Services
             product.OldPrice = dto.OldPrice;
             product.Discount = dto.Discount;
             product.Brand = dto.Brand;
+            product.Code = dto.Code;
             product.Sku = dto.Sku;
             product.Description = dto.Description;
             product.CategoryId = dto.CategoryId;
             product.UpdatedAt = DateTime.UtcNow;
 
+            // لو المستخدم اختار صورة جديدة
+            if (dto.Image != null)
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "products");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // حذف الصورة القديمة (اختياري لكن أنضف)
+                if (!string.IsNullOrEmpty(product.ImageUrl))
+                {
+                    var oldPath = Path.Combine(
+                        _env.WebRootPath,
+                        product.ImageUrl.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString())
+                    );
+
+                    if (File.Exists(oldPath))
+                    {
+                        File.Delete(oldPath);
+                    }
+                }
+
+                var fileName = $"{Guid.NewGuid()}_{dto.Image.FileName}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
+
+                product.ImageUrl = $"/uploads/products/{fileName}";
+            }
+
             await _context.SaveChangesAsync();
+
             return true;
         }
     }

@@ -43,7 +43,10 @@ namespace E_commercal_APi.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductUpdateVM dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateProduct(
+            int id,
+            [FromForm] ProductUpdateVM dto)
         {
             var updated = await _productService.UpdateAsync(id, dto);
 

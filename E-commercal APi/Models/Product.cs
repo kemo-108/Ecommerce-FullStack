@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+//s
 namespace E_commercal_APi.Models
 {
     [Index(nameof(Code), IsUnique = true)]

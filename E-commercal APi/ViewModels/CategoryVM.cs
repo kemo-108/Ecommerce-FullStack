@@ -27,5 +27,8 @@
         public string Description { get; set; }
         public bool Featured { get; set; }
         public string Status { get; set; }
+
+        // أضف السطر ده
+        public IFormFile? Image { get; set; }
     }
 }

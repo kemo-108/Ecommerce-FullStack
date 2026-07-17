@@ -1,73 +1,73 @@
-﻿using E_commercal_APi.Services;
+using E_commercal_APi.Services;
 using E_commercal_APi.ViewModels;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commercal_APi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/products")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IWebHostEnvironment _env;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IWebHostEnvironment env)
         {
             _productService = productService;
+            _env = env;
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAll()
         {
-            var products = await _productService.GetAllProductsAsync();
+            var products = await _productService.GetAllAsync();
             return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var Product = await _productService.GetProductByIdAsync(id);
-            if (Product == null)
-                return NotFound();
-            return Ok(Product);
+            var product = await _productService.GetByIdAsync(id);
+            return product == null ? NotFound(new { message = "Product not found." }) : Ok(product);
         }
 
         [HttpPost]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> CreateProduct([FromForm] ProductCreateVM dto)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Create([FromForm] ProductCreateDto dto)
         {
-            var created = await _productService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetProductById), new { id = created.ProductId }, created);
+            var created = await _productService.CreateAsync(dto, _env.WebRootPath);
+            return CreatedAtAction(nameof(GetById), new { id = created.ProductId }, created);
         }
-
 
         [HttpPut("{id}")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UpdateProduct(
-            int id,
-            [FromForm] ProductUpdateVM dto)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Update(int id, ProductUpdateDto dto)
         {
-            var updated = await _productService.UpdateAsync(id, dto);
-
-            if (!updated)
-                return NotFound(new { message = $"Product with id {id} was not found." });
-
-            return NoContent();
+            try
+            {
+                var updated = await _productService.UpdateAsync(id, dto);
+                return Ok(updated);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _productService.DeleteAsync(id);
-
-            if (!deleted)
-                return NotFound(new { message = $"Product with id {id} was not found." });
-
-            return NoContent();
+            try
+            {
+                await _productService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
-
-
 }

@@ -1,4 +1,4 @@
-﻿using E_commercal_APi.Data;
+using E_commercal_APi.Data;
 using E_commercal_APi.Models;
 using E_commercal_APi.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -7,177 +7,155 @@ namespace E_commercal_APi.Services
 {
     public class ProductService : IProductService
     {
-        private readonly AppDbContext _context;
-        private readonly IWebHostEnvironment _env;
+        private readonly AppDbContext _db;
 
-        public ProductService(AppDbContext context, IWebHostEnvironment env)
+        public ProductService(AppDbContext db)
         {
-            _context = context;
-            _env = env;
+            _db = db;
         }
 
-        public async Task<ProductVM> CreateAsync(ProductCreateVM dto)
+        private static ProductDto ToDto(Product p) => new()
         {
-            var product = new Product
-            {
-                ProductName = dto.ProductName,
-                Price = dto.Price,
-                OldPrice = dto.OldPrice,
-                Discount = dto.Discount,
-                Brand = dto.Brand,
-                Code = dto.Code,
-                Sku = dto.Sku,
-                Description = dto.Description,
-                CategoryId = dto.CategoryId,
-                CreatedAt = DateTime.UtcNow
-            };
+            ProductId = p.ProductId,
+            ProductName = p.ProductName,
+            Brand = p.Brand,
+            Code = p.Code,
+            ImageUrl = p.ImageUrl,
+            Price = p.Price,
+            OldPrice = p.OldPrice,
+            Rating = p.Rating,
+            Description = p.Description,
+            Category = p.Category?.Name,
+            CategoryId = p.CategoryId,
+            Qty = p.InventoryRecords?.Sum(i => i.Stock) ?? 0,
+            Status = p.Status,
+            CreatedAt = p.CreatedAt.ToString("dd MMM yyyy"),
+        };
+
+        public async Task<List<ProductDto>> GetAllAsync()
+        {
+            var products = await _db.Products
+                .Include(p => p.Category)
+                .Include(p => p.InventoryRecords)
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
+
+            return products.Select(ToDto).ToList();
+        }
+
+        public async Task<ProductDto?> GetByIdAsync(int id)
+        {
+            var product = await _db.Products
+                .Include(p => p.Category)
+                .Include(p => p.InventoryRecords)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            return product == null ? null : ToDto(product);
+        }
+
+        public async Task<ProductDto> CreateAsync(ProductCreateDto dto, string webRootPath)
+        {
+            string? imageUrl = null;
 
             if (dto.Images != null && dto.Images.Count > 0)
             {
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "products");
+                var uploadsFolder = Path.Combine(webRootPath, "uploads", "products");
                 Directory.CreateDirectory(uploadsFolder);
 
-                var savedUrls = new List<string>();
-
-                foreach (var file in dto.Images)
-                {
-                    var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-
-                    savedUrls.Add($"/uploads/products/{fileName}");
-                }
-
-                product.ImageUrl = savedUrls[0];
-
-                if (savedUrls.Count > 1)
-                {
-                    product.Images = savedUrls.Skip(1)
-                        .Select((url, index) => new ProductImage { ImageUrl = url, SortOrder = index })
-                        .ToList();
-                }
-            }
-
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-
-            return await GetProductByIdAsync(product.ProductId);
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.ProductId == id);
-
-            if (product == null)
-                return false;
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<IEnumerable<ProductVM>> GetAllProductsAsync()
-        {
-            var products = await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.InventoryRecords)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return products.Select(p => new ProductVM
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                ImageUrl = p.ImageUrl,
-                Price = p.Price,
-                Category = p.Category?.Name,
-                Rating = p.Rating,
-                Stock = p.InventoryRecords?.Sum(i => i.Stock) ?? 0
-            });
-        }
-        public async Task<ProductVM?> GetProductByIdAsync(int id)
-        {
-            var p = await _context.Products
-                .Include(x => x.Category)
-                .Include(x => x.InventoryRecords)
-                .FirstOrDefaultAsync(x => x.ProductId == id);
-
-            if (p == null) return null;
-
-            return new ProductVM
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                ImageUrl = p.ImageUrl,
-                Price = p.Price,
-                Category = p.Category?.Name,
-                Rating = p.Rating,
-                Stock = p.InventoryRecords?.Sum(i => i.Stock) ?? 0,
-                OldPrice = p.OldPrice,
-                Discount = p.Discount,
-                Brand = p.Brand,
-                Sku = p.Sku,
-                Description = p.Description
-            };
-        }
-
-        public async Task<bool> UpdateAsync(int id, ProductUpdateVM dto)
-        {
-            var product = await _context.Products
-                .FirstOrDefaultAsync(p => p.ProductId == id);
-
-            if (product == null)
-                return false;
-
-            product.ProductName = dto.ProductName;
-            product.Price = dto.Price;
-            product.OldPrice = dto.OldPrice;
-            product.Discount = dto.Discount;
-            product.Brand = dto.Brand;
-            product.Code = dto.Code;
-            product.Sku = dto.Sku;
-            product.Description = dto.Description;
-            product.CategoryId = dto.CategoryId;
-            product.UpdatedAt = DateTime.UtcNow;
-
-            // لو المستخدم اختار صورة جديدة
-            if (dto.Image != null)
-            {
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "products");
-                Directory.CreateDirectory(uploadsFolder);
-
-                // حذف الصورة القديمة (اختياري لكن أنضف)
-                if (!string.IsNullOrEmpty(product.ImageUrl))
-                {
-                    var oldPath = Path.Combine(
-                        _env.WebRootPath,
-                        product.ImageUrl.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString())
-                    );
-
-                    if (File.Exists(oldPath))
-                    {
-                        File.Delete(oldPath);
-                    }
-                }
-
-                var fileName = $"{Guid.NewGuid()}_{dto.Image.FileName}";
+                var file = dto.Images[0];
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await dto.Image.CopyToAsync(stream);
+                    await file.CopyToAsync(stream);
                 }
 
-                product.ImageUrl = $"/uploads/products/{fileName}";
+                imageUrl = $"uploads/products/{fileName}";
             }
 
-            await _context.SaveChangesAsync();
+            var category = await _db.Categories
+                .FirstOrDefaultAsync(c => c.Name == dto.Category);
 
-            return true;
+            var product = new Product
+            {
+                ProductName = dto.ProductName,
+                Brand = dto.Brand,
+                CategoryId = category?.Id,
+                Code = dto.Code,
+                Price = dto.Price,
+                OldPrice = dto.Discount > 0 ? dto.Price / (1 - dto.Discount / 100) : null,
+                Description = dto.Description,
+                ImageUrl = imageUrl,
+                Status = "active",
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            _db.Products.Add(product);
+            await _db.SaveChangesAsync();
+
+            // Seed an inventory record in the default warehouse so Qty shows up immediately.
+            var defaultWarehouse = await _db.Warehouses.FirstOrDefaultAsync();
+            if (defaultWarehouse != null)
+            {
+                _db.Inventory.Add(new Inventory
+                {
+                    ProductId = product.ProductId,
+                    WarehouseId = defaultWarehouse.Id,
+                    Sku = dto.Code ?? $"SKU-{product.ProductId}",
+                    Stock = dto.Qty,
+                    MinStock = 5,
+                    LastUpdated = DateTime.UtcNow,
+                });
+                await _db.SaveChangesAsync();
+            }
+
+            var created = await GetByIdAsync(product.ProductId);
+            return created!;
+        }
+
+        public async Task<ProductDto> UpdateAsync(int id, ProductUpdateDto dto)
+        {
+            var product = await _db.Products.FindAsync(id)
+                ?? throw new KeyNotFoundException("Product not found.");
+
+            product.ProductName = dto.ProductName;
+            product.Brand = dto.Brand;
+            product.Price = dto.Price;
+            product.Description = dto.Description;
+            product.UpdatedAt = DateTime.UtcNow;
+
+            if (!string.IsNullOrWhiteSpace(dto.ImageUrl))
+                product.ImageUrl = dto.ImageUrl;
+
+            if (!string.IsNullOrWhiteSpace(dto.Category))
+            {
+                var category = await _db.Categories
+                    .FirstOrDefaultAsync(c => c.Name == dto.Category);
+                if (category != null) product.CategoryId = category.Id;
+            }
+
+            var inventory = await _db.Inventory
+                .FirstOrDefaultAsync(i => i.ProductId == id);
+            if (inventory != null)
+            {
+                inventory.Stock = dto.Qty;
+                inventory.LastUpdated = DateTime.UtcNow;
+            }
+
+            await _db.SaveChangesAsync();
+
+            var updated = await GetByIdAsync(id);
+            return updated!;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var product = await _db.Products.FindAsync(id)
+                ?? throw new KeyNotFoundException("Product not found.");
+
+            _db.Products.Remove(product);
+            await _db.SaveChangesAsync();
         }
     }
 }

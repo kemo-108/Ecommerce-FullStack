@@ -29,20 +29,21 @@ namespace E_commercal_APi.Controllers
             var category = await _categoryService.GetCategoryByIdAsync(id);
             return category == null ? NotFound(new { message = $"Category with id {id} was not found." }) : Ok(category);
         }
-
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> CreateCategory([FromForm] CategoryCreateVM dto)
-        {
-            var created = await _categoryService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetCategoryById), new { id = created.Id }, created);
-        }
+        public async Task<IActionResult> CreateCategory([FromForm] CategoryCreateVM dto);
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryUpdateVM dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateCategory(
+            int id,
+            [FromForm] CategoryUpdateVM dto)
         {
             var updated = await _categoryService.UpdateAsync(id, dto);
-            return updated ? NoContent() : NotFound(new { message = $"Category with id {id} was not found." });
+
+            return updated
+                ? NoContent()
+                : NotFound(new { message = $"Category with id {id} was not found." });
         }
 
         [HttpDelete("{id}")]

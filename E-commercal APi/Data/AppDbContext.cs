@@ -1,15 +1,12 @@
-﻿using E_commercal_APi.Models;
+using E_commercal_APi.Models;
 
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 namespace E_commercal_APi.Data
 {
-    public class AppDbContext:DbContext
+    public class AppDbContext : DbContext
     {
-
-        public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Address> Addresses { get; set; }
@@ -36,26 +33,5 @@ namespace E_commercal_APi.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Refund>()
-                .HasOne(r => r.User)
-                .WithMany()
-                .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Return>()
-                .HasOne(r => r.User)
-                .WithMany()
-                .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-        }
-
-
-
-
     }
 }

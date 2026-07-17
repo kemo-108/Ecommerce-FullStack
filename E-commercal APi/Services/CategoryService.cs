@@ -1,4 +1,4 @@
-﻿using E_commercal_APi.Data;
+using E_commercal_APi.Data;
 using E_commercal_APi.Models;
 using E_commercal_APi.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -7,109 +7,80 @@ namespace E_commercal_APi.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly AppDbContext _context;
-        private readonly IWebHostEnvironment _env;
+        private readonly AppDbContext _db;
 
-        public CategoryService(AppDbContext context, IWebHostEnvironment env)
+        public CategoryService(AppDbContext db)
         {
-            _context = context;
-            _env = env;
+            _db = db;
         }
 
-        public async Task<IEnumerable<CategoryVM>> GetAllCategoriesAsync()
+        private CategoryDto ToDto(Category c) => new()
         {
-            var categories = await _context.Categories
-                .Include(c => c.Products)
-                .AsNoTracking()
+            Id = c.Id,
+            Name = c.Name,
+            Description = c.Description,
+            Image = c.Image,
+            Featured = c.Featured,
+            Status = c.Status,
+            Products = _db.Products.Count(p => p.CategoryId == c.Id),
+        };
+
+        public async Task<List<CategoryDto>> GetAllAsync()
+        {
+            var categories = await _db.Categories
+                .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
 
-            return categories.Select(MapToVM);
+            return categories.Select(ToDto).ToList();
         }
 
-        public async Task<CategoryVM?> GetCategoryByIdAsync(int id)
+        public async Task<CategoryDto?> GetByIdAsync(int id)
         {
-            var category = await _context.Categories
-                .Include(c => c.Products)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.Id == id);
-
-            return category == null ? null : MapToVM(category);
+            var category = await _db.Categories.FindAsync(id);
+            return category == null ? null : ToDto(category);
         }
 
-        public async Task<CategoryVM> CreateAsync(CategoryCreateVM dto)
+        public async Task<CategoryDto> CreateAsync(CategoryCreateDto dto)
         {
             var category = new Category
             {
                 Name = dto.Name,
                 Description = dto.Description,
+                Image = dto.Image,
                 Featured = dto.Featured,
-                Status = string.IsNullOrWhiteSpace(dto.Status) ? "active" : dto.Status,
-                CreatedAt = DateTime.UtcNow
+                Status = dto.Status,
+                CreatedAt = DateTime.UtcNow,
             };
 
-            if (dto.Image != null)
-            {
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "categories");
-                Directory.CreateDirectory(uploadsFolder);
+            _db.Categories.Add(category);
+            await _db.SaveChangesAsync();
 
-                var fileName = $"{Guid.NewGuid()}_{dto.Image.FileName}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await dto.Image.CopyToAsync(stream);
-                }
-
-                category.Image = $"/uploads/categories/{fileName}";
-            }
-
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
-
-            return await GetCategoryByIdAsync(category.Id);
+            return ToDto(category);
         }
 
-        public async Task<bool> UpdateAsync(int id, CategoryUpdateVM dto)
+        public async Task<CategoryDto> UpdateAsync(int id, CategoryCreateDto dto)
         {
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
-
-            if (category == null)
-                return false;
+            var category = await _db.Categories.FindAsync(id)
+                ?? throw new KeyNotFoundException("Category not found.");
 
             category.Name = dto.Name;
             category.Description = dto.Description;
+            category.Image = dto.Image;
             category.Featured = dto.Featured;
             category.Status = dto.Status;
 
-            await _context.SaveChangesAsync();
-            return true;
+            await _db.SaveChangesAsync();
+
+            return ToDto(category);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            var category = await _db.Categories.FindAsync(id)
+                ?? throw new KeyNotFoundException("Category not found.");
 
-            if (category == null)
-                return false;
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        private static CategoryVM MapToVM(Category c)
-        {
-            return new CategoryVM
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Image = c.Image,
-                Description = c.Description,
-                Featured = c.Featured,
-                Status = c.Status,
-                ProductsCount = c.Products?.Count ?? 0,
-                CreatedAt = c.CreatedAt
-            };
+            _db.Categories.Remove(category);
+            await _db.SaveChangesAsync();
         }
     }
 }

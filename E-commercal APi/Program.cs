@@ -3,8 +3,6 @@ using E_commercal_APi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
-using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,40 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // ================= Swagger =================
+// NOTE: Microsoft.OpenApi 2.x (used by Swashbuckle.AspNetCore 10.x on .NET 10)
+// removed the Microsoft.OpenApi.Models namespace along with OpenApiReference /
+// OpenApiSecurityScheme.Reference, which is what broke the build. We keep
+// Swagger itself (SwaggerGen + SwaggerUI), just without the custom JWT
+// "Authorize" padlock button. Auth still works fine when calling the API from
+// the React frontend or Postman - you just can't test [Authorize] endpoints
+// directly from the Swagger UI page. Paste the token in Postman's
+// Authorization tab instead: "Bearer {your token}".
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "E-commercial API",
-        Version = "v1"
-    });
-
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter JWT Token only"
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
 
 // ================= Database =================
 builder.Services.AddDbContext<AppDbContext>(options =>

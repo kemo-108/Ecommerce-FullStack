@@ -2,21 +2,21 @@ import { useState } from "react";
 import { FiSave, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "./EditCustomerModal.css";
+import { updateCustomer } from "../../../../../services/CustomersService";
 
 const EditCustomerModal = ({
   customer,
-  customers,
-  setCustomers,
+  refreshCustomers,
   setOpenEditModal,
 }) => {
   const [formData, setFormData] = useState({
     customerName: customer?.customerName || "",
     email: customer?.email || "",
     phone: customer?.phone || "",
-    address: customer?.address || "",
     status: customer?.status || "Active",
-    type: customer?.type || "Regular",
   });
+
+  const [saving, setSaving] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -25,25 +25,22 @@ const EditCustomerModal = ({
     }));
   };
 
-  setCustomers(
-    customers.map((item) =>
-      item.customerId === customer.customerId
-        ? {
-            ...item,
-            customerName: formData.customerName,
-            email: formData.email,
-            phone: formData.phone,
-            address: formData.address,
-            status: formData.status,
-            type: formData.type,
-          }
-        : item,
-    ),
-  );
-
-  toast.success("Customer updated successfully.");
-
-  setOpenEditModal(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await updateCustomer(customer.customerId, formData);
+      toast.success("Customer updated successfully.");
+      await refreshCustomers();
+      setOpenEditModal(false);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to update customer."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="modal-overlay">
@@ -95,17 +92,6 @@ const EditCustomerModal = ({
             </div>
 
             <div className="input-group">
-              <label>Address</label>
-
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="input-group">
               <label>Status</label>
 
               <select
@@ -115,16 +101,6 @@ const EditCustomerModal = ({
               >
                 <option>Active</option>
                 <option>Blocked</option>
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label>Customer Type</label>
-
-              <select name="type" value={formData.type} onChange={handleChange}>
-                <option>Regular</option>
-                <option>VIP</option>
-                <option>New</option>
               </select>
             </div>
           </div>
@@ -138,9 +114,9 @@ const EditCustomerModal = ({
               Cancel
             </button>
 
-            <button type="submit" className="save-btn">
+            <button type="submit" className="save-btn" disabled={saving}>
               <FiSave />
-              Save Changes
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

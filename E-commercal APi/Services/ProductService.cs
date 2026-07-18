@@ -56,22 +56,31 @@ namespace E_commercal_APi.Services
         public async Task<ProductDto> CreateAsync(ProductCreateDto dto, string webRootPath)
         {
             string? imageUrl = null;
+            var galleryImages = new List<ProductImage>();
 
             if (dto.Images != null && dto.Images.Count > 0)
             {
                 var uploadsFolder = Path.Combine(webRootPath, "uploads", "products");
                 Directory.CreateDirectory(uploadsFolder);
 
-                var file = dto.Images[0];
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                for (int i = 0; i < dto.Images.Count; i++)
                 {
-                    await file.CopyToAsync(stream);
-                }
+                    var file = dto.Images[i];
+                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
 
-                imageUrl = $"uploads/products/{fileName}";
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    var url = $"uploads/products/{fileName}";
+
+                    if (i == 0)
+                        imageUrl = url; // first image = thumbnail
+                    else
+                        galleryImages.Add(new ProductImage { ImageUrl = url, SortOrder = i - 1 });
+                }
             }
 
             var category = await _db.Categories
@@ -90,6 +99,9 @@ namespace E_commercal_APi.Services
                 Status = "active",
                 CreatedAt = DateTime.UtcNow,
             };
+
+            if (galleryImages.Count > 0)
+                product.Images = galleryImages;
 
             _db.Products.Add(product);
             await _db.SaveChangesAsync();
@@ -151,8 +163,23 @@ namespace E_commercal_APi.Services
 
         public async Task DeleteAsync(int id)
         {
-            var product = await _db.Products.FindAsync(id)
+            var product = await _db.Products
+                .Include(p => p.CartItems)
+                .Include(p => p.WishlistedBy)
+                .Include(p => p.OrderItems)
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.ProductId == id)
                 ?? throw new KeyNotFoundException("Product not found.");
+
+            if (product.OrderItems.Any() || product.Reviews.Any())
+                throw new InvalidOperationException(
+                    "This product has order or review history and can't be deleted.");
+
+            if (product.CartItems.Any())
+                _db.CartItems.RemoveRange(product.CartItems);
+
+            if (product.WishlistedBy.Any())
+                _db.Wishlists.RemoveRange(product.WishlistedBy);
 
             _db.Products.Remove(product);
             await _db.SaveChangesAsync();

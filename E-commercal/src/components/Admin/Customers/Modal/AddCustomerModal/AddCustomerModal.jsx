@@ -1,41 +1,24 @@
 import { useState } from "react";
-import { FiUploadCloud, FiUser, FiX } from "react-icons/fi";
+import { FiUser, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "./AddCustomerModal.css";
+import { createCustomer } from "../../../../../services/CustomersService";
 
-const AddCustomerModal = ({ setOpenAddModal, customers, setCustomers }) => {
+const AddCustomerModal = ({ setOpenAddModal, refreshCustomers }) => {
   const [formData, setFormData] = useState({
     customerName: "",
     email: "",
     phone: "",
-    address: "",
     status: "Active",
-    type: "Regular",
-    avatar: null,
-    notes: "",
   });
 
-  const [preview, setPreview] = useState(null);
-
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleImage = (e) => {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    setPreview(URL.createObjectURL(file));
-
-    setFormData((prev) => ({
-      ...prev,
-      avatar: file,
     }));
   };
 
@@ -54,44 +37,28 @@ const AddCustomerModal = ({ setOpenAddModal, customers, setCustomers }) => {
       newErrors.phone = "Phone is required";
     }
 
-    if (!formData.address.trim()) {
-      newErrors.address = "Address is required";
-    }
-
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
   };
 
-  const newCustomer = {
-    customerId: customers.length + 1,
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
 
-    customerName: formData.customerName,
-
-    email: formData.email,
-
-    phone: formData.phone,
-
-    address: formData.address,
-
-    avatar: preview || "https://i.pravatar.cc/150",
-
-    totalOrders: 0,
-
-    totalSpent: 0,
-
-    status: formData.status,
-
-    type: formData.type,
-
-    joined: new Date().toLocaleDateString(),
+    setSaving(true);
+    try {
+      await createCustomer(formData);
+      toast.success("Customer added successfully.");
+      await refreshCustomers();
+      setOpenAddModal(false);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to add customer."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
-
-  setCustomers((prev) => [...prev, newCustomer]);
-
-  toast.success("Customer added successfully.");
-
-  setOpenAddModal(false);
 
   return (
     <div className="modal-overlay">
@@ -112,21 +79,8 @@ const AddCustomerModal = ({ setOpenAddModal, customers, setCustomers }) => {
 
           <div className="avatar-section">
             <div className="avatar-upload">
-              {preview ? <img src={preview} alt="avatar" /> : <FiUser />}
+              <FiUser />
             </div>
-
-            <label htmlFor="avatar" className="upload-btn">
-              <FiUploadCloud />
-              Upload Photo
-            </label>
-
-            <input
-              id="avatar"
-              hidden
-              type="file"
-              accept="image/*"
-              onChange={handleImage}
-            />
           </div>
 
           {/* Form */}
@@ -180,22 +134,6 @@ const AddCustomerModal = ({ setOpenAddModal, customers, setCustomers }) => {
               </div>
 
               <div className="input-group">
-                <label>Address</label>
-
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                />
-
-                {errors.address && (
-                  <span className="error-text">{errors.address}</span>
-                )}
-              </div>
-            </div>{" "}
-            <div className="double-input">
-              <div className="input-group">
                 <label>Status</label>
 
                 <select
@@ -207,31 +145,6 @@ const AddCustomerModal = ({ setOpenAddModal, customers, setCustomers }) => {
                   <option value="Blocked">Blocked</option>
                 </select>
               </div>
-
-              <div className="input-group">
-                <label>Customer Type</label>
-
-                <select
-                  name="type"
-                  value={formData.type}
-                  onChange={handleChange}
-                >
-                  <option value="Regular">Regular</option>
-                  <option value="VIP">VIP</option>
-                  <option value="New">New</option>
-                </select>
-              </div>
-            </div>
-            <div className="input-group full-width">
-              <label>Notes</label>
-
-              <textarea
-                rows="5"
-                name="notes"
-                placeholder="Write customer notes..."
-                value={formData.notes}
-                onChange={handleChange}
-              ></textarea>
             </div>
           </div>
         </div>
@@ -241,8 +154,8 @@ const AddCustomerModal = ({ setOpenAddModal, customers, setCustomers }) => {
             Cancel
           </button>
 
-          <button className="save-btn" onClick={handleSubmit}>
-            Save Customer
+          <button className="save-btn" onClick={handleSubmit} disabled={saving}>
+            {saving ? "Saving..." : "Save Customer"}
           </button>
         </div>
       </div>

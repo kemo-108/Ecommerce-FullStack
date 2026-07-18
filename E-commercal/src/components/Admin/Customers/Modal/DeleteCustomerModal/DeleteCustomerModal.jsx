@@ -1,20 +1,31 @@
+import { useState } from "react";
 import { FiTrash2, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "./DeleteCustomerModal.css";
+import { deleteCustomer } from "../../../../../services/CustomersService";
 
 const DeleteCustomerModal = ({
   customer,
-  customers,
-  setCustomers,
+  refreshCustomers,
   setOpenDeleteModal,
 }) => {
-  setCustomers(
-    customers.filter((item) => item.customerId !== customer.customerId),
-  );
+  const [deleting, setDeleting] = useState(false);
 
-  toast.success("Customer deleted successfully.");
-
-  setOpenDeleteModal(false);
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await deleteCustomer(customer.customerId);
+      toast.success("Customer deleted successfully.");
+      await refreshCustomers();
+      setOpenDeleteModal(false);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to delete customer."
+      );
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   if (!customer) return null;
 
@@ -53,9 +64,9 @@ const DeleteCustomerModal = ({
             Cancel
           </button>
 
-          <button className="delete-btn" onClick={handleDelete}>
+          <button className="delete-btn" onClick={handleDelete} disabled={deleting}>
             <FiTrash2 />
-            Delete
+            {deleting ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>

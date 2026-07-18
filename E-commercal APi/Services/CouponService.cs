@@ -22,8 +22,8 @@ namespace E_commercal_APi.Services
             DiscountType = c.DiscountType,
             DiscountValue = c.DiscountValue,
             MinOrder = c.MinOrder,
-            Usage = c.Usage,
-            UsageLimit = c.UsageLimit,
+            Usage = c.Useage,
+            UsageLimit = c.UseageLimit,
             ExpiryDate = c.ExpiryDate,
             Status = c.Status,
         };
@@ -43,8 +43,8 @@ namespace E_commercal_APi.Services
                 DiscountType = dto.DiscountType,
                 DiscountValue = dto.DiscountValue,
                 MinOrder = dto.MinOrder,
-                UsageLimit = dto.UsageLimit,
-                Usage = 0,
+                UseageLimit = dto.UsageLimit,
+                Useage = 0,
                 ExpiryDate = dto.ExpiryDate,
                 Status = dto.Status,
             };
@@ -65,7 +65,7 @@ namespace E_commercal_APi.Services
             coupon.DiscountType = dto.DiscountType;
             coupon.DiscountValue = dto.DiscountValue;
             coupon.MinOrder = dto.MinOrder;
-            coupon.UsageLimit = dto.UsageLimit;
+            coupon.UseageLimit = dto.UsageLimit;
             coupon.ExpiryDate = dto.ExpiryDate;
             coupon.Status = dto.Status;
 

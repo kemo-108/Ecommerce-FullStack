@@ -62,6 +62,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 // ================= CORS =================
 builder.Services.AddCors(options =>

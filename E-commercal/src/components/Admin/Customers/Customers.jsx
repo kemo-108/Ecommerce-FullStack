@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import "./Customers.css";
+import { getCustomers } from "../../../services/CustomersService";
 import CustomersEmptyState from "./CustomersEmptyState";
 import CustomersHeader from "./CustomersHeader";
 import CustomersFilters from "./CustomersFilters";
@@ -33,78 +35,30 @@ const Customers = () => {
   const customersPerPage = 8;
 
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadCustomers = async () => {
+    setLoading(true);
+    try {
+      const data = await getCustomers();
+      setCustomers(data);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to load customers."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setCustomers(dummyCustomers);
+    loadCustomers();
   }, []);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedStatus, selectedType, sortBy]);
 
-  // Dummy Data
-  const dummyCustomers = [
-    {
-      customerId: 1,
-      customerName: "Ahmed Mohamed",
-      email: "ahmed@gmail.com",
-      phone: "+20 101 234 5678",
-      avatar: "https://i.pravatar.cc/150?img=11",
-      totalOrders: 14,
-      totalSpent: 2340,
-      status: "Active",
-      type: "VIP",
-      joined: "28 Jun 2026",
-    },
-    {
-      customerId: 2,
-      customerName: "Sara Ali",
-      email: "sara@gmail.com",
-      phone: "+20 100 987 6543",
-      avatar: "https://i.pravatar.cc/150?img=32",
-      totalOrders: 7,
-      totalSpent: 890,
-      status: "Active",
-      type: "VIP",
-      joined: "25 Jun 2026",
-    },
-    {
-      customerId: 3,
-      customerName: "Omar Tarek",
-      email: "omar@gmail.com",
-      phone: "+20 111 222 3333",
-      avatar: "https://i.pravatar.cc/150?img=13",
-      totalOrders: 2,
-      totalSpent: 210,
-      status: "Blocked",
-      type: "New",
-      joined: "20 Jun 2026",
-    },
-    {
-      customerId: 4,
-      customerName: "Mona Hassan",
-      email: "mona@gmail.com",
-      phone: "+20 106 555 4444",
-      avatar: "https://i.pravatar.cc/150?img=47",
-      totalOrders: 5,
-      totalSpent: 560,
-      status: "Active",
-      type: "Regular",
-      joined: "18 Jun 2026",
-    },
-    {
-      customerId: 5,
-      customerName: "Youssef Ahmed",
-      email: "youssef@gmail.com",
-      phone: "+20 109 876 5432",
-      avatar: "https://i.pravatar.cc/150?img=15",
-      totalOrders: 12,
-      totalSpent: 1450,
-      status: "Active",
-      type: "VIP",
-      joined: "15 Jun 2026",
-    },
-  ];
   const filteredCustomers = customers.filter((customer) => {
     const term = searchTerm.toLowerCase().trim();
 
@@ -202,24 +156,21 @@ const Customers = () => {
       {openEditModal && (
         <EditCustomerModal
           customer={customer}
-          customers={customers}
-          setCustomers={setCustomers}
+          refreshCustomers={loadCustomers}
           setOpenEditModal={setOpenEditModal}
         />
       )}
       {openDeleteModal && (
         <DeleteCustomerModal
           customer={customer}
-          customers={customers}
-          setCustomers={setCustomers}
+          refreshCustomers={loadCustomers}
           setOpenDeleteModal={setOpenDeleteModal}
         />
       )}
       {openAddModal && (
         <AddCustomerModal
           setOpenAddModal={setOpenAddModal}
-          setCustomers={setCustomers}
-          customers={customers}
+          refreshCustomers={loadCustomers}
         />
       )}{" "}
     </div>

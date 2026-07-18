@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-//test
+import { useEffect, useMemo, useState } from "react";
 import "./Categories.css";
 
 import CategoriesHeader from "./CategoriesHeader";
@@ -13,70 +12,12 @@ import ViewCategoryModal from "./ViewCategoryModal/ViewCategoryModal";
 import EditCategoryModal from "./EditCategoryModal/EditCategoryModal";
 import DeleteCategoryModal from "./DeleteCategoryModal/DeleteCategoryModal";
 
-const Categories = () => {
-  const [categories, setCategories] = useState([
-    {
-      id: 1,
-      name: "Electronics",
-      description: "Phones, Laptops, Tablets and Electronic Accessories",
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200",
-      products: 52,
-      featured: true,
-      status: "Active",
-      createdAt: "2 Jun 2026",
-      createdTime: "10:30 AM",
-    },
-    {
-      id: 2,
-      name: "Shoes",
-      description: "Men, Women and Kids Footwear",
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200",
-      products: 33,
-      featured: true,
-      status: "Active",
-      createdAt: "5 Jun 2026",
-      createdTime: "09:15 AM",
-    },
-    {
-      id: 3,
-      name: "Watches",
-      description: "Men and Women Wrist Watches",
-      image:
-        "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=200",
-      products: 16,
-      featured: false,
-      status: "Hidden",
-      createdAt: "9 Jun 2026",
-      createdTime: "02:45 PM",
-    },
-    {
-      id: 4,
-      name: "Bags",
-      description: "Handbags, Backpacks and Travel Bags",
-      image:
-        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=200",
-      products: 28,
-      featured: true,
-      status: "Active",
-      createdAt: "12 Jun 2026",
-      createdTime: "11:20 AM",
-    },
-    {
-      id: 5,
-      name: "Sunglasses",
-      description: "Men and Women Sunglasses",
-      image:
-        "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=200",
-      products: 18,
-      featured: false,
-      status: "Active",
-      createdAt: "14 Jun 2026",
-      createdTime: "01:10 PM",
-    },
-  ]);
+import { getCategories } from "../../../Services/CategoryService"; // عدل المسار لو مختلف
 
+const Categories = () => {
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -93,6 +34,20 @@ const Categories = () => {
 
   const CATEGORIES_PER_PAGE = 8;
 
+  // Load Categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   // Filter + Sort
   const filteredCategories = useMemo(() => {
     let data = [...categories];
@@ -101,8 +56,10 @@ const Categories = () => {
     if (searchTerm.trim()) {
       data = data.filter(
         (category) =>
-          category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          category.description.toLowerCase().includes(searchTerm.toLowerCase()),
+          category.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          category.description
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -206,6 +163,7 @@ const Categories = () => {
           setOpenDeleteModal={setOpenDeleteModal}
         />
       )}
+
       {openAddModal && (
         <AddCategoryModal
           setOpenAddModal={setOpenAddModal}

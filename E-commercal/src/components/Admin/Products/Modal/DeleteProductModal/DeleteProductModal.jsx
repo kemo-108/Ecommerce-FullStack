@@ -8,7 +8,7 @@ const DeleteProductModal = ({ product, setOpenDeleteModal, onDeleted }) => {
   const [deleting, setDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!product?.productId || deleting) return;
+    if (!product || !product.productId || deleting) return;
 
     setDeleting(true);
 
@@ -21,7 +21,7 @@ const DeleteProductModal = ({ product, setOpenDeleteModal, onDeleted }) => {
 
       setOpenDeleteModal(false);
     } catch (error) {
-      console.error(error);
+      console.error("Delete Product Error:", error);
 
       toast.error(
         error.response?.data?.message ||
@@ -44,13 +44,14 @@ const DeleteProductModal = ({ product, setOpenDeleteModal, onDeleted }) => {
 
         <p>
           Are you sure you want to delete
-          <strong> {product?.productName}</strong> ?
+          <strong> {product?.productName}</strong>?
         </p>
 
         <span>This action cannot be undone.</span>
 
         <div className="delete-actions">
           <button
+            type="button"
             className="cancel-btn"
             onClick={() => setOpenDeleteModal(false)}
             disabled={deleting}
@@ -60,6 +61,7 @@ const DeleteProductModal = ({ product, setOpenDeleteModal, onDeleted }) => {
           </button>
 
           <button
+            type="button"
             className="delete-btn"
             onClick={handleDelete}
             disabled={deleting}

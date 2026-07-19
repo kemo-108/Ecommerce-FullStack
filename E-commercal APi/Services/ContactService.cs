@@ -22,7 +22,7 @@ namespace E_commercal_APi.Services
                 Subject = dto.Subject,
                 Message = dto.Message,
                 Status = "new",
-                CreatedAt = DateTime.UtcNow,
+                CreateAt = DateTime.UtcNow,
             });
 
             await _db.SaveChangesAsync();

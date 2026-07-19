@@ -33,5 +33,15 @@ namespace E_commercal_APi.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<CouponRedemption>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(cr => cr.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

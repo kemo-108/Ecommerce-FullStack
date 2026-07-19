@@ -97,7 +97,7 @@ namespace E_commercal_APi.Migrations
                 column: "OrderId",
                 principalTable: "Orders",
                 principalColumn: "OrderId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_CouponRedemptions_Users_UserId",
@@ -105,7 +105,7 @@ namespace E_commercal_APi.Migrations
                 column: "UserId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Refunds_Users_UserId",
@@ -113,7 +113,7 @@ namespace E_commercal_APi.Migrations
                 column: "UserId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Returns_Users_UserId",
@@ -121,7 +121,7 @@ namespace E_commercal_APi.Migrations
                 column: "UserId",
                 principalTable: "Users",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />

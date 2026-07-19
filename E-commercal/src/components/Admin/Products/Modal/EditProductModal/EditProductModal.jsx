@@ -69,7 +69,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "categoryId" ? Number(value) : value,
+      [name]: value,
     }));
   };
 
@@ -85,7 +85,6 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
 
     setPreviewImage(URL.createObjectURL(file));
   };
-
   const validateForm = () => {
     const newErrors = {};
 
@@ -105,6 +104,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
 
     return Object.keys(newErrors).length === 0;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -127,14 +127,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
 
       // ارفع صورة جديدة فقط إذا المستخدم اختار واحدة
       if (formData.image) {
-        payload.append("Image", formData.image);
-      }
-
-      // Debug
-      console.log("Updating Product...");
-
-      for (let pair of payload.entries()) {
-        console.log(pair[0], pair[1]);
+        payload.append("Images", formData.image);
       }
 
       await updateProduct(product.productId, payload);
@@ -278,6 +271,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
                 onChange={handleChange}
               />
             </div>
+
             <div className="input-group full-width">
               <label>Description</label>
 
@@ -286,7 +280,6 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                placeholder="Write product description..."
               />
             </div>
 
@@ -296,17 +289,14 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
               <input type="file" accept="image/*" onChange={handleImage} />
 
               {previewImage && (
-                <div className="preview-wrapper">
-                  <img
-                    src={previewImage}
-                    alt="Product Preview"
-                    className="preview-image"
-                  />
-                </div>
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="preview-image"
+                />
               )}
             </div>
-          </div>
-
+          </div>{" "}
           <div className="modal-actions">
             <button
               type="button"

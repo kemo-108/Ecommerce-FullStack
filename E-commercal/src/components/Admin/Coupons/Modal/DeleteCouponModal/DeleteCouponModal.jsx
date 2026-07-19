@@ -1,19 +1,32 @@
+import { useState } from "react";
 import { FiAlertTriangle, FiX } from "react-icons/fi";
 import "./DeleteCouponModal.css";
+import { toast } from "react-toastify";
+import { deleteCoupon } from "../../../../../services/CouponsService";
 
-const DeleteCouponModal = ({ coupon, setCoupons, setOpenDeleteModal }) => {
+const DeleteCouponModal = ({ coupon, refreshCoupons, setOpenDeleteModal }) => {
   if (!coupon) return null;
+
+  const [deleting, setDeleting] = useState(false);
 
   const closeModal = () => {
     setOpenDeleteModal(false);
   };
 
-  const handleDelete = () => {
-    setCoupons((prev) => prev.filter((item) => item.id !== coupon.id));
-
-    closeModal();
-
-    // API Later
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await deleteCoupon(coupon.id);
+      toast.success("Coupon deleted successfully.");
+      await refreshCoupons();
+      closeModal();
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to delete coupon."
+      );
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -47,8 +60,8 @@ const DeleteCouponModal = ({ coupon, setCoupons, setOpenDeleteModal }) => {
             Cancel
           </button>
 
-          <button type="button" className="delete-btn" onClick={handleDelete}>
-            Delete Coupon
+          <button type="button" className="delete-btn" onClick={handleDelete} disabled={deleting}>
+            {deleting ? "Deleting..." : "Delete Coupon"}
           </button>
         </div>
       </div>

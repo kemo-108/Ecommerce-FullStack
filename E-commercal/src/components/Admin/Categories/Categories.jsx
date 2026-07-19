@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+//test
 import "./Categories.css";
-import { getCategories } from "../../../services/CategoryService";
+import { toast } from "react-toastify";
 
+import { getCategories } from "../../../services/CategoryService";
 import CategoriesHeader from "./CategoriesHeader";
 import CategoriesFilters from "./CategoriesFilters";
 import CategoriesStats from "./CategoriesStats";
@@ -15,21 +17,22 @@ import DeleteCategoryModal from "./DeleteCategoryModal/DeleteCategoryModal";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const fetchCategories = async () => {
-    setLoading(true);
+  const loadCategories = async () => {
     try {
       const data = await getCategories();
-      setCategories(data || []);
-    } finally {
-      setLoading(false);
+      setCategories(data);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to load categories."
+      );
     }
   };
 
   useEffect(() => {
-    fetchCategories();
+    loadCategories();
   }, []);
+
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -149,7 +152,7 @@ const Categories = () => {
       {openEditModal && (
         <EditCategoryModal
           category={selectedCategory}
-          onSaved={fetchCategories}
+          refreshCategories={loadCategories}
           setOpenEditModal={setOpenEditModal}
         />
       )}
@@ -157,14 +160,14 @@ const Categories = () => {
       {openDeleteModal && (
         <DeleteCategoryModal
           category={selectedCategory}
-          onDeleted={fetchCategories}
+          refreshCategories={loadCategories}
           setOpenDeleteModal={setOpenDeleteModal}
         />
       )}
       {openAddModal && (
         <AddCategoryModal
           setOpenAddModal={setOpenAddModal}
-          onSaved={fetchCategories}
+          refreshCategories={loadCategories}
         />
       )}
     </div>

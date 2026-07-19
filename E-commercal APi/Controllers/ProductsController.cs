@@ -42,11 +42,11 @@ namespace E_commercal_APi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Update(int id, [FromForm] ProductUpdateDto dto)
+        public async Task<IActionResult> Update(int id, ProductUpdateDto dto)
         {
             try
             {
-                var updated = await _productService.UpdateAsync(id, dto, _env.WebRootPath);
+                var updated = await _productService.UpdateAsync(id, dto);
                 return Ok(updated);
             }
             catch (KeyNotFoundException ex)

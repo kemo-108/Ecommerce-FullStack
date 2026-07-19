@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import "./EditCouponModal.css";
+import { toast } from "react-toastify";
+import { updateCoupon } from "../../../../../services/CouponsService";
 
-const EditCouponModal = ({ coupon, setCoupons, setOpenEditModal }) => {
+const EditCouponModal = ({ coupon, refreshCoupons, setOpenEditModal }) => {
   if (!coupon) return null;
 
   const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ const EditCouponModal = ({ coupon, setCoupons, setOpenEditModal }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setFormData({
@@ -80,27 +83,34 @@ const EditCouponModal = ({ coupon, setCoupons, setOpenEditModal }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validate()) return;
 
-    setCoupons((prev) =>
-      prev.map((item) =>
-        item.id === coupon.id
-          ? {
-              ...item,
-              ...formData,
-              discountValue: Number(formData.discountValue),
-              minOrder: Number(formData.minOrder),
-              maxDiscount: Number(formData.maxDiscount),
-              usageLimit: Number(formData.usageLimit),
-            }
-          : item,
-      ),
-    );
-
-    closeModal();
+    setSaving(true);
+    try {
+      await updateCoupon(coupon.id, {
+        code: formData.code,
+        description: formData.description,
+        discountType: formData.discountType,
+        discountValue: Number(formData.discountValue),
+        usageLimit: Number(formData.usageLimit),
+        minOrder: Number(formData.minOrder),
+        maxDiscount: Number(formData.maxDiscount) || 0,
+        expiryDate: formData.expiryDate,
+        status: formData.status,
+      });
+      toast.success("Coupon updated successfully.");
+      await refreshCoupons();
+      closeModal();
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to update coupon."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -253,8 +263,8 @@ const EditCouponModal = ({ coupon, setCoupons, setOpenEditModal }) => {
               Cancel
             </button>
 
-            <button type="submit" className="save-btn">
-              Save Changes
+            <button type="submit" className="save-btn" disabled={saving}>
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

@@ -33,6 +33,12 @@ namespace E_commercal_APi.ViewModels
         [Required, MinLength(6)] public string NewPassword { get; set; }
     }
 
+    public class UpdateMeDto
+    {
+        [Required] public string Name { get; set; }
+        [Required] public string Phone { get; set; }
+    }
+
     public class UserDto
     {
         public int Id { get; set; }
@@ -42,6 +48,7 @@ namespace E_commercal_APi.ViewModels
         public string Avatar { get; set; }
         public string Role { get; set; }
         public string Status { get; set; }
+        public DateTime Joined { get; set; }
     }
 
     public class AuthResponseDto

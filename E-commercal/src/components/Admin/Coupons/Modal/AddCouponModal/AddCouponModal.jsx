@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import "./AddCouponModal.css";
+import { toast } from "react-toastify";
+import { createCoupon } from "../../../../../services/CouponsService";
 
-const AddCouponModal = ({ setOpenAddModal, setCoupons }) => {
+const AddCouponModal = ({ setOpenAddModal, refreshCoupons }) => {
   const initialState = {
     code: "",
     description: "",
@@ -17,6 +19,7 @@ const AddCouponModal = ({ setOpenAddModal, setCoupons }) => {
 
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   const closeModal = () => {
     setFormData(initialState);
@@ -79,28 +82,34 @@ const AddCouponModal = ({ setOpenAddModal, setCoupons }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validate()) return;
 
-    const newCoupon = {
-      id: Date.now(),
-      code: formData.code.toUpperCase(),
-      description: formData.description,
-      discountType: formData.discountType,
-      discountValue: Number(formData.discountValue),
-      usage: 0,
-      usageLimit: Number(formData.usageLimit),
-      minOrder: Number(formData.minOrder),
-      maxDiscount: Number(formData.maxDiscount) || 0,
-      expiryDate: formData.expiryDate,
-      status: formData.status,
-    };
-
-    setCoupons((prev) => [newCoupon, ...prev]);
-
-    closeModal();
+    setSaving(true);
+    try {
+      await createCoupon({
+        code: formData.code.toUpperCase(),
+        description: formData.description,
+        discountType: formData.discountType,
+        discountValue: Number(formData.discountValue),
+        usageLimit: Number(formData.usageLimit),
+        minOrder: Number(formData.minOrder),
+        maxDiscount: Number(formData.maxDiscount) || 0,
+        expiryDate: formData.expiryDate,
+        status: formData.status,
+      });
+      toast.success("Coupon created successfully.");
+      await refreshCoupons();
+      closeModal();
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to create coupon."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -256,8 +265,8 @@ const AddCouponModal = ({ setOpenAddModal, setCoupons }) => {
               Cancel
             </button>
 
-            <button type="submit" className="save-btn">
-              Create Coupon
+            <button type="submit" className="save-btn" disabled={saving}>
+              {saving ? "Creating..." : "Create Coupon"}
             </button>
           </div>
         </form>

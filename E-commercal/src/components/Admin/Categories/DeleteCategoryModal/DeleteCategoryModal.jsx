@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { deleteCategory } from "../../../../services/CategoryService";
 const DeleteCategoryModal = ({
   category,
-  onDeleted,
+  refreshCategories,
   setOpenDeleteModal,
 }) => {
   if (!category) return null;
@@ -17,17 +17,15 @@ const DeleteCategoryModal = ({
   };
 
   const handleDelete = async () => {
-    if (deleting) return;
     setDeleting(true);
     try {
       await deleteCategory(category.id);
       toast.success("Category deleted successfully.");
-      onDeleted?.();
+      await refreshCategories();
       closeModal();
     } catch (error) {
-      console.error(error);
       toast.error(
-        error.response?.data?.message || "Could not delete the category."
+        error.response?.data?.message || "Failed to delete category."
       );
     } finally {
       setDeleting(false);
@@ -69,12 +67,7 @@ const DeleteCategoryModal = ({
             Cancel
           </button>
 
-          <button
-            type="button"
-            className="delete-btn"
-            onClick={handleDelete}
-            disabled={deleting}
-          >
+          <button type="button" className="delete-btn" onClick={handleDelete} disabled={deleting}>
             {deleting ? "Deleting..." : "Delete Category"}
           </button>
         </div>

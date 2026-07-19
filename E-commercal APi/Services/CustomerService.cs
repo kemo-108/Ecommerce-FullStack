@@ -109,6 +109,7 @@ namespace E_commercal_APi.Services
                 Email = dto.Email,
                 Phone = dto.Phone,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(tempPassword),
+                Avatar = "https://ui-avatars.com/api/?name=" + Uri.EscapeDataString(dto.CustomerName),
                 Role = "customer",
                 Status = dto.Status == "Active" ? "active" : "banned",
                 EmailVerified = false,

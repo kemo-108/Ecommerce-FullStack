@@ -20,8 +20,6 @@ namespace E_commercal_APi.Services
             ProductName = p.ProductName,
             Brand = p.Brand,
             Code = p.Code,
-            Sku = p.Sku,
-            Discount = p.Discount ?? 0,
             ImageUrl = p.ImageUrl,
             Price = p.Price,
             OldPrice = p.OldPrice,
@@ -85,16 +83,17 @@ namespace E_commercal_APi.Services
                 }
             }
 
+            var category = await _db.Categories
+                .FirstOrDefaultAsync(c => c.Name == dto.Category);
+
             var product = new Product
             {
                 ProductName = dto.ProductName,
                 Brand = dto.Brand,
-                CategoryId = dto.CategoryId,
+                CategoryId = category?.Id,
                 Code = dto.Code,
-                Sku = dto.Sku,
                 Price = dto.Price,
-                OldPrice = dto.OldPrice,
-                Discount = dto.Discount,
+                OldPrice = dto.Discount > 0 ? dto.Price / (1 - dto.Discount / 100) : null,
                 Description = dto.Description,
                 ImageUrl = imageUrl,
                 Status = "active",
@@ -115,7 +114,7 @@ namespace E_commercal_APi.Services
                 {
                     ProductId = product.ProductId,
                     WarehouseId = defaultWarehouse.Id,
-                    Sku = dto.Sku ?? dto.Code ?? $"SKU-{product.ProductId}",
+                    Sku = dto.Code ?? $"SKU-{product.ProductId}",
                     Stock = dto.Qty,
                     MinStock = 5,
                     LastUpdated = DateTime.UtcNow,
@@ -127,7 +126,7 @@ namespace E_commercal_APi.Services
             return created!;
         }
 
-        public async Task<ProductDto> UpdateAsync(int id, ProductUpdateDto dto, string webRootPath)
+        public async Task<ProductDto> UpdateAsync(int id, ProductUpdateDto dto)
         {
             var product = await _db.Products.FindAsync(id)
                 ?? throw new KeyNotFoundException("Product not found.");
@@ -135,32 +134,26 @@ namespace E_commercal_APi.Services
             product.ProductName = dto.ProductName;
             product.Brand = dto.Brand;
             product.Price = dto.Price;
-            product.OldPrice = dto.OldPrice;
-            product.Discount = dto.Discount;
-            product.Code = dto.Code;
-            product.Sku = dto.Sku;
             product.Description = dto.Description;
-            product.CategoryId = dto.CategoryId;
             product.UpdatedAt = DateTime.UtcNow;
 
-            if (dto.Image != null)
+            if (!string.IsNullOrWhiteSpace(dto.ImageUrl))
+                product.ImageUrl = dto.ImageUrl;
+
+            if (!string.IsNullOrWhiteSpace(dto.Category))
             {
-                var uploadsFolder = Path.Combine(webRootPath, "uploads", "products");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(dto.Image.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await dto.Image.CopyToAsync(stream);
-                }
-
-                product.ImageUrl = $"uploads/products/{fileName}";
+                var category = await _db.Categories
+                    .FirstOrDefaultAsync(c => c.Name == dto.Category);
+                if (category != null) product.CategoryId = category.Id;
             }
 
-            // Note: stock/quantity is intentionally not updated here.
-            // It's managed exclusively from Admin > Inventory.
+            var inventory = await _db.Inventory
+                .FirstOrDefaultAsync(i => i.ProductId == id);
+            if (inventory != null)
+            {
+                inventory.Stock = dto.Qty;
+                inventory.LastUpdated = DateTime.UtcNow;
+            }
 
             await _db.SaveChangesAsync();
 

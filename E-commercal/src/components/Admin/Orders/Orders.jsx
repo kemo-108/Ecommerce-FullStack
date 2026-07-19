@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
 import "./Orders.css";
-import { GetAllOrders } from "../../../services/OrderService";
+import { toast } from "react-toastify";
 
+import { GetAllOrders } from "../../../services/OrderService";
 import OrdersHeader from "./OrdersHeader";
 import OrdersFilters from "./OrdersFilters";
 import OrdersStats from "./OrdersStats";
@@ -30,24 +31,21 @@ const Orders = () => {
 
   const ORDERS_PER_PAGE = 8;
 
-  // Dummy Data (هنستبدله بالـ API بعدين)
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const fetchOrders = async () => {
-    setLoading(true);
+  const loadOrders = async () => {
     try {
       const data = await GetAllOrders();
-      setOrders(data || []);
+      setOrders(data);
     } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+      toast.error(
+        error.response?.data?.message || "Failed to load orders."
+      );
     }
   };
 
   useEffect(() => {
-    fetchOrders();
+    loadOrders();
   }, []);
 
   const filteredOrders = orders
@@ -118,7 +116,10 @@ const Orders = () => {
       />
 
       {openAddModal && (
-        <AddOrderModal setOpenAddModal={setOpenAddModal} onSaved={fetchOrders} />
+        <AddOrderModal
+          setOpenAddModal={setOpenAddModal}
+          refreshOrders={loadOrders}
+        />
       )}
 
       {openViewModal && (
@@ -132,16 +133,16 @@ const Orders = () => {
       {openStatusModal && (
         <UpdateOrderStatusModal
           order={selectedOrder}
+          refreshOrders={loadOrders}
           setOpenStatusModal={setOpenStatusModal}
-          onSaved={fetchOrders}
         />
       )}
 
       {openDeleteModal && (
         <DeleteOrderModal
           order={selectedOrder}
+          refreshOrders={loadOrders}
           setOpenDeleteModal={setOpenDeleteModal}
-          onDeleted={fetchOrders}
         />
       )}
       {openPrintModal && (

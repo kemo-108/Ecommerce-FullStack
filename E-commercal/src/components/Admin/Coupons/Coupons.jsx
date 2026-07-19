@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import "./Coupons.css";
+import { toast } from "react-toastify";
 
+import { getCoupons } from "../../../services/CouponsService";
 import CouponsHeader from "./CouponsHeader";
 import CouponsFilters from "./CouponsFilters";
 import CouponsStats from "./CouponsStats";
@@ -14,73 +16,22 @@ import EditCouponModal from "./Modal/EditCouponModal/EditCouponModal";
 import DeleteCouponModal from "./Modal/DeleteCouponModal/DeleteCouponModal";
 
 const Coupons = () => {
-  const [coupons, setCoupons] = useState([
-    {
-      id: 1,
-      code: "SUMMER25",
-      description: "Summer Sale Discount",
-      discountType: "Percentage",
-      discountValue: 25,
-      usage: 124,
-      usageLimit: 500,
-      minOrder: 300,
-      maxDiscount: 500,
-      expiryDate: "30 Jul 2026",
-      status: "Active",
-    },
-    {
-      id: 2,
-      code: "WELCOME10",
-      description: "New Customer Offer",
-      discountType: "Percentage",
-      discountValue: 10,
-      usage: 320,
-      usageLimit: 1000,
-      minOrder: 200,
-      maxDiscount: 250,
-      expiryDate: "15 Jul 2026",
-      status: "Active",
-    },
-    {
-      id: 3,
-      code: "FREESHIP",
-      description: "Shipping Discount",
-      discountType: "Fixed Amount",
-      discountValue: 75,
-      usage: 89,
-      usageLimit: 200,
-      minOrder: 500,
-      maxDiscount: 75,
-      expiryDate: "10 Jun 2026",
-      status: "Expired",
-    },
-    {
-      id: 4,
-      code: "NEWYEAR30",
-      description: "New Year Offer",
-      discountType: "Percentage",
-      discountValue: 30,
-      usage: 500,
-      usageLimit: 500,
-      minOrder: 500,
-      maxDiscount: 800,
-      expiryDate: "31 Jan 2026",
-      status: "Expired",
-    },
-    {
-      id: 5,
-      code: "FLASH20",
-      description: "Flash Sale",
-      discountType: "Percentage",
-      discountValue: 20,
-      usage: 0,
-      usageLimit: 300,
-      minOrder: 250,
-      maxDiscount: 300,
-      expiryDate: "10 Aug 2026",
-      status: "Scheduled",
-    },
-  ]);
+  const [coupons, setCoupons] = useState([]);
+
+  const loadCoupons = async () => {
+    try {
+      const data = await getCoupons();
+      setCoupons(data);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to load coupons."
+      );
+    }
+  };
+
+  useEffect(() => {
+    loadCoupons();
+  }, []);
 
   const [selectedCoupon, setSelectedCoupon] = useState(null);
 
@@ -187,7 +138,7 @@ const Coupons = () => {
       {openAddModal && (
         <AddCouponModal
           setOpenAddModal={setOpenAddModal}
-          setCoupons={setCoupons}
+          refreshCoupons={loadCoupons}
         />
       )}
 
@@ -201,7 +152,7 @@ const Coupons = () => {
       {openEditModal && (
         <EditCouponModal
           coupon={selectedCoupon}
-          setCoupons={setCoupons}
+          refreshCoupons={loadCoupons}
           setOpenEditModal={setOpenEditModal}
         />
       )}
@@ -209,7 +160,7 @@ const Coupons = () => {
       {openDeleteModal && (
         <DeleteCouponModal
           coupon={selectedCoupon}
-          setCoupons={setCoupons}
+          refreshCoupons={loadCoupons}
           setOpenDeleteModal={setOpenDeleteModal}
         />
       )}

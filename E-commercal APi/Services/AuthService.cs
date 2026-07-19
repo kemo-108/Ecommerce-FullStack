@@ -25,6 +25,7 @@ namespace E_commercal_APi.Services
             Avatar = u.Avatar,
             Role = u.Role,
             Status = u.Status,
+            Joined = u.Joined,
         };
 
         private async Task<AuthResponseDto> IssueTokensAsync(User user)
@@ -63,6 +64,7 @@ namespace E_commercal_APi.Services
                 Email = dto.Email,
                 Phone = dto.Phone,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                Avatar = "https://ui-avatars.com/api/?name=" + Uri.EscapeDataString(dto.Name),
                 Role = "customer",
                 Status = "active",
                 EmailVerified = false,
@@ -158,6 +160,24 @@ namespace E_commercal_APi.Services
             reset.Used = true;
 
             await _db.SaveChangesAsync();
+        }
+        public async Task<UserDto?> GetMeAsync(int userId)
+        {
+            var user = await _db.Users.FindAsync(userId);
+            return user == null ? null : ToDto(user);
+        }
+
+        public async Task<UserDto> UpdateMeAsync(int userId, UpdateMeDto dto)
+        {
+            var user = await _db.Users.FindAsync(userId)
+                ?? throw new InvalidOperationException("User not found.");
+
+            user.Name = dto.Name;
+            user.Phone = dto.Phone;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+            return ToDto(user);
         }
     }
 }

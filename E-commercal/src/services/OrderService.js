@@ -17,14 +17,12 @@ export const GetOrderById = async (orderId) => {
   return response.data;
 };
 
-// ================= Admin =================
-
 export const GetAllOrders = async () => {
   const response = await axios.get(API);
   return response.data;
 };
 
-export const CreateOrder = async (orderData) => {
+export const AdminCreateOrder = async (orderData) => {
   const response = await axios.post(`${API}/admin`, orderData);
   return response.data;
 };

@@ -28,14 +28,7 @@ const ViewCategoryModal = ({ category, setOpenViewModal }) => {
 
         <div className="modal-body">
           <div className="category-preview">
-            <img
-              src={
-                category.image?.startsWith("http")
-                  ? category.image
-                  : `https://localhost:7069/${category.image}`
-              }
-              alt={category.name}
-            />
+            <img src={category.image} alt={category.name} />
 
             <div>
               <h2>{category.name}</h2>

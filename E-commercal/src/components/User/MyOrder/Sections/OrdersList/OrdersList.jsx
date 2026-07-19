@@ -22,7 +22,7 @@ const OrdersList = ({ orders, setSelectedOrder }) => {
         {orders.length > 0 ? (
           orders.map((order) => (
             <OrderRow
-              key={order.id}
+              key={order.orderId}
               order={order}
               setSelectedOrder={setSelectedOrder}
             />

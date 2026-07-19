@@ -23,6 +23,8 @@ namespace E_commercal_APi.Services
             Featured = c.Featured,
             Status = c.Status,
             Products = _db.Products.Count(p => p.CategoryId == c.Id),
+            CreatedAt = c.CreatedAt.ToString("d MMM yyyy"),
+            CreatedTime = c.CreatedAt.ToString("hh:mm tt"),
         };
 
         public async Task<List<CategoryDto>> GetAllAsync()
@@ -40,31 +42,13 @@ namespace E_commercal_APi.Services
             return category == null ? null : ToDto(category);
         }
 
-        public async Task<CategoryDto> CreateAsync(CategoryCreateDto dto, string webRootPath)
+        public async Task<CategoryDto> CreateAsync(CategoryCreateDto dto)
         {
-            string? imageUrl = null;
-
-            if (dto.Image != null)
-            {
-                var uploadsFolder = Path.Combine(webRootPath, "uploads", "categories");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(dto.Image.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await dto.Image.CopyToAsync(stream);
-                }
-
-                imageUrl = $"uploads/categories/{fileName}";
-            }
-
             var category = new Category
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                Image = imageUrl,
+                Image = dto.Image,
                 Featured = dto.Featured,
                 Status = dto.Status,
                 CreatedAt = DateTime.UtcNow,
@@ -76,31 +60,16 @@ namespace E_commercal_APi.Services
             return ToDto(category);
         }
 
-        public async Task<CategoryDto> UpdateAsync(int id, CategoryCreateDto dto, string webRootPath)
+        public async Task<CategoryDto> UpdateAsync(int id, CategoryCreateDto dto)
         {
             var category = await _db.Categories.FindAsync(id)
                 ?? throw new KeyNotFoundException("Category not found.");
 
             category.Name = dto.Name;
             category.Description = dto.Description;
+            category.Image = dto.Image;
             category.Featured = dto.Featured;
             category.Status = dto.Status;
-
-            if (dto.Image != null)
-            {
-                var uploadsFolder = Path.Combine(webRootPath, "uploads", "categories");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(dto.Image.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await dto.Image.CopyToAsync(stream);
-                }
-
-                category.Image = $"uploads/categories/{fileName}";
-            }
 
             await _db.SaveChangesAsync();
 

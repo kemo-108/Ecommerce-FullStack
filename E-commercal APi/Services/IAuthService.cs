@@ -10,5 +10,7 @@ namespace E_commercal_APi.Services
         Task LogoutAsync(string refreshToken);
         Task ForgotPasswordAsync(string email);
         Task ResetPasswordAsync(string token, string newPassword);
+        Task<UserDto?> GetMeAsync(int userId);
+        Task<UserDto> UpdateMeAsync(int userId, UpdateMeDto dto);
     }
 }

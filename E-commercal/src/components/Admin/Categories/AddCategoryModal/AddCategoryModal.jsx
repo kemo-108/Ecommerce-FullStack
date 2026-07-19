@@ -1,27 +1,23 @@
 import { useState } from "react";
-import { FiUploadCloud, FiX } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
 import "./AddCategoryModal.css";
 import { toast } from "react-toastify";
 import { createCategory } from "../../../../services/CategoryService";
-
-const AddCategoryModal = ({ setOpenAddModal, onSaved }) => {
+const AddCategoryModal = ({ setOpenAddModal, refreshCategories }) => {
   const initialState = {
     name: "",
     description: "",
     status: "Active",
     featured: false,
+    image: "",
   };
 
   const [formData, setFormData] = useState(initialState);
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
   const closeModal = () => {
     setFormData(initialState);
-    setImage(null);
-    setPreview(null);
     setErrors({});
     setOpenAddModal(false);
   };
@@ -39,6 +35,13 @@ const AddCategoryModal = ({ setOpenAddModal, onSaved }) => {
       newErrors.description = "Description is required.";
     } else if (formData.description.trim().length < 10) {
       newErrors.description = "Description must be at least 10 characters.";
+    }
+
+    if (
+      formData.image.trim() &&
+      !/^https?:\/\/.+\..+/.test(formData.image.trim())
+    ) {
+      newErrors.image = "Please enter a valid image URL.";
     }
 
     setErrors(newErrors);
@@ -62,36 +65,26 @@ const AddCategoryModal = ({ setOpenAddModal, onSaved }) => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validate() || saving) return;
+    if (!validate()) return;
 
     setSaving(true);
     try {
-      const payload = new FormData();
-      payload.append("Name", formData.name.trim());
-      payload.append("Description", formData.description.trim());
-      payload.append("Featured", formData.featured);
-      payload.append("Status", formData.status);
-      if (image) payload.append("Image", image);
-
-      await createCategory(payload);
-
+      await createCategory({
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        image: formData.image.trim() || "https://via.placeholder.com/150",
+        featured: formData.featured,
+        status: formData.status,
+      });
       toast.success("Category added successfully.");
-      onSaved?.();
+      await refreshCategories();
       closeModal();
     } catch (error) {
-      console.error(error);
       toast.error(
-        error.response?.data?.message || "Could not add the category."
+        error.response?.data?.message || "Failed to add category."
       );
     } finally {
       setSaving(false);
@@ -169,12 +162,18 @@ const AddCategoryModal = ({ setOpenAddModal, onSaved }) => {
           </div>
 
           <div className="form-group">
-            <label>Image</label>
+            <label>Image URL</label>
 
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <input
+              type="text"
+              name="image"
+              placeholder="https://..."
+              value={formData.image}
+              onChange={handleChange}
+            />
 
-            {preview && (
-              <img src={preview} alt="Preview" className="image-preview" />
+            {errors.image && (
+              <small className="error-text">{errors.image}</small>
             )}
           </div>
 
@@ -184,7 +183,7 @@ const AddCategoryModal = ({ setOpenAddModal, onSaved }) => {
             </button>
 
             <button type="submit" className="save-btn" disabled={saving}>
-              {saving ? "Saving..." : "Add Category"}
+              {saving ? "Adding..." : "Add Category"}
             </button>
           </div>
         </form>

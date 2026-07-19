@@ -84,7 +84,15 @@ const CouponRow = ({
 
       <td>
         <div className="validity-box">
-          <h5>{coupon.expiryDate}</h5>
+          <h5>
+            {coupon.expiryDate
+              ? new Date(coupon.expiryDate).toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : ""}
+          </h5>
 
           <span>Expiry Date</span>
         </div>

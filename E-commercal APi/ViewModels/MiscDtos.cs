@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace E_commercal_APi.ViewModels
 {
     public class CouponDto
@@ -11,7 +13,7 @@ namespace E_commercal_APi.ViewModels
         public decimal? MaxDiscount { get; set; }
         public int Usage { get; set; }
         public int? UsageLimit { get; set; }
-        public DateTime? ExpiryDate { get; set; }
+        public string ExpiryDate { get; set; }
         public string Status { get; set; }
     }
 
@@ -24,7 +26,7 @@ namespace E_commercal_APi.ViewModels
         public decimal MinOrder { get; set; }
         public decimal MaxDiscount { get; set; }
         public int UsageLimit { get; set; }
-        public DateTime? ExpiryDate { get; set; }
+        [Required] public DateTime ExpiryDate { get; set; }
         public string Status { get; set; } = "active";
     }
 

@@ -37,6 +37,16 @@ export const ResetPassword = async (token, newPassword) => {
   return response.data;
 };
 
+export const GetMe = async () => {
+  const response = await axios.get(`${API}/me`);
+  return response.data;
+};
+
+export const UpdateMe = async (data) => {
+  const response = await axios.put(`${API}/me`, data);
+  return response.data;
+};
+
 export const GetCurrentUser = () => {
   const raw = localStorage.getItem("user");
   return raw ? JSON.parse(raw) : null;

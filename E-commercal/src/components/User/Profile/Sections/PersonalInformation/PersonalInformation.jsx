@@ -1,7 +1,56 @@
+import { useState } from "react";
 import "./PersonalInformation.css";
-import { FiEdit2 } from "react-icons/fi";
+import { FiEdit2, FiSave, FiX } from "react-icons/fi";
+import { toast } from "react-toastify";
+import {
+  GetCurrentUser,
+  UpdateMe,
+  SaveSession,
+} from "../../../../../services/AuthService";
 
 const PersonalInformation = () => {
+  const currentUser = GetCurrentUser();
+
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    name: currentUser?.name || "",
+    phone: currentUser?.phone || "",
+  });
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const updatedUser = await UpdateMe(formData);
+      // Keep the cached session in sync so the sidebar/ProfileCard reflect it too.
+      SaveSession({
+        accessToken: localStorage.getItem("accessToken"),
+        refreshToken: localStorage.getItem("refreshToken"),
+        user: updatedUser,
+      });
+      toast.success("Profile updated successfully.");
+      setEditing(false);
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to update profile."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      name: currentUser?.name || "",
+      phone: currentUser?.phone || "",
+    });
+    setEditing(false);
+  };
+
   return (
     <section className="personal-information">
       <div className="section-header">
@@ -10,51 +59,51 @@ const PersonalInformation = () => {
           <p>Manage your personal details.</p>
         </div>
 
-        <button className="edit-btn">
-          <FiEdit2 />
-          Edit Profile
-        </button>
+        {editing ? (
+          <div style={{ display: "flex", gap: "8px" }}>
+            <button className="edit-btn" onClick={handleCancel}>
+              <FiX />
+              Cancel
+            </button>
+            <button className="edit-btn" onClick={handleSave} disabled={saving}>
+              <FiSave />
+              {saving ? "Saving..." : "Save"}
+            </button>
+          </div>
+        ) : (
+          <button className="edit-btn" onClick={() => setEditing(true)}>
+            <FiEdit2 />
+            Edit Profile
+          </button>
+        )}
       </div>
 
       <div className="information-grid">
         <div className="input-group">
           <label>Full Name</label>
-          <input type="text" value="Kemo Mostafa" readOnly />
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            readOnly={!editing}
+          />
         </div>
 
         <div className="input-group">
           <label>Email Address</label>
-          <input type="email" value="kemo@gmail.com" readOnly />
+          <input type="email" value={currentUser?.email || ""} readOnly />
         </div>
 
         <div className="input-group">
           <label>Phone Number</label>
-          <input type="text" value="+20 100 000 0000" readOnly />
-        </div>
-
-        <div className="input-group">
-          <label>Gender</label>
-          <input type="text" value="Male" readOnly />
-        </div>
-
-        <div className="input-group">
-          <label>Country</label>
-          <input type="text" value="Egypt" readOnly />
-        </div>
-
-        <div className="input-group">
-          <label>City</label>
-          <input type="text" value="Cairo" readOnly />
-        </div>
-
-        <div className="input-group">
-          <label>Postal Code</label>
-          <input type="text" value="12345" readOnly />
-        </div>
-
-        <div className="input-group">
-          <label>Birth Date</label>
-          <input type="text" value="20 / 04 / 2005" readOnly />
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            readOnly={!editing}
+          />
         </div>
       </div>
     </section>

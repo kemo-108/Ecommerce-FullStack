@@ -76,7 +76,15 @@ const ViewCouponModal = ({ coupon, setOpenViewModal }) => {
 
               <div>
                 <span>Expiry Date</span>
-                <h4>{coupon.expiryDate}</h4>
+                <h4>
+                  {coupon.expiryDate
+                    ? new Date(coupon.expiryDate).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : ""}
+                </h4>
               </div>
             </div>
 

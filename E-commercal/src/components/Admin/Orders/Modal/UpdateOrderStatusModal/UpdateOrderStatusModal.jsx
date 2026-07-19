@@ -4,22 +4,20 @@ import { toast } from "react-toastify";
 import "./UpdateOrderStatusModal.css";
 import { UpdateOrderStatus } from "../../../../../services/OrderService";
 
-const UpdateOrderStatusModal = ({ order, setOpenStatusModal, onSaved }) => {
+const UpdateOrderStatusModal = ({ order, refreshOrders, setOpenStatusModal }) => {
   const [status, setStatus] = useState(order?.status || "Pending");
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
-    if (saving) return;
     setSaving(true);
     try {
       await UpdateOrderStatus(order.orderId, status);
       toast.success("Order status updated successfully.");
-      onSaved?.();
+      await refreshOrders();
       setOpenStatusModal(false);
     } catch (error) {
-      console.error(error);
       toast.error(
-        error.response?.data?.message || "Could not update order status."
+        error.response?.data?.message || "Failed to update order status."
       );
     } finally {
       setSaving(false);

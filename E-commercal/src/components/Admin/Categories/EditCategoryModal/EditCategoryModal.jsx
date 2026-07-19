@@ -3,35 +3,29 @@ import { FiX } from "react-icons/fi";
 import "./EditCategoryModal.css";
 import { toast } from "react-toastify";
 import { updateCategory } from "../../../../services/CategoryService";
+const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) => {
+  if (!category) return null;
 
-const EditCategoryModal = ({ category, onSaved, setOpenEditModal }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     status: "Active",
     featured: false,
+    image: "",
   });
 
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (category) {
-      setFormData({
-        name: category.name || "",
-        description: category.description || "",
-        status: category.status || "Active",
-        featured: !!category.featured,
-      });
-      setPreview(
-        category.image ? `https://localhost:7069/${category.image}` : null
-      );
-    }
+    setFormData({
+      name: category.name,
+      description: category.description,
+      status: category.status,
+      featured: category.featured,
+      image: category.image,
+    });
   }, [category]);
-
-  if (!category) return null;
 
   const closeModal = () => {
     setErrors({});
@@ -53,6 +47,10 @@ const EditCategoryModal = ({ category, onSaved, setOpenEditModal }) => {
       newErrors.description = "Minimum 10 characters.";
     }
 
+    if (formData.image && !/^https?:\/\/.+\..+/.test(formData.image)) {
+      newErrors.image = "Invalid image url.";
+    }
+
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
@@ -72,36 +70,26 @@ const EditCategoryModal = ({ category, onSaved, setOpenEditModal }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validate() || saving) return;
+    if (!validate()) return;
 
     setSaving(true);
     try {
-      const payload = new FormData();
-      payload.append("Name", formData.name.trim());
-      payload.append("Description", formData.description.trim());
-      payload.append("Featured", formData.featured);
-      payload.append("Status", formData.status);
-      if (image) payload.append("Image", image);
-
-      await updateCategory(category.id, payload);
-
+      await updateCategory(category.id, {
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        image: formData.image,
+        featured: formData.featured,
+        status: formData.status,
+      });
       toast.success("Category updated successfully.");
-      onSaved?.();
+      await refreshCategories();
       closeModal();
     } catch (error) {
-      console.error(error);
       toast.error(
-        error.response?.data?.message || "Could not update the category."
+        error.response?.data?.message || "Failed to update category."
       );
     } finally {
       setSaving(false);
@@ -172,12 +160,16 @@ const EditCategoryModal = ({ category, onSaved, setOpenEditModal }) => {
           </div>
 
           <div className="form-group">
-            <label>Image</label>
+            <label>Image URL</label>
 
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <input
+              name="image"
+              value={formData.image}
+              onChange={handleChange}
+            />
 
-            {preview && (
-              <img src={preview} alt="Preview" className="image-preview" />
+            {errors.image && (
+              <small className="error-text">{errors.image}</small>
             )}
           </div>
 

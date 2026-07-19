@@ -2,25 +2,35 @@ import "./OrderRow.css";
 import { FiEye, FiRotateCw } from "react-icons/fi";
 
 const OrderRow = ({ order, setSelectedOrder }) => {
+  const firstItem = order.items?.[0];
+  const totalQuantity =
+    order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const extraItemsCount = (order.items?.length || 0) - 1;
+
   return (
     <div className="order-row">
       <div className="order-product">
-        <img src={order.image} alt={order.product} />
+        <img src={firstItem?.imageUrl} alt={firstItem?.productName} />
 
         <div>
-          <h4>{order.product}</h4>
+          <h4>
+            {firstItem?.productName}
+            {extraItemsCount > 0 && ` +${extraItemsCount} more`}
+          </h4>
 
-          <span>Qty : {order.quantity}</span>
+          <span>Qty : {totalQuantity}</span>
         </div>
       </div>
 
-      <div className="order-id">{order.id}</div>
+      <div className="order-id">#{order.orderId}</div>
 
-      <div className="order-date">{order.date}</div>
+      <div className="order-date">
+        {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : ""}
+      </div>
 
       <div className="order-total">${Number(order.total).toFixed(2)}</div>
 
-      <div className={`order-status ${order.status.toLowerCase()}`}>
+      <div className={`order-status ${order.status?.toLowerCase()}`}>
         {order.status}
       </div>
 

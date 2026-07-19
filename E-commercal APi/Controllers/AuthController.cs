@@ -1,6 +1,8 @@
 using E_commercal_APi.Services;
 using E_commercal_APi.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace E_commercal_APi.Controllers
 {
@@ -84,6 +86,23 @@ namespace E_commercal_APi.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> Me()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var user = await _authService.GetMeAsync(userId);
+            return user == null ? NotFound() : Ok(user);
+        }
+
+        [HttpPut("me")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMe(UpdateMeDto dto)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var updated = await _authService.UpdateMeAsync(userId, dto);
+            return Ok(updated);
         }
     }
 }

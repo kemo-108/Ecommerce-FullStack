@@ -20,7 +20,7 @@ namespace E_commercal_APi.Models
         public string Phone { get; set; }
 
         [MaxLength(300)]
-        public string? Avatar { get; set; }
+        public string Avatar { get; set; }
 
         // customer | admin
         [Required, MaxLength(20)]

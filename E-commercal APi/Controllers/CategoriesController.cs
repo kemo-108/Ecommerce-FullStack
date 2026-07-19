@@ -1,5 +1,6 @@
-﻿using E_commercal_APi.Services;
+using E_commercal_APi.Services;
 using E_commercal_APi.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commercal_APi.Controllers
@@ -9,10 +10,12 @@ namespace E_commercal_APi.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IWebHostEnvironment _env;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, IWebHostEnvironment env)
         {
             _categoryService = categoryService;
+            _env = env;
         }
 
         [HttpGet]
@@ -34,18 +37,20 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto dto)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> CreateCategory([FromForm] CategoryCreateDto dto)
         {
-            var created = await _categoryService.CreateAsync(dto);
+            var created = await _categoryService.CreateAsync(dto, _env.WebRootPath);
             return CreatedAtAction(nameof(GetCategoryById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryCreateDto dto)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> UpdateCategory(int id, [FromForm] CategoryCreateDto dto)
         {
             try
             {
-                var updated = await _categoryService.UpdateAsync(id, dto);
+                var updated = await _categoryService.UpdateAsync(id, dto, _env.WebRootPath);
                 return Ok(updated);
             }
             catch (KeyNotFoundException)
@@ -55,6 +60,7 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try

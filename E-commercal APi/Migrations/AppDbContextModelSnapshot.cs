@@ -160,7 +160,7 @@ namespace E_commercal_APi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -211,13 +211,10 @@ namespace E_commercal_APi.Migrations
                     b.Property<decimal>("DiscountValue")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime?>("ExpiryDate")
+                    b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("MaxDiscount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("MinOrder")
+                    b.Property<decimal>("MinOrder")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Status")
@@ -225,10 +222,10 @@ namespace E_commercal_APi.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("Usage")
+                    b.Property<int>("Useage")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UsageLimit")
+                    b.Property<int>("UseageLimit")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -250,10 +247,10 @@ namespace E_commercal_APi.Migrations
                     b.Property<int>("CouponId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderId")
+                    b.Property<int>("OrederId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("RedeemedAt")
+                    b.Property<DateTime>("RedeemAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
@@ -262,10 +259,6 @@ namespace E_commercal_APi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CouponId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("CouponRedemptions");
                 });
@@ -941,6 +934,7 @@ namespace E_commercal_APi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Avatar")
+                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
@@ -1079,29 +1073,11 @@ namespace E_commercal_APi.Migrations
 
             modelBuilder.Entity("E_commercal_APi.Models.CouponRedemption", b =>
                 {
-                    b.HasOne("E_commercal_APi.Models.Coupon", "Coupon")
+                    b.HasOne("E_commercal_APi.Models.Coupon", null)
                         .WithMany("Redemptions")
                         .HasForeignKey("CouponId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("E_commercal_APi.Models.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("E_commercal_APi.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Coupon");
-
-                    b.Navigation("Order");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Inventory", b =>
@@ -1244,7 +1220,7 @@ namespace E_commercal_APi.Migrations
                     b.HasOne("E_commercal_APi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -1263,7 +1239,7 @@ namespace E_commercal_APi.Migrations
                     b.HasOne("E_commercal_APi.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");

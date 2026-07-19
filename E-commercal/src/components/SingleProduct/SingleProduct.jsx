@@ -15,7 +15,7 @@ import BannerImage from "../../image/image-Collection.png";
 import "./SingleProduct.css";
 import { AddToCart } from "../../services/CartService";
 import { AddToWishlist } from "../../services/WishlistService";
-import getProducts from "../../services/ProductService";
+import { getProducts } from "../../services/ProductService";
 import { toast } from "react-toastify";
 
 const TABS = ["Description", "Specifications", "Reviews"];
@@ -178,9 +178,7 @@ const SingleProduct = () => {
           {/* ================= Right ================= */}
 
           <div className="sp-details">
-            <span className="sp-category">
-              {product.category || "General"}
-            </span>
+            <span className="sp-category">{product.category || "General"}</span>
 
             <h2 className="sp-title">{product.productName}</h2>
 
@@ -190,16 +188,20 @@ const SingleProduct = () => {
                   <FiStar key={star} className="sp-star-filled" />
                 ) : (
                   <FiStar key={star} />
-                )
+                ),
               )}
 
               <span>
-                {product.rating ? `(${product.rating.toFixed(1)})` : "(No ratings yet)"}
+                {product.rating
+                  ? `(${product.rating.toFixed(1)})`
+                  : "(No ratings yet)"}
               </span>
             </div>
 
             <div className="sp-price-wrapper">
-              <h3 className="sp-price">${Number(product.price || 0).toFixed(2)}</h3>
+              <h3 className="sp-price">
+                ${Number(product.price || 0).toFixed(2)}
+              </h3>
 
               {hasDiscount && (
                 <>
@@ -347,7 +349,10 @@ const SingleProduct = () => {
 
         <div className="sp-tab-content">
           {activeTab === "Description" && (
-            <p>{product.description || "No description available for this product."}</p>
+            <p>
+              {product.description ||
+                "No description available for this product."}
+            </p>
           )}
 
           {activeTab === "Specifications" && (
@@ -360,14 +365,14 @@ const SingleProduct = () => {
               </li>
               <li>
                 <strong>Stock:</strong>{" "}
-                {inStock ? `${product.stock ?? "Available"} units` : "Out of stock"}
+                {inStock
+                  ? `${product.stock ?? "Available"} units`
+                  : "Out of stock"}
               </li>
             </ul>
           )}
 
-          {activeTab === "Reviews" && (
-            <p>No reviews yet for this product.</p>
-          )}
+          {activeTab === "Reviews" && <p>No reviews yet for this product.</p>}
         </div>
       </div>
 

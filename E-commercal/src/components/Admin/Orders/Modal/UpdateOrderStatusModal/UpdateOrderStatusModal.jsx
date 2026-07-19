@@ -2,21 +2,28 @@ import { useState } from "react";
 import { FiSave, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "./UpdateOrderStatusModal.css";
+import { UpdateOrderStatus } from "../../../../../services/OrderService";
 
-const UpdateOrderStatusModal = ({ order, setOpenStatusModal }) => {
+const UpdateOrderStatusModal = ({ order, setOpenStatusModal, onSaved }) => {
   const [status, setStatus] = useState(order?.status || "Pending");
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    console.log({
-      orderId: order.orderId,
-      status,
-    });
-
-    // API Later
-
-    toast.success("Order status updated successfully.");
-
-    setOpenStatusModal(false);
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      await UpdateOrderStatus(order.orderId, status);
+      toast.success("Order status updated successfully.");
+      onSaved?.();
+      setOpenStatusModal(false);
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || "Could not update order status."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -74,9 +81,9 @@ const UpdateOrderStatusModal = ({ order, setOpenStatusModal }) => {
             Cancel
           </button>
 
-          <button className="save-btn" onClick={handleSave}>
+          <button className="save-btn" onClick={handleSave} disabled={saving}>
             <FiSave />
-            Save Changes
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./Orders.css";
+import { GetAllOrders } from "../../../services/OrderService";
 
 import OrdersHeader from "./OrdersHeader";
 import OrdersFilters from "./OrdersFilters";
@@ -30,88 +31,24 @@ const Orders = () => {
   const ORDERS_PER_PAGE = 8;
 
   // Dummy Data (هنستبدله بالـ API بعدين)
-  const orders = [
-    {
-      orderId: 1001,
-      customerName: "Ahmed Mohamed",
-      customerEmail: "ahmed@gmail.com",
-      customerImage: "https://i.pravatar.cc/150?img=1",
-      total: 1240,
-      paymentStatus: "Paid",
-      status: "Delivered",
-      orderDate: "01 Jul 2026",
-    },
-    {
-      orderId: 1002,
-      customerName: "Sara Ali",
-      customerEmail: "sara@gmail.com",
-      customerImage: "https://i.pravatar.cc/150?img=5",
-      total: 350,
-      paymentStatus: "Pending",
-      status: "Pending",
-      orderDate: "30 Jun 2026",
-    },
-    {
-      orderId: 1003,
-      customerName: "Mohamed Adel",
-      customerEmail: "adel@gmail.com",
-      customerImage: "",
-      total: 890,
-      paymentStatus: "Paid",
-      status: "Processing",
-      orderDate: "30 Jun 2026",
-    },
-    {
-      orderId: 1004,
-      customerName: "Nada Hassan",
-      customerEmail: "nada@gmail.com",
-      customerImage: "https://i.pravatar.cc/150?img=9",
-      total: 2200,
-      paymentStatus: "Paid",
-      status: "Delivered",
-      orderDate: "29 Jun 2026",
-    },
-    {
-      orderId: 1005,
-      customerName: "Omar Tarek",
-      customerEmail: "omar@gmail.com",
-      customerImage: "",
-      total: 175,
-      paymentStatus: "Failed",
-      status: "Cancelled",
-      orderDate: "29 Jun 2026",
-    },
-    {
-      orderId: 1006,
-      customerName: "Youssef Samir",
-      customerEmail: "youssef@gmail.com",
-      customerImage: "https://i.pravatar.cc/150?img=12",
-      total: 960,
-      paymentStatus: "Paid",
-      status: "Delivered",
-      orderDate: "28 Jun 2026",
-    },
-    {
-      orderId: 1007,
-      customerName: "Mariam Ahmed",
-      customerEmail: "mariam@gmail.com",
-      customerImage: "",
-      total: 640,
-      paymentStatus: "Pending",
-      status: "Processing",
-      orderDate: "28 Jun 2026",
-    },
-    {
-      orderId: 1008,
-      customerName: "Karim Mostafa",
-      customerEmail: "karim@gmail.com",
-      customerImage: "https://i.pravatar.cc/150?img=15",
-      total: 3100,
-      paymentStatus: "Paid",
-      status: "Delivered",
-      orderDate: "27 Jun 2026",
-    },
-  ];
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const data = await GetAllOrders();
+      setOrders(data || []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   const filteredOrders = orders
     .filter((order) => {
@@ -180,7 +117,9 @@ const Orders = () => {
         ordersPerPage={ORDERS_PER_PAGE}
       />
 
-      {openAddModal && <AddOrderModal setOpenAddModal={setOpenAddModal} />}
+      {openAddModal && (
+        <AddOrderModal setOpenAddModal={setOpenAddModal} onSaved={fetchOrders} />
+      )}
 
       {openViewModal && (
         <ViewOrderModal
@@ -194,6 +133,7 @@ const Orders = () => {
         <UpdateOrderStatusModal
           order={selectedOrder}
           setOpenStatusModal={setOpenStatusModal}
+          onSaved={fetchOrders}
         />
       )}
 
@@ -201,6 +141,7 @@ const Orders = () => {
         <DeleteOrderModal
           order={selectedOrder}
           setOpenDeleteModal={setOpenDeleteModal}
+          onDeleted={fetchOrders}
         />
       )}
       {openPrintModal && (

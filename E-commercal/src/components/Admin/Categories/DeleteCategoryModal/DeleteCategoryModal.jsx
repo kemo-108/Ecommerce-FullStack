@@ -1,23 +1,37 @@
+import { useState } from "react";
 import { FiAlertTriangle, FiX } from "react-icons/fi";
 import "./DeleteCategoryModal.css";
 import { toast } from "react-toastify";
+import { deleteCategory } from "../../../../services/CategoryService";
 const DeleteCategoryModal = ({
   category,
-  setCategories,
+  onDeleted,
   setOpenDeleteModal,
 }) => {
   if (!category) return null;
+
+  const [deleting, setDeleting] = useState(false);
 
   const closeModal = () => {
     setOpenDeleteModal(false);
   };
 
-  const handleDelete = () => {
-    setCategories((prev) => prev.filter((item) => item.id !== category.id));
-
-    closeModal();
-
-    // API Later
+  const handleDelete = async () => {
+    if (deleting) return;
+    setDeleting(true);
+    try {
+      await deleteCategory(category.id);
+      toast.success("Category deleted successfully.");
+      onDeleted?.();
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || "Could not delete the category."
+      );
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -55,8 +69,13 @@ const DeleteCategoryModal = ({
             Cancel
           </button>
 
-          <button type="button" className="delete-btn" onClick={handleDelete}>
-            Delete Category
+          <button
+            type="button"
+            className="delete-btn"
+            onClick={handleDelete}
+            disabled={deleting}
+          >
+            {deleting ? "Deleting..." : "Delete Category"}
           </button>
         </div>
       </div>

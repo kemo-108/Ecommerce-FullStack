@@ -142,3 +142,11 @@
 .form-group textarea.error {
   border-color: #e53935;
 }
+
+.image-preview{
+    margin-top: 10px;
+    width: 100%;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+}

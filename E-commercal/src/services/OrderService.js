@@ -16,3 +16,25 @@ export const GetOrderById = async (orderId) => {
   const response = await axios.get(`${API}/${orderId}`);
   return response.data;
 };
+
+// ================= Admin =================
+
+export const GetAllOrders = async () => {
+  const response = await axios.get(API);
+  return response.data;
+};
+
+export const CreateOrder = async (orderData) => {
+  const response = await axios.post(`${API}/admin`, orderData);
+  return response.data;
+};
+
+export const UpdateOrderStatus = async (orderId, status) => {
+  const response = await axios.patch(`${API}/${orderId}/status`, { status });
+  return response.data;
+};
+
+export const DeleteOrder = async (orderId) => {
+  const response = await axios.delete(`${API}/${orderId}`);
+  return response.data;
+};

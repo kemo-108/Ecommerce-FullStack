@@ -14,7 +14,7 @@ import {
   FiHeadphones,
   FiChevronRight,
 } from "react-icons/fi";
-import { getProducts } from "../../services/ProductService";
+import getProducts from "../../services/ProductService";
 import Product from "../Product/Product";
 
 const CATEGORIES = [

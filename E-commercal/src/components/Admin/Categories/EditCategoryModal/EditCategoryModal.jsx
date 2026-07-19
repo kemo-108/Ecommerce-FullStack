@@ -2,28 +2,36 @@ import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import "./EditCategoryModal.css";
 import { toast } from "react-toastify";
-const EditCategoryModal = ({ category, setCategories, setOpenEditModal }) => {
-  if (!category) return null;
+import { updateCategory } from "../../../../services/CategoryService";
 
+const EditCategoryModal = ({ category, onSaved, setOpenEditModal }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     status: "Active",
     featured: false,
-    image: "",
   });
 
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    setFormData({
-      name: category.name,
-      description: category.description,
-      status: category.status,
-      featured: category.featured,
-      image: category.image,
-    });
+    if (category) {
+      setFormData({
+        name: category.name || "",
+        description: category.description || "",
+        status: category.status || "Active",
+        featured: !!category.featured,
+      });
+      setPreview(
+        category.image ? `https://localhost:7069/${category.image}` : null
+      );
+    }
   }, [category]);
+
+  if (!category) return null;
 
   const closeModal = () => {
     setErrors({});
@@ -45,10 +53,6 @@ const EditCategoryModal = ({ category, setCategories, setOpenEditModal }) => {
       newErrors.description = "Minimum 10 characters.";
     }
 
-    if (formData.image && !/^https?:\/\/.+\..+/.test(formData.image)) {
-      newErrors.image = "Invalid image url.";
-    }
-
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
@@ -68,23 +72,40 @@ const EditCategoryModal = ({ category, setCategories, setOpenEditModal }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validate()) return;
+    if (!validate() || saving) return;
 
-    setCategories((prev) =>
-      prev.map((item) =>
-        item.id === category.id
-          ? {
-              ...item,
-              ...formData,
-            }
-          : item,
-      ),
-    );
+    setSaving(true);
+    try {
+      const payload = new FormData();
+      payload.append("Name", formData.name.trim());
+      payload.append("Description", formData.description.trim());
+      payload.append("Featured", formData.featured);
+      payload.append("Status", formData.status);
+      if (image) payload.append("Image", image);
 
-    closeModal();
+      await updateCategory(category.id, payload);
+
+      toast.success("Category updated successfully.");
+      onSaved?.();
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || "Could not update the category."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -151,16 +172,12 @@ const EditCategoryModal = ({ category, setCategories, setOpenEditModal }) => {
           </div>
 
           <div className="form-group">
-            <label>Image URL</label>
+            <label>Image</label>
 
-            <input
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-            />
+            <input type="file" accept="image/*" onChange={handleImageChange} />
 
-            {errors.image && (
-              <small className="error-text">{errors.image}</small>
+            {preview && (
+              <img src={preview} alt="Preview" className="image-preview" />
             )}
           </div>
 
@@ -169,8 +186,8 @@ const EditCategoryModal = ({ category, setCategories, setOpenEditModal }) => {
               Cancel
             </button>
 
-            <button type="submit" className="save-btn">
-              Save Changes
+            <button type="submit" className="save-btn" disabled={saving}>
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

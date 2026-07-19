@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./Categories.css";
+import { getCategories } from "../../../services/CategoryService";
 
 import CategoriesHeader from "./CategoriesHeader";
 import CategoriesFilters from "./CategoriesFilters";
@@ -12,12 +13,25 @@ import ViewCategoryModal from "./ViewCategoryModal/ViewCategoryModal";
 import EditCategoryModal from "./EditCategoryModal/EditCategoryModal";
 import DeleteCategoryModal from "./DeleteCategoryModal/DeleteCategoryModal";
 
-import { getCategories } from "../../../Services/CategoryService"; // عدل المسار لو مختلف
-
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const data = await getCategories();
+      setCategories(data || []);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -34,20 +48,6 @@ const Categories = () => {
 
   const CATEGORIES_PER_PAGE = 8;
 
-  // Load Categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await getCategories();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error loading categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
   // Filter + Sort
   const filteredCategories = useMemo(() => {
     let data = [...categories];
@@ -56,10 +56,8 @@ const Categories = () => {
     if (searchTerm.trim()) {
       data = data.filter(
         (category) =>
-          category.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          category.description
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()),
+          category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          category.description.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -151,7 +149,7 @@ const Categories = () => {
       {openEditModal && (
         <EditCategoryModal
           category={selectedCategory}
-          setCategories={setCategories}
+          onSaved={fetchCategories}
           setOpenEditModal={setOpenEditModal}
         />
       )}
@@ -159,15 +157,14 @@ const Categories = () => {
       {openDeleteModal && (
         <DeleteCategoryModal
           category={selectedCategory}
-          setCategories={setCategories}
+          onDeleted={fetchCategories}
           setOpenDeleteModal={setOpenDeleteModal}
         />
       )}
-
       {openAddModal && (
         <AddCategoryModal
           setOpenAddModal={setOpenAddModal}
-          setCategories={setCategories}
+          onSaved={fetchCategories}
         />
       )}
     </div>

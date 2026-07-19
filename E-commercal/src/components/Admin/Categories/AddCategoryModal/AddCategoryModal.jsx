@@ -1,21 +1,27 @@
 import { useState } from "react";
-import { FiX } from "react-icons/fi";
+import { FiUploadCloud, FiX } from "react-icons/fi";
 import "./AddCategoryModal.css";
 import { toast } from "react-toastify";
-const AddCategoryModal = ({ setOpenAddModal, setCategories }) => {
+import { createCategory } from "../../../../services/CategoryService";
+
+const AddCategoryModal = ({ setOpenAddModal, onSaved }) => {
   const initialState = {
     name: "",
     description: "",
     status: "Active",
     featured: false,
-    image: "",
   };
 
   const [formData, setFormData] = useState(initialState);
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   const closeModal = () => {
     setFormData(initialState);
+    setImage(null);
+    setPreview(null);
     setErrors({});
     setOpenAddModal(false);
   };
@@ -33,13 +39,6 @@ const AddCategoryModal = ({ setOpenAddModal, setCategories }) => {
       newErrors.description = "Description is required.";
     } else if (formData.description.trim().length < 10) {
       newErrors.description = "Description must be at least 10 characters.";
-    }
-
-    if (
-      formData.image.trim() &&
-      !/^https?:\/\/.+\..+/.test(formData.image.trim())
-    ) {
-      newErrors.image = "Please enter a valid image URL.";
     }
 
     setErrors(newErrors);
@@ -63,29 +62,40 @@ const AddCategoryModal = ({ setOpenAddModal, setCategories }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validate()) return;
+    if (!validate() || saving) return;
 
-    const newCategory = {
-      id: Date.now(),
-      name: formData.name.trim(),
-      description: formData.description.trim(),
-      image: formData.image.trim() || "https://via.placeholder.com/150",
-      products: 0,
-      featured: formData.featured,
-      status: formData.status,
-      createdAt: new Date().toLocaleDateString(),
-      createdTime: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
+    setSaving(true);
+    try {
+      const payload = new FormData();
+      payload.append("Name", formData.name.trim());
+      payload.append("Description", formData.description.trim());
+      payload.append("Featured", formData.featured);
+      payload.append("Status", formData.status);
+      if (image) payload.append("Image", image);
 
-    setCategories((prev) => [newCategory, ...prev]);
+      await createCategory(payload);
 
-    closeModal();
+      toast.success("Category added successfully.");
+      onSaved?.();
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error.response?.data?.message || "Could not add the category."
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -159,18 +169,12 @@ const AddCategoryModal = ({ setOpenAddModal, setCategories }) => {
           </div>
 
           <div className="form-group">
-            <label>Image URL</label>
+            <label>Image</label>
 
-            <input
-              type="text"
-              name="image"
-              placeholder="https://..."
-              value={formData.image}
-              onChange={handleChange}
-            />
+            <input type="file" accept="image/*" onChange={handleImageChange} />
 
-            {errors.image && (
-              <small className="error-text">{errors.image}</small>
+            {preview && (
+              <img src={preview} alt="Preview" className="image-preview" />
             )}
           </div>
 
@@ -179,8 +183,8 @@ const AddCategoryModal = ({ setOpenAddModal, setCategories }) => {
               Cancel
             </button>
 
-            <button type="submit" className="save-btn">
-              Add Category
+            <button type="submit" className="save-btn" disabled={saving}>
+              {saving ? "Saving..." : "Add Category"}
             </button>
           </div>
         </form>

@@ -1,16 +1,26 @@
+import { useState } from "react";
 import { FiTrash2, FiX } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "./DeleteOrderModal.css";
+import { DeleteOrder } from "../../../../../services/OrderService";
 
-const DeleteOrderModal = ({ order, setOpenDeleteModal }) => {
-  const handleDelete = () => {
-    console.log("Delete Order:", order.orderId);
+const DeleteOrderModal = ({ order, setOpenDeleteModal, onDeleted }) => {
+  const [deleting, setDeleting] = useState(false);
 
-    // API Later
-
-    toast.success("Order deleted successfully.");
-
-    setOpenDeleteModal(false);
+  const handleDelete = async () => {
+    if (deleting) return;
+    setDeleting(true);
+    try {
+      await DeleteOrder(order.orderId);
+      toast.success("Order deleted successfully.");
+      onDeleted?.();
+      setOpenDeleteModal(false);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Could not delete order.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -46,9 +56,13 @@ const DeleteOrderModal = ({ order, setOpenDeleteModal }) => {
             Cancel
           </button>
 
-          <button className="delete-btn" onClick={handleDelete}>
+          <button
+            className="delete-btn"
+            onClick={handleDelete}
+            disabled={deleting}
+          >
             <FiTrash2 />
-            Delete
+            {deleting ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>

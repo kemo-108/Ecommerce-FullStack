@@ -179,5 +179,19 @@ namespace E_commercal_APi.Services
             await _db.SaveChangesAsync();
             return ToDto(user);
         }
+
+        public async Task ChangePasswordAsync(int userId, ChangePasswordDto dto)
+        {
+            var user = await _db.Users.FindAsync(userId)
+                ?? throw new InvalidOperationException("User not found.");
+
+            if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash))
+                throw new UnauthorizedAccessException("Current password is incorrect.");
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
+        }
     }
 }

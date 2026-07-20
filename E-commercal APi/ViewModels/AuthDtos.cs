@@ -57,4 +57,10 @@ namespace E_commercal_APi.ViewModels
         public string RefreshToken { get; set; }
         public UserDto User { get; set; }
     }
+
+    public class ChangePasswordDto
+    {
+        [Required] public string CurrentPassword { get; set; }
+        [Required, MinLength(6)] public string NewPassword { get; set; }
+    }
 }

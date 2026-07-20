@@ -12,5 +12,6 @@ namespace E_commercal_APi.Services
         Task ResetPasswordAsync(string token, string newPassword);
         Task<UserDto?> GetMeAsync(int userId);
         Task<UserDto> UpdateMeAsync(int userId, UpdateMeDto dto);
+        Task ChangePasswordAsync(int userId, ChangePasswordDto dto);
     }
 }

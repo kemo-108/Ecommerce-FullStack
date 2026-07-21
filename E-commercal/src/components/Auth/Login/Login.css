@@ -162,7 +162,7 @@
   border-radius: 8px;
   font-size: 15px;
   color: var(--dark);
-  padding: 0 16px 0 46px;
+   padding: 0 46px 0 16px;
   transition: border-color 0.2s ease;
   position: relative;
   z-index: 1;
@@ -178,7 +178,7 @@
 
 .input-box .icon {
   position: absolute;
-  left: 16px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 17px;

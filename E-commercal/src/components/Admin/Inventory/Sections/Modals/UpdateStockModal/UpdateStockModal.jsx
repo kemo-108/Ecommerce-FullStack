@@ -17,8 +17,9 @@ const UpdateStockModal = ({ product, onClose, onSave }) => {
     e.preventDefault();
 
     onSave({
-      ...product,
-      stock: Number(product.stock) + Number(quantity),
+      id: product.id,
+      productId: product.productId,
+      quantity: Number(quantity),
     });
   };
 

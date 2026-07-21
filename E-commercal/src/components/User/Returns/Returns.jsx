@@ -1,72 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Returns.css";
+import { toast } from "react-toastify";
 
 import ReturnsHeader from "./Sections/ReturnsHeader/ReturnsHeader";
 import ReturnsFilters from "./Sections/ReturnsFilters/ReturnsFilters";
 import ReturnsTable from "./Sections/ReturnsTable/ReturnsTable";
 import ReturnsPagination from "./Sections/ReturnsPagination/ReturnsPagination";
+import RequestReturnModal from "./Sections/RequestReturnModal/RequestReturnModal";
+import { GetMyReturns } from "../../../services/ReturnsService";
 
-const RETURNS_DATA = [
-  {
-    id: 1,
-    returnId: "RT10254",
-    orderId: "ORD10254",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
-    name: "Nike Air Max 270",
-    qty: 1,
-    total: 180,
-    date: "15 Jul 2026",
-    status: "Delivered",
-  },
-  {
-    id: 2,
-    returnId: "RT10255",
-    orderId: "ORD10255",
-    image: "https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=300",
-    name: "Adidas Ultraboost",
-    qty: 2,
-    total: 240,
-    date: "11 Jul 2026",
-    status: "Processing",
-  },
-  {
-    id: 3,
-    returnId: "RT10256",
-    orderId: "ORD10256",
-    image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=300",
-    name: "Sony WH-1000XM5",
-    qty: 1,
-    total: 150,
-    date: "08 Jul 2026",
-    status: "Rejected",
-  },
-];
+const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
 const Returns = () => {
+  const [returns, setReturns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [sortBy, setSortBy] = useState("Latest");
 
-  const filteredReturns = RETURNS_DATA.filter((item) => {
-    const term = searchTerm.toLowerCase().trim();
-    const matchesSearch =
-      !term ||
-      item.returnId.toLowerCase().includes(term) ||
-      item.orderId.toLowerCase().includes(term);
+  const loadReturns = async () => {
+    setLoading(true);
+    try {
+      const data = await GetMyReturns();
+      setReturns(
+        data.map((r) => ({
+          id: r.returnId,
+          returnId: `RT${r.returnId}`,
+          orderId: `ORD${r.orderId}`,
+          image: r.items?.[0]?.imageUrl,
+          name:
+            r.items?.length > 1
+              ? `${r.items[0].productName} +${r.items.length - 1} more`
+              : r.items?.[0]?.productName,
+          qty: r.qty,
+          total: r.total,
+          date: r.date,
+          displayDate: r.date
+            ? new Date(r.date).toLocaleDateString("en-US", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })
+            : "",
+          status: capitalize(r.status),
+        }))
+      );
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to load returns.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const matchesStatus =
-      selectedStatus === "All Status" || item.status === selectedStatus;
+  useEffect(() => {
+    loadReturns();
+  }, []);
 
-    return matchesSearch && matchesStatus;
-  }).sort((a, b) =>
-    sortBy === "Oldest"
-      ? new Date(a.date) - new Date(b.date)
-      : new Date(b.date) - new Date(a.date)
-  );
+  const filteredReturns = returns
+    .filter((item) => {
+      const term = searchTerm.toLowerCase().trim();
+      const matchesSearch =
+        !term ||
+        item.returnId.toLowerCase().includes(term) ||
+        item.orderId.toLowerCase().includes(term);
+
+      const matchesStatus =
+        selectedStatus === "All Status" || item.status === selectedStatus;
+
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) =>
+      sortBy === "Oldest"
+        ? new Date(a.date) - new Date(b.date)
+        : new Date(b.date) - new Date(a.date)
+    );
 
   return (
     <div className="returns-page">
-      <ReturnsHeader />
+      <ReturnsHeader onRequestReturn={() => setOpenModal(true)} />
 
       <ReturnsFilters
         searchTerm={searchTerm}
@@ -77,9 +89,20 @@ const Returns = () => {
         setSortBy={setSortBy}
       />
 
-      <ReturnsTable items={filteredReturns} />
+      {loading ? (
+        <p>Loading returns...</p>
+      ) : (
+        <ReturnsTable items={filteredReturns} />
+      )}
 
       <ReturnsPagination totalItems={filteredReturns.length} />
+
+      {openModal && (
+        <RequestReturnModal
+          onClose={() => setOpenModal(false)}
+          onCreated={loadReturns}
+        />
+      )}
     </div>
   );
 };

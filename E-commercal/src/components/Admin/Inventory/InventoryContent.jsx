@@ -11,17 +11,19 @@ import InventoryPagination from "./Sections/InventoryPagination/InventoryPaginat
 import ViewInventoryModal from "./Sections/Modals/ViewInventoryModal/ViewInventoryModal";
 import EditInventoryModal from "./Sections/Modals/EditInventoryModal/EditInventoryModal";
 import UpdateStockModal from "./Sections/Modals/UpdateStockModal/UpdateStockModal";
-import DeleteInventoryModal from "./Sections/Modals/DeletenventoryModal/DeletenventoryModal";
 
 const InventoryContent = () => {
   const {
     modals,
     selectedProduct,
+    loading,
 
     closeViewModal,
     closeEditModal,
     closeUpdateStockModal,
-    closeDeleteModal,
+
+    saveEdit,
+    saveStock,
   } = useInventory();
 
   return (
@@ -32,8 +34,6 @@ const InventoryContent = () => {
           <h1>Inventory</h1>
           <p>Manage product stock and warehouse</p>
         </div>
-
-        <button className="restock-btn">+ Restock Product</button>
       </div>
 
       <InventoryStats />
@@ -42,7 +42,7 @@ const InventoryContent = () => {
 
       <InventoryFilters />
 
-      <InventoryTable />
+      {loading ? <p>Loading inventory...</p> : <InventoryTable />}
 
       <InventoryPagination />
 
@@ -59,8 +59,8 @@ const InventoryContent = () => {
         <EditInventoryModal
           product={selectedProduct}
           onClose={closeEditModal}
-          onSave={(product) => {
-            console.log(product);
+          onSave={async (payload) => {
+            await saveEdit(payload);
             closeEditModal();
           }}
         />
@@ -71,21 +71,9 @@ const InventoryContent = () => {
         <UpdateStockModal
           product={selectedProduct}
           onClose={closeUpdateStockModal}
-          onSave={(product) => {
-            console.log(product);
+          onSave={async (payload) => {
+            await saveStock(payload);
             closeUpdateStockModal();
-          }}
-        />
-      )}
-
-      {/* Delete Modal */}
-      {modals.delete && (
-        <DeleteInventoryModal
-          product={selectedProduct}
-          onClose={closeDeleteModal}
-          onDelete={(id) => {
-            console.log(id);
-            closeDeleteModal();
           }}
         />
       )}

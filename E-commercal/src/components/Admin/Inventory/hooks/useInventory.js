@@ -1,18 +1,39 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { InventoryContext } from "../context/InventoryContext";
 
-import inventoryData from "../data/inventoryData";
-
 import {
   setProducts,
+  updateProduct,
+  deleteProduct as removeProduct,
   openModal,
   closeModal,
   setSelectedProduct,
+  setLoading,
 } from "../reducer/inventoryActions";
 
 import { getInventoryStatus } from "../utils/inventoryStatus";
 import { getInventoryStats } from "../utils/inventoryHelpers";
+import { toast } from "react-toastify";
+import {
+  GetInventory,
+  UpdateInventory,
+  RestockInventory,
+} from "../../../../services/InventoryService";
+
+const mapRecord = (r) => ({
+  id: r.id,
+  productId: r.productId,
+  name: r.productName,
+  imageUrl: r.imageUrl,
+  category: r.category,
+  warehouse: r.warehouse,
+  sku: r.sku,
+  barcode: r.barcode,
+  stock: r.stock,
+  minStock: r.minStock,
+  lastUpdated: r.lastUpdated,
+});
 
 const useInventory = () => {
   const context = useContext(InventoryContext);
@@ -24,15 +45,66 @@ const useInventory = () => {
   }
 
   const { state, dispatch } = context;
+  const [saving, setSaving] = useState(false);
 
   // ==========================================
   // Load Inventory
   // ==========================================
-  useEffect(() => {
-    if (state.products.length === 0) {
-      dispatch(setProducts(inventoryData));
+  const loadInventory = async () => {
+    dispatch(setLoading(true));
+    try {
+      const data = await GetInventory();
+      dispatch(setProducts(data.map(mapRecord)));
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to load inventory."
+      );
+    } finally {
+      dispatch(setLoading(false));
     }
-  }, [dispatch, state.products.length]);
+  };
+
+  useEffect(() => {
+    loadInventory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const saveEdit = async (payload) => {
+    setSaving(true);
+    try {
+      const updated = await UpdateInventory(payload.id, {
+        sku: payload.sku,
+        barcode: payload.barcode,
+        minStock: payload.minStock,
+      });
+      dispatch(updateProduct(mapRecord(updated)));
+      toast.success("Inventory details updated successfully.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to update inventory."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const saveStock = async (payload) => {
+    setSaving(true);
+    try {
+      const updated = await RestockInventory(payload.id, {
+        quantity: payload.quantity,
+        reason: "Manual restock",
+      });
+      dispatch(updateProduct(mapRecord(updated)));
+      toast.success("Stock updated successfully.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to update stock."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // ==========================================
   // Filter + Sort
@@ -268,6 +340,16 @@ const useInventory = () => {
     closeUpdateStockModal,
 
     closeDeleteModal,
+
+    saveEdit,
+
+    saveStock,
+
+    saving,
+
+    loading: state.loading,
+
+    refreshInventory: loadInventory,
   };
 };
 

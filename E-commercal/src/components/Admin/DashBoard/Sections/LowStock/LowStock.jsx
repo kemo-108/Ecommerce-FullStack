@@ -1,52 +1,43 @@
+import { useEffect, useState } from "react";
 import "./LowStock.css";
-
-const products = [
-  {
-    id: 1,
-    name: "Gaming Mouse",
-    stock: 3,
-    image: "https://picsum.photos/60?11",
-  },
-  {
-    id: 2,
-    name: "Mechanical Keyboard",
-    stock: 5,
-    image: "https://picsum.photos/60?12",
-  },
-  {
-    id: 3,
-    name: "AirPods Pro",
-    stock: 6,
-    image: "https://picsum.photos/60?13",
-  },
-  {
-    id: 4,
-    name: "iPhone 16 Pro",
-    stock: 2,
-    image: "https://picsum.photos/60?14",
-  },
-];
+import { GetInventory } from "../../../../../services/InventoryService";
 
 const LowStock = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    GetInventory()
+      .then((data) => {
+        const lowStock = data
+          .filter((item) => item.stock <= item.minStock)
+          .sort((a, b) => a.stock - b.stock)
+          .slice(0, 5);
+        setProducts(lowStock);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="low-stock">
       <div className="low-stock-header">
         <h3>Low Stock Products</h3>
-
-        <button>View All</button>
       </div>
 
       <div className="low-stock-list">
-        {products.map((item) => (
-          <div className="low-stock-item" key={item.id}>
-            <img src={item.image} alt={item.name} />
+        {products.length > 0 ? (
+          products.map((item) => (
+            <div className="low-stock-item" key={item.id}>
+              <img src={item.imageUrl} alt={item.productName} />
 
-            <div className="low-stock-info">
-              <h4>{item.name}</h4>
-              <span>Stock : {item.stock}</span>
+              <div className="low-stock-info">
+                <h4>{item.productName}</h4>
+                <span>Stock : {item.stock}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No low stock products.</p>
+        )}
       </div>
     </div>
   );

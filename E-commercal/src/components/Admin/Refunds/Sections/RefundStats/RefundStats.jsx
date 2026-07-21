@@ -6,37 +6,40 @@ import {
   FiDollarSign,
 } from "react-icons/fi";
 
-const RefundStats = () => {
+const RefundStats = ({ refunds = [] }) => {
+  const pending = refunds.filter((r) => r.status === "Pending").length;
+  const approved = refunds.filter((r) => r.status === "Approved").length;
+  const rejected = refunds.filter((r) => r.status === "Rejected").length;
+  const totalAmount = refunds
+    .filter((r) => r.status === "Approved")
+    .reduce((sum, r) => sum + Number(r.amount || 0), 0);
+
   const stats = [
     {
       id: 1,
       title: "Pending Requests",
-      value: "15",
-      change: "+4 from yesterday",
+      value: String(pending),
       icon: <FiClock />,
       className: "pending",
     },
     {
       id: 2,
       title: "Approved Requests",
-      value: "42",
-      change: "+12 from yesterday",
+      value: String(approved),
       icon: <FiCheckCircle />,
       className: "approved",
     },
     {
       id: 3,
       title: "Rejected Requests",
-      value: "9",
-      change: "-3 from yesterday",
+      value: String(rejected),
       icon: <FiXCircle />,
       className: "rejected",
     },
     {
       id: 4,
-      title: "Total Refund Amount",
-      value: "$12,500",
-      change: "+8.5% from last month",
+      title: "Total Refunded Amount",
+      value: `$${totalAmount.toFixed(2)}`,
       icon: <FiDollarSign />,
       className: "amount",
     },
@@ -52,10 +55,7 @@ const RefundStats = () => {
 
           <div className="refund-stat-content">
             <h5>{stat.title}</h5>
-
             <h2>{stat.value}</h2>
-
-            <span className={stat.className}>{stat.change}</span>
           </div>
         </div>
       ))}

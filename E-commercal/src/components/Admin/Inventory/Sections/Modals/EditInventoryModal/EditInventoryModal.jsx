@@ -4,29 +4,17 @@ import "./EditInventoryModal.css";
 
 const EditInventoryModal = ({ product, onClose, onSave }) => {
   const [formData, setFormData] = useState({
-    name: "",
     sku: "",
-    category: "",
-    warehouse: "",
-    supplier: "",
-    price: "",
-    stock: "",
+    barcode: "",
     minStock: "",
-    description: "",
   });
 
   useEffect(() => {
     if (product) {
       setFormData({
-        name: product.name,
-        sku: product.sku,
-        category: product.category,
-        warehouse: product.warehouse,
-        supplier: product.supplier,
-        price: product.price,
-        stock: product.stock,
-        minStock: product.minStock,
-        description: product.description,
+        sku: product.sku || "",
+        barcode: product.barcode || "",
+        minStock: product.minStock ?? "",
       });
     }
   }, [product]);
@@ -44,8 +32,11 @@ const EditInventoryModal = ({ product, onClose, onSave }) => {
     e.preventDefault();
 
     onSave({
-      ...product,
-      ...formData,
+      id: product.id,
+      productId: product.productId,
+      sku: formData.sku,
+      barcode: formData.barcode,
+      minStock: Number(formData.minStock),
     });
   };
 
@@ -55,7 +46,7 @@ const EditInventoryModal = ({ product, onClose, onSave }) => {
     <div className="modal-overlay">
       <div className="edit-inventory-modal">
         <div className="modal-header">
-          <h2>Edit Product</h2>
+          <h2>Edit Inventory Details</h2>
 
           <button className="close-btn" onClick={onClose}>
             <FiX />
@@ -65,14 +56,8 @@ const EditInventoryModal = ({ product, onClose, onSave }) => {
         <form className="edit-form" onSubmit={handleSubmit}>
           <div className="form-grid">
             <div className="form-group">
-              <label>Product Name</label>
-
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
+              <label>Product</label>
+              <input type="text" value={product.name} disabled />
             </div>
 
             <div className="form-group">
@@ -87,56 +72,12 @@ const EditInventoryModal = ({ product, onClose, onSave }) => {
             </div>
 
             <div className="form-group">
-              <label>Category</label>
+              <label>Barcode</label>
 
               <input
                 type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Warehouse</label>
-
-              <input
-                type="text"
-                name="warehouse"
-                value={formData.warehouse}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Supplier</label>
-
-              <input
-                type="text"
-                name="supplier"
-                value={formData.supplier}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Price</label>
-
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Current Stock</label>
-
-              <input
-                type="number"
-                name="stock"
-                value={formData.stock}
+                name="barcode"
+                value={formData.barcode}
                 onChange={handleChange}
               />
             </div>
@@ -153,16 +94,6 @@ const EditInventoryModal = ({ product, onClose, onSave }) => {
             </div>
           </div>
 
-          <div className="form-group full-width">
-            <label>Description</label>
-
-            <textarea
-              rows="5"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-            />
-          </div>
           <div className="modal-actions">
             <button type="button" className="cancel-btn" onClick={onClose}>
               Cancel

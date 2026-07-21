@@ -1,58 +1,39 @@
+import { useEffect, useState } from "react";
 import "./TopProducts.css";
-
-const products = [
-  {
-    id: 1,
-    name: "iPhone 16 Pro",
-    category: "Smartphones",
-    sales: 120,
-    image: "https://picsum.photos/60?1",
-  },
-  {
-    id: 2,
-    name: "Nike Air Max",
-    category: "Shoes",
-    sales: 95,
-    image: "https://picsum.photos/60?2",
-  },
-  {
-    id: 3,
-    name: "Apple Watch",
-    category: "Accessories",
-    sales: 70,
-    image: "https://picsum.photos/60?3",
-  },
-  {
-    id: 4,
-    name: "AirPods Pro",
-    category: "Audio",
-    sales: 65,
-    image: "https://picsum.photos/60?4",
-  },
-];
+import { GetDashboardStats } from "../../../../../services/DashboardService";
 
 const TopProducts = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    GetDashboardStats()
+      .then((stats) => setProducts(stats.topProducts || []))
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="top-products">
       <div className="top-products-header">
         <h3>Top Selling Products</h3>
-
-        <button>View All</button>
       </div>
 
       <div className="top-products-list">
-        {products.map((product) => (
-          <div className="product-item" key={product.id}>
-            <img src={product.image} alt={product.name} />
+        {products.length > 0 ? (
+          products.map((product) => (
+            <div className="product-item" key={product.productId}>
+              <img src={product.imageUrl} alt={product.productName} />
 
-            <div className="product-info">
-              <h4>{product.name}</h4>
-              <p>{product.category}</p>
+              <div className="product-info">
+                <h4>{product.productName}</h4>
+                <p>${Number(product.revenue).toFixed(2)} revenue</p>
+              </div>
+
+              <span>{product.quantitySold} Sales</span>
             </div>
-
-            <span>{product.sales} Sales</span>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No sales data yet.</p>
+        )}
       </div>
     </div>
   );

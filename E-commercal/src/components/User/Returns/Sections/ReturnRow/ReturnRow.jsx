@@ -1,5 +1,4 @@
 import "./ReturnRow.css";
-import { FiEye, FiRotateCcw } from "react-icons/fi";
 
 const ReturnRow = ({ item }) => {
   return (
@@ -18,23 +17,11 @@ const ReturnRow = ({ item }) => {
 
       <span className="id-badge">#{item.orderId}</span>
 
-      <span>{item.date}</span>
+      <span>{item.displayDate}</span>
 
       <span className={`status ${item.status.toLowerCase()}`}>
         {item.status}
       </span>
-
-      <div className="return-actions">
-        <button className="view-btn">
-          <FiEye />
-        </button>
-
-        {item.status === "Processing" && (
-          <button className="cancel-btn">
-            <FiRotateCcw />
-          </button>
-        )}
-      </div>
     </div>
   );
 };

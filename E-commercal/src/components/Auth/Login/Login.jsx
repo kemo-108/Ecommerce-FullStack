@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { FaUser } from "react-icons/fa";
-import { FaUnlockAlt } from "react-icons/fa";
+import { FiMail, FiLock } from "react-icons/fi";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Login as LoginRequest, SaveSession } from "../../../services/AuthService";
 import { toast } from "react-toastify";
+import logo from "../../../image/image.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -48,39 +48,59 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
-      <div className="login-container">
-        <div className="wrapper">
-          <form onSubmit={handleSubmit}>
-            <h1>Login</h1>
+    <div className="auth-page">
+      <div className="auth-panel">
+        <Link to="/" className="auth-logo">
+          <img src={logo} alt="Art Corner logo" />
+          <span>Art Corner</span>
+        </Link>
 
-            <div className="input-box">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-              <FaUser className="icon" />
+        <h2>Quality art supplies, delivered.</h2>
+        <p>
+          Sign in to track your orders, manage your wishlist, and check out
+          faster next time.
+        </p>
+      </div>
+
+      <div className="auth-form-side">
+        <div className="auth-card">
+          <h1>Welcome back</h1>
+          <p className="auth-subtitle">Log in to your account to continue.</p>
+
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <label>Email</label>
+              <div className="input-box">
+                <FiMail className="icon" />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="input-box">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                required
-                minLength={6}
-              />
-              <FaUnlockAlt className="icon" />
+            <div className="input-group">
+              <label>Password</label>
+              <div className="input-box">
+                <FiLock className="icon" />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
 
             <div className="remmember-forgot">
-              <label>
+              <label className="remember-label">
                 <input
                   type="checkbox"
                   checked={remember}
@@ -92,7 +112,7 @@ const Login = () => {
               <Link to="/forgot-password">Forgot password?</Link>
             </div>
 
-            <button type="submit" className="btn" disabled={loading}>
+            <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>
 
@@ -101,9 +121,9 @@ const Login = () => {
                 Don't have an account? <Link to="/register">Register</Link>
               </p>
             </div>
-            <br />
+
             <Link className="link-home" to="/">
-              Home
+              Back to Home
             </Link>
           </form>
         </div>

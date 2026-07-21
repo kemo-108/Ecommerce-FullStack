@@ -33,14 +33,14 @@ font-weight:600;
 .page-btn:hover,
 .page-number:hover{
 
-background:#ec4899;
+background:var(--primary);
 color:#fff;
 
 }
 
 .page-number.active{
 
-background:#ec4899;
+background:var(--primary);
 color:#fff;
 
 }

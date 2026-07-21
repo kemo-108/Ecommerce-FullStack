@@ -47,6 +47,11 @@ export const UpdateMe = async (data) => {
   return response.data;
 };
 
+export const ChangePassword = async (data) => {
+  const response = await axios.post(`${API}/change-password`, data);
+  return response.data;
+};
+
 export const GetCurrentUser = () => {
   const raw = localStorage.getItem("user");
   return raw ? JSON.parse(raw) : null;

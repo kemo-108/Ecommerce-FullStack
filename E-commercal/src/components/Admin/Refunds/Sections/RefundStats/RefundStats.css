@@ -76,7 +76,7 @@
 }
 
 .amount {
-  color: #ec4899;
+  color: var(--primary);
 }
 
 .amount.refund-stat-icon {

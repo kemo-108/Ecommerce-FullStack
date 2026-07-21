@@ -1,17 +1,13 @@
 import "./InventoryRow.css";
 
-import { FiEye, FiEdit2, FiRefreshCw, FiTrash2 } from "react-icons/fi";
+import { FiEye, FiEdit2, FiRefreshCw } from "react-icons/fi";
 
 import useInventory from "../../hooks/useInventory";
 import { getInventoryStatus } from "../../utils/inventoryStatus";
 
 const InventoryRow = ({ product }) => {
-  const {
-    openViewModal,
-    openEditModal,
-    openUpdateStockModal,
-    openDeleteModal,
-  } = useInventory();
+  const { openViewModal, openEditModal, openUpdateStockModal } =
+    useInventory();
 
   const status = getInventoryStatus(product.stock, product.minStock);
 
@@ -44,7 +40,11 @@ const InventoryRow = ({ product }) => {
         </span>
       </td>
 
-      <td>{product.lastUpdated}</td>
+      <td>
+        {product.lastUpdated
+          ? new Date(product.lastUpdated).toLocaleDateString()
+          : ""}
+      </td>
 
       <td>
         <div className="actions">
@@ -70,14 +70,6 @@ const InventoryRow = ({ product }) => {
             title="Update Stock"
           >
             <FiRefreshCw />
-          </button>
-
-          <button
-            className="delete-btn"
-            onClick={() => openDeleteModal(product)}
-            title="Delete"
-          >
-            <FiTrash2 />
           </button>
         </div>
       </td>

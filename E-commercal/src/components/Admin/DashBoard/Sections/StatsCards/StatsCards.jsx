@@ -1,64 +1,52 @@
+import { useEffect, useState } from "react";
 import "./StatsCards.css";
 import StatCard from "./StatCards";
 
-import {
-  FaDollarSign,
-  FaShoppingBag,
-  FaUsers,
-  FaBoxOpen,
-  FaChartLine,
-  FaWallet,
-} from "react-icons/fa";
+import { FaDollarSign, FaShoppingBag, FaUsers, FaBoxOpen } from "react-icons/fa";
+import { GetDashboardStats } from "../../../../../services/DashboardService";
 
 const StatsCards = () => {
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalOrders: 0,
+    totalCustomers: 0,
+    totalProducts: 0,
+  });
+
+  useEffect(() => {
+    GetDashboardStats()
+      .then((data) => setStats(data))
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="stats-cards">
       <StatCard
         title="Revenue"
-        value="$25,400"
-        percentage="+12%"
+        value={`$${Number(stats.totalRevenue).toLocaleString()}`}
         color="#E9F8EE"
         icon={<FaDollarSign />}
       />
 
       <StatCard
         title="Orders"
-        value="156"
-        percentage="+8%"
+        value={String(stats.totalOrders)}
         color="#FFF6DD"
         icon={<FaShoppingBag />}
       />
 
       <StatCard
         title="Customers"
-        value="420"
-        percentage="+5%"
+        value={String(stats.totalCustomers)}
         color="#E8F1FF"
         icon={<FaUsers />}
       />
 
       <StatCard
         title="Products"
-        value="86"
-        percentage="+3%"
+        value={String(stats.totalProducts)}
         color="#FFEAF2"
         icon={<FaBoxOpen />}
-      />
-
-      <StatCard
-        title="Profit"
-        value="$8,250"
-        percentage="+18%"
-        color="#EAF9F3"
-        icon={<FaChartLine />}
-      />
-
-      <StatCard
-        title="Expenses"
-        value="$3,120"
-        percentage="-2%"
-        color="#FFF0F0"
-        icon={<FaWallet />}
       />
     </div>
   );

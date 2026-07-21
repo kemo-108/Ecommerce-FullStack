@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./SalesChart.css";
 import {
   ResponsiveContainer,
@@ -9,32 +10,29 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-
-const data = [
-  { day: "01", revenue: 2000, orders: 4500 },
-  { day: "04", revenue: 4000, orders: 6700 },
-  { day: "07", revenue: 3200, orders: 3100 },
-  { day: "10", revenue: 6800, orders: 4700 },
-  { day: "13", revenue: 2900, orders: 7600 },
-  { day: "16", revenue: 4100, orders: 5800 },
-  { day: "19", revenue: 5200, orders: 3000 },
-  { day: "22", revenue: 8400, orders: 5200 },
-  { day: "25", revenue: 6100, orders: 4700 },
-  { day: "28", revenue: 4800, orders: 2100 },
-  { day: "31", revenue: 7200, orders: 3500 },
-];
+import { GetDashboardStats } from "../../../../../services/DashboardService";
 
 const SalesChart = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    GetDashboardStats()
+      .then((stats) => {
+        setData(
+          (stats.revenueByMonth || []).map((m) => ({
+            month: m.month,
+            revenue: m.revenue,
+            orders: m.orders,
+          }))
+        );
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="sales-chart-card">
       <div className="sales-chart-header">
         <h3>Sales Overview</h3>
-
-        <select>
-          <option>This Month</option>
-          <option>This Week</option>
-          <option>This Year</option>
-        </select>
       </div>
 
       <div className="chart-container">
@@ -62,7 +60,7 @@ const SalesChart = () => {
 
             <CartesianGrid vertical={false} stroke="#f1f1f1" />
 
-            <XAxis dataKey="day" tickLine={false} axisLine={false} />
+            <XAxis dataKey="month" tickLine={false} axisLine={false} />
 
             <YAxis tickLine={false} axisLine={false} />
 

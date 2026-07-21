@@ -10,7 +10,6 @@ const ReturnsTable = ({ items }) => {
         <span>Order ID</span>
         <span>Date</span>
         <span>Status</span>
-        <span>Action</span>
       </div>
 
       <div className="returns-table-body">

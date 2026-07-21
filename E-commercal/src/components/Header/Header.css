@@ -47,7 +47,7 @@
     max-width: 100%;
     display: flex;
     align-items: center;
-    background: #FFF1F5;
+    background: var(--primary-light);
     border: 2px solid transparent;
     border-radius: 50px;
     padding: 8px 16px;
@@ -99,7 +99,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: #FFF1F5;
+    background: var(--primary-light);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -277,7 +277,7 @@
 }
 
 .dropdown-menu a:hover {
-    background: #FFF1F5;
+    background: var(--primary-light);
     color: var(--primary);
     padding-left: 20px;
 }

@@ -44,21 +44,21 @@
 
 .page-number.active{
 
-    background:#FF2D75;
+    background:var(--primary);
 
     color:#fff;
 
-    border-color:#FF2D75;
+    border-color:var(--primary);
 }
 
 .page-btn:hover:not(:disabled),
 .page-number:hover{
 
-    background:#FF2D75;
+    background:var(--primary);
 
     color:#fff;
 
-    border-color:#FF2D75;
+    border-color:var(--primary);
 }
 
 .page-btn:disabled{

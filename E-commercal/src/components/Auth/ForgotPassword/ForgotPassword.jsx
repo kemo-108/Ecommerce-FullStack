@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { FaEnvelope } from "react-icons/fa";
+import { FiMail, FiCheckCircle } from "react-icons/fi";
 import "../Login/Login.css";
 import { Link } from "react-router-dom";
 import { ForgotPassword as ForgotPasswordRequest } from "../../../services/AuthService";
 import { toast } from "react-toastify";
+import logo from "../../../image/image.png";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -32,45 +33,69 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="login">
-      <div className="login-container">
-        <div className="wrapper">
-          <form onSubmit={handleSubmit}>
-            <h1>Reset Password</h1>
+    <div className="auth-page">
+      <div className="auth-panel">
+        <Link to="/" className="auth-logo">
+          <img src={logo} alt="Art Corner logo" />
+          <span>Art Corner</span>
+        </Link>
 
-            {sent ? (
-              <p style={{ textAlign: "center", margin: "20px 0" }}>
-                If an account exists for {email}, a reset link has been sent.
-              </p>
-            ) : (
-              <div className="input-box">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <FaEnvelope className="icon" />
-              </div>
-            )}
+        <h2>Forgot your password?</h2>
+        <p>
+          No worries — enter the email on your account and we'll send you a
+          link to reset it.
+        </p>
+      </div>
 
-            {!sent && (
-              <button type="submit" className="btn" disabled={loading}>
-                {loading ? "Sending..." : "Send Reset Link"}
-              </button>
-            )}
+      <div className="auth-form-side">
+        <div className="auth-card">
+          <h1>Reset Password</h1>
 
-            <div className="register-link">
+          {sent ? (
+            <div className="reset-sent">
+              <FiCheckCircle className="reset-sent-icon" />
               <p>
-                Remembered your password? <Link to="/login">Login</Link>
+                If an account exists for <strong>{email}</strong>, a reset
+                link has been sent.
               </p>
             </div>
-            <br />
-            <Link className="link-home" to="/">
-              Home
-            </Link>
-          </form>
+          ) : (
+            <>
+              <p className="auth-subtitle">
+                Enter your email to receive a reset link.
+              </p>
+
+              <form onSubmit={handleSubmit}>
+                <div className="input-group">
+                  <label>Email</label>
+                  <div className="input-box">
+                    <FiMail className="icon" />
+                    <input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" className="btn-primary" disabled={loading}>
+                  {loading ? "Sending..." : "Send Reset Link"}
+                </button>
+              </form>
+            </>
+          )}
+
+          <div className="register-link">
+            <p>
+              Remembered your password? <Link to="/login">Login</Link>
+            </p>
+          </div>
+
+          <Link className="link-home" to="/">
+            Back to Home
+          </Link>
         </div>
       </div>
     </div>

@@ -20,7 +20,7 @@
 
     font-weight:700;
 
-    color:#ec4899;
+    color:var(--primary);
 
     border-bottom:1px solid #f1f1f1;
 }

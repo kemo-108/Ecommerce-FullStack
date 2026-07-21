@@ -1,11 +1,13 @@
 import "./Topbar.css";
-import { FaSearch, FaBell, FaEnvelope } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GetCurrentUser } from "../../../../../services/AuthService";
 
 const Topbar = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const admin = GetCurrentUser();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -31,23 +33,14 @@ const Topbar = () => {
       </div>
 
       <div className="topbar-right">
-        <div className="topbar-icon">
-          <FaBell />
-
-          <span>3</span>
-        </div>
-
-        <div className="topbar-icon">
-          <FaEnvelope />
-
-          <span>5</span>
-        </div>
-
         <div className="admin-info">
-          <img src="https://i.pravatar.cc/150?img=12" alt="Admin" />
+          <img
+            src={admin?.avatar || "https://i.pravatar.cc/150"}
+            alt={admin?.name || "Admin"}
+          />
 
           <div>
-            <h4>Kemo Mostafa</h4>
+            <h4>{admin?.name || "Admin"}</h4>
 
             <p>Administrator</p>
           </div>

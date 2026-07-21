@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { FaUser, FaUnlockAlt, FaEnvelope, FaPhone } from "react-icons/fa";
+import { FiUser, FiLock, FiMail, FiPhone } from "react-icons/fi";
 import "../Login/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Register as RegisterRequest, SaveSession } from "../../../services/AuthService";
 import { toast } from "react-toastify";
+import logo from "../../../image/image.png";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -59,75 +60,104 @@ const Register = () => {
   };
 
   return (
-    <div className="login">
-      <div className="login-container">
-        <div className="wrapper">
+    <div className="auth-page">
+      <div className="auth-panel">
+        <Link to="/" className="auth-logo">
+          <img src={logo} alt="Art Corner logo" />
+          <span>Art Corner</span>
+        </Link>
+
+        <h2>Join the Art Corner community.</h2>
+        <p>
+          Create an account to save your favorites, track orders, and check
+          out in seconds.
+        </p>
+      </div>
+
+      <div className="auth-form-side">
+        <div className="auth-card">
+          <h1>Create your account</h1>
+          <p className="auth-subtitle">It only takes a minute.</p>
+
           <form onSubmit={handleSubmit}>
-            <h1>Register</h1>
-
-            <div className="input-box">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
-              <FaUser className="icon" />
+            <div className="input-group">
+              <label>Full Name</label>
+              <div className="input-box">
+                <FiUser className="icon" />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your full name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="input-box">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-              <FaEnvelope className="icon" />
+            <div className="input-group">
+              <label>Email</label>
+              <div className="input-box">
+                <FiMail className="icon" />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="input-box">
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone"
-                value={form.phone}
-                onChange={handleChange}
-                required
-              />
-              <FaPhone className="icon" />
+            <div className="input-group">
+              <label>Phone</label>
+              <div className="input-box">
+                <FiPhone className="icon" />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="01xxxxxxxxx"
+                  value={form.phone}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="input-box">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                required
-                minLength={6}
-              />
-              <FaUnlockAlt className="icon" />
+            <div className="input-group">
+              <label>Password</label>
+              <div className="input-box">
+                <FiLock className="icon" />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
 
-            <div className="input-box">
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                required
-                minLength={6}
-              />
-              <FaUnlockAlt className="icon" />
+            <div className="input-group">
+              <label>Confirm Password</label>
+              <div className="input-box">
+                <FiLock className="icon" />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="••••••••"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
 
-            <button type="submit" className="btn" disabled={loading}>
+            <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? "Creating account..." : "Register"}
             </button>
 
@@ -136,9 +166,9 @@ const Register = () => {
                 Already have an account? <Link to="/login">Login</Link>
               </p>
             </div>
-            <br />
+
             <Link className="link-home" to="/">
-              Home
+              Back to Home
             </Link>
           </form>
         </div>

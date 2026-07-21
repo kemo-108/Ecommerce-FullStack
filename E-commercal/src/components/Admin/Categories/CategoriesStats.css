@@ -59,7 +59,7 @@
 
 .pink{
     background:#FDECF3;
-    color:#FF2D75;
+    color:var(--primary);
 }
 
 .green{
@@ -73,12 +73,12 @@
 }
 
 .yellow{
-    background:#FFF7E6;
+    background:var(--primary-light);
     color:#F59E0B;
 }
 
 .pink + .stat-info span{
-    color:#FF2D75;
+    color:var(--primary);
 }
 
 .green + .stat-info span{

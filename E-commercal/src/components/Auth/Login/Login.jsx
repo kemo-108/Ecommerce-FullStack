@@ -64,6 +64,11 @@ const Login = () => {
 
       <div className="auth-form-side">
         <div className="auth-card">
+          <div className="auth-card-logo">
+            <img src={logo} alt="Art Corner logo" />
+            <span>Art Corner</span>
+          </div>
+
           <h1>Welcome back</h1>
           <p className="auth-subtitle">Log in to your account to continue.</p>
 

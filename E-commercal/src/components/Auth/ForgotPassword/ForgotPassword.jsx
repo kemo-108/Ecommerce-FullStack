@@ -49,6 +49,11 @@ const ForgotPassword = () => {
 
       <div className="auth-form-side">
         <div className="auth-card">
+          <div className="auth-card-logo">
+            <img src={logo} alt="Art Corner logo" />
+            <span>Art Corner</span>
+          </div>
+
           <h1>Reset Password</h1>
 
           {sent ? (

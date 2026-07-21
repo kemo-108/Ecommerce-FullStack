@@ -76,6 +76,11 @@ const Register = () => {
 
       <div className="auth-form-side">
         <div className="auth-card">
+          <div className="auth-card-logo">
+            <img src={logo} alt="Art Corner logo" />
+            <span>Art Corner</span>
+          </div>
+
           <h1>Create your account</h1>
           <p className="auth-subtitle">It only takes a minute.</p>
 

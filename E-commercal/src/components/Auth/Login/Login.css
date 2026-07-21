@@ -91,6 +91,26 @@
   margin-bottom: 8px;
 }
 
+.auth-card-logo {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.auth-card-logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.auth-card-logo span {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dark);
+}
+
 .auth-subtitle {
   color: var(--gray);
   margin-bottom: 30px;
@@ -142,8 +162,10 @@
   border-radius: 8px;
   font-size: 15px;
   color: var(--dark);
-  padding: 0 16px 0 42px;
+  padding: 0 16px 0 46px;
   transition: border-color 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .input-box input::placeholder {
@@ -156,11 +178,13 @@
 
 .input-box .icon {
   position: absolute;
-  left: 14px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 18px;
+  font-size: 17px;
   color: var(--gray);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .remmember-forgot {
@@ -252,6 +276,10 @@
 
   .auth-form-side {
     flex: 1;
+  }
+
+  .auth-card-logo {
+    display: flex;
   }
 }
 

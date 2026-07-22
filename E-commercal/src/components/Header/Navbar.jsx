@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../image/image.png";
-import Navber from "./Navbar";
-import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiPhone, FiTruck } from "react-icons/fi";
+// import Navbar from "./"
+import {
+  FiSearch,
+  FiHeart,
+  FiShoppingCart,
+  FiUser,
+  FiPhone,
+  FiTruck,
+} from "react-icons/fi";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { GetCart } from "../../services/CartService";
@@ -22,30 +29,30 @@ const Header = () => {
   };
 
   const refreshCartCount = () => {
-  if (!IsAuthenticated()) {
-    setTimeout(() => setCartCount(0), 0);
-    return;
-  }
-  GetCart()
-    .then((data) =>
-      setCartCount(
-        Array.isArray(data)
-          ? data.reduce((sum, item) => sum + (item.Qty || 1), 0)
-          : 0
+    if (!IsAuthenticated()) {
+      setTimeout(() => setCartCount(0), 0);
+      return;
+    }
+    GetCart()
+      .then((data) =>
+        setCartCount(
+          Array.isArray(data)
+            ? data.reduce((sum, item) => sum + (item.Qty || 1), 0)
+            : 0,
+        ),
       )
-    )
-    .catch(() => setCartCount(0));
-};
+      .catch(() => setCartCount(0));
+  };
 
   const refreshWishlistCount = () => {
-  if (!IsAuthenticated()) {
-    setTimeout(() => setWishlistCount(0), 0);
-    return;
-  }
-  GetWishlist()
-    .then((data) => setWishlistCount(Array.isArray(data) ? data.length : 0))
-    .catch(() => setWishlistCount(0));
-};
+    if (!IsAuthenticated()) {
+      setTimeout(() => setWishlistCount(0), 0);
+      return;
+    }
+    GetWishlist()
+      .then((data) => setWishlistCount(Array.isArray(data) ? data.length : 0))
+      .catch(() => setWishlistCount(0));
+  };
 
   useEffect(() => {
     refreshCartCount();
@@ -106,7 +113,9 @@ const Header = () => {
           <div className="header-icons">
             <Link to="/wishlist" className="icon-link">
               <FiHeart size={22} />
-              {wishlistCount > 0 && <span className="count">{wishlistCount}</span>}
+              {wishlistCount > 0 && (
+                <span className="count">{wishlistCount}</span>
+              )}
               <span className="icon-label">Wishlist</span>
             </Link>
 
@@ -128,7 +137,7 @@ const Header = () => {
       </div>
 
       {/* ================= Category / nav bar ================= */}
-      <Navber />
+      {/* <Navber /> */}
     </div>
   );
 };

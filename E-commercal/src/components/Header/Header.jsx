@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../image/image.png";
 import Navber from "./Navbar";
-import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiPhone, FiTruck } from "react-icons/fi";
+import {
+  FiSearch,
+  FiHeart,
+  FiShoppingCart,
+  FiUser,
+  FiPhone,
+  FiTruck,
+} from "react-icons/fi";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { GetCart } from "../../services/CartService";
@@ -27,8 +34,8 @@ const Header = () => {
         setCartCount(
           Array.isArray(data)
             ? data.reduce((sum, item) => sum + (item.Qty || 1), 0)
-            : 0
-        )
+            : 0,
+        ),
       )
       .catch(() => setCartCount(0));
   };
@@ -92,7 +99,9 @@ const Header = () => {
           <div className="header-icons">
             <Link to="/wishlist" className="icon-link">
               <FiHeart size={22} />
-              {wishlistCount > 0 && <span className="count">{wishlistCount}</span>}
+              {wishlistCount > 0 && (
+                <span className="count">{wishlistCount}</span>
+              )}
               <span className="icon-label">Wishlist</span>
             </Link>
 

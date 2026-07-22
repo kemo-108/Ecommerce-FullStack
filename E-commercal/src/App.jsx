@@ -56,47 +56,50 @@ function App() {
         }
       >
         <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/checkout" element={<CheckOut />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/category" element={<PublicCategory />} />
-        <Route path="/wishlist" element={<WishList />} />
-        <Route path="/single-product/:productId" element={<SingleProduct />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/category" element={<PublicCategory />} />
+          <Route path="/wishlist" element={<WishList />} />
+          <Route
+            path="/single-product/:productId"
+            element={<SingleProduct />}
+          />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        <Route path="/account" element={<Account />}>
-          <Route index element={<Navigate to="/account/profile" replace />} />
+          <Route path="/account" element={<Account />}>
+            <Route index element={<Navigate to="/account/profile" replace />} />
 
-          <Route path="profile" element={<Profile />} />
+            <Route path="profile" element={<Profile />} />
 
-          <Route path="orders" element={<MyOrder />} />
+            <Route path="orders" element={<MyOrder />} />
 
-          <Route path="addresses" element={<Addresses />} />
+            <Route path="addresses" element={<Addresses />} />
 
-          <Route path="security" element={<Security />} />
+            <Route path="security" element={<Security />} />
 
-          <Route path="returns" element={<Returns />} />
-        </Route>
+            <Route path="returns" element={<Returns />} />
+          </Route>
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="category" element={<AdminCategories />} />
-          <Route path="coupons" element={<Coupons />} />
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="refunds" element={<Refunds />} />
-        </Route>
-       <Route path="*" element={<h1>404 Not Found</h1>} />
-      </Routes>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="products" element={<Products />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="category" element={<AdminCategories />} />
+            <Route path="coupons" element={<Coupons />} />
+            <Route path="inventory" element={<Inventory />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="refunds" element={<Refunds />} />
+          </Route>
+          <Route path="*" element={<h1>404 Not Found</h1>} />
+        </Routes>
       </div>
 
       {!isAuthPage && !isAdminPage && !isAccountPage && <Footer />}

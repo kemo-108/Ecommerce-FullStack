@@ -1,57 +1,136 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { CgProfile } from "react-icons/cg";
-import { FiMenu, FiX, FiHeart } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import logo from "../../image/image.png";
+import Navber from "./Navbar";
+import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiPhone, FiTruck } from "react-icons/fi";
 import "./Header.css";
-const links = [
-  { id: 1, title: "Home", Url: "/" },
-  { id: 2, title: "Shop", Url: "/shop" },
-  { id: 3, title: "Category", Url: "/category" },
-  { id: 4, title: "Contact", Url: "/contact" },
-];
-const Navber = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+import { Link, useNavigate } from "react-router-dom";
+import { GetCart } from "../../services/CartService";
+import { GetWishlist } from "../../services/WishlistService";
+import { IsAuthenticated } from "../../services/AuthService";
 
-  const closeMobileMenu = () => setMobileOpen(false);
+const Header = () => {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const query = searchTerm.trim();
+    navigate(query ? `/shop?search=${encodeURIComponent(query)}` : "/shop");
+  };
+
+  const refreshCartCount = () => {
+  if (!IsAuthenticated()) {
+    setTimeout(() => setCartCount(0), 0);
+    return;
+  }
+  GetCart()
+    .then((data) =>
+      setCartCount(
+        Array.isArray(data)
+          ? data.reduce((sum, item) => sum + (item.Qty || 1), 0)
+          : 0
+      )
+    )
+    .catch(() => setCartCount(0));
+};
+
+  const refreshWishlistCount = () => {
+  if (!IsAuthenticated()) {
+    setTimeout(() => setWishlistCount(0), 0);
+    return;
+  }
+  GetWishlist()
+    .then((data) => setWishlistCount(Array.isArray(data) ? data.length : 0))
+    .catch(() => setWishlistCount(0));
+};
+
+  useEffect(() => {
+    refreshCartCount();
+    refreshWishlistCount();
+
+    window.addEventListener("cart-updated", refreshCartCount);
+    window.addEventListener("wishlist-updated", refreshWishlistCount);
+
+    return () => {
+      window.removeEventListener("cart-updated", refreshCartCount);
+      window.removeEventListener("wishlist-updated", refreshWishlistCount);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="navbar">
-      <button
-        type="button"
-        className="navbar-toggle"
-        aria-label={mobileOpen ? "Close menu" : "Open menu"}
-        aria-expanded={mobileOpen}
-        onClick={() => setMobileOpen((prev) => !prev)}
-      >
-        {mobileOpen ? <FiX size={26} /> : <FiMenu size={26} />}
-      </button>
+    <div className={`header ${scrolled ? "active" : ""}`}>
+      {/* ================= Top utility bar ================= */}
+      <div className="header-topbar">
+        <div className="container topbar-inner">
+          <span className="topbar-item">
+            <FiTruck /> Free shipping on orders over $100
+          </span>
 
-      <div className={mobileOpen ? "nav-links open" : "nav-links"}>
-        {links.map((link) => (
-          <div key={link.id} className="nav-item">
-            <Link to={link.Url} className="nav-link" onClick={closeMobileMenu}>
-              {link.title}
-            </Link>
-          </div>
-        ))}
-
-        <Link to="/login" className="login-icon-mobile" onClick={closeMobileMenu}>
-          <CgProfile className="login-icon" />
-        </Link>
-        <Link to="/wishlist" className="wishlist-icon-mobile" onClick={closeMobileMenu}>
-          <FiHeart className="login-icon" />
-        </Link>
+          <a href="tel:+11234567890" className="topbar-item">
+            <FiPhone /> (123) 456-7890
+          </a>
+        </div>
       </div>
 
-      <Link to="/wishlist" className="wishlist-icon-desktop">
-        <FiHeart className="login-icon" />
-      </Link>
+      {/* ================= Main header ================= */}
+      <div className="header-main">
+        <div className="container header-main-inner">
+          <Link to="/" className="logo">
+            <img src={logo} alt="Art Corner logo" />
+            <span>Art Corner</span>
+          </Link>
 
-      <Link to="/login" className="login-icon-desktop">
-        <CgProfile className="login-icon" />
-      </Link>
+          <form className="search-box" onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="Search for products..."
+              name="search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="submit">
+              <FiSearch size={20} />
+            </button>
+          </form>
+
+          <div className="header-icons">
+            <Link to="/wishlist" className="icon-link">
+              <FiHeart size={22} />
+              {wishlistCount > 0 && <span className="count">{wishlistCount}</span>}
+              <span className="icon-label">Wishlist</span>
+            </Link>
+
+            <Link to="/cart" className="icon-link">
+              <FiShoppingCart size={22} />
+              {cartCount > 0 && <span className="count">{cartCount}</span>}
+              <span className="icon-label">Cart</span>
+            </Link>
+
+            <Link
+              to={IsAuthenticated() ? "/account/profile" : "/login"}
+              className="icon-link"
+            >
+              <FiUser size={22} />
+              <span className="icon-label">Account</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ================= Category / nav bar ================= */}
+      <Navber />
     </div>
   );
 };
 
-export default Navber;
+export default Header;

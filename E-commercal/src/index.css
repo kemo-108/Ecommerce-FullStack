@@ -81,3 +81,9 @@ img{
     max-width: 100%;
     display: block;
 }
+/* Compensates for the fixed Header so page content doesn't render
+   underneath it. Applied around <Routes> in App.jsx on any page
+   that actually renders the Header. */
+.site-content{
+    padding-top: var(--header-height, 168px);
+}

@@ -50,7 +50,12 @@ function App() {
       {!isAuthPage && !isAdminPage && !isAccountPage && <Header />}
       {!isAuthPage && !isAdminPage && !isAccountPage && <Sidebar />}
 
-      <Routes>
+      <div
+        className={
+          !isAuthPage && !isAdminPage && !isAccountPage ? "site-content" : ""
+        }
+      >
+        <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/checkout" element={<CheckOut />} />
         <Route path="/contact" element={<Contact />} />
@@ -90,8 +95,9 @@ function App() {
           <Route path="settings" element={<Settings />} />
           <Route path="refunds" element={<Refunds />} />
         </Route>
-        <Route path="*" element={<h1>404 Not Found</h1>} />
+       <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
+      </div>
 
       {!isAuthPage && !isAdminPage && !isAccountPage && <Footer />}
     </>

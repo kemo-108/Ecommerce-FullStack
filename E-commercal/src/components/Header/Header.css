@@ -2,15 +2,18 @@
 
 /* ================= HEADER ================= */
 
+:root {
+    --header-height: 168px;
+}
+
 .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100px;
     z-index: 1000;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     transition: .35s ease;
     background: transparent;
 }
@@ -22,6 +25,91 @@
     backdrop-filter: blur(12px);
 }
 
+/* ================= TOP UTILITY BAR ================= */
+
+.header-topbar {
+    background: var(--secondary);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 50px;
+    font-size: 13px;
+}
+
+.topbar-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ================= MAIN HEADER ROW ================= */
+
+.header-main {
+    background: transparent;
+}
+
+.header.active .header-main {
+    background: transparent;
+}
+
+.header-main-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 14px 50px;
+}
+
+/* ================= HEADER ICONS ================= */
+
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.header-icons .icon-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--dark);
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    transition: .3s;
+}
+
+.header-icons .icon-link:hover {
+    color: var(--primary);
+}
+
+.header-icons .icon-label {
+    white-space: nowrap;
+}
+
+.header-icons .count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+
 .header .container {
     width: 100%;
     display: flex;
@@ -31,13 +119,24 @@
 }
 
 .header .logo {
-    width: 70px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
 }
 
 .header .logo img {
-    width: 100%;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.header .logo span {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--dark);
+    white-space: nowrap;
 }
 
 /* ================= SEARCH ================= */
@@ -87,79 +186,19 @@
     color: var(--primary);
 }
 
-/* ================= HEADER ICONS ================= */
-
-.header .Header_icons {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.header .Header_icons .icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--primary-light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #333;
-    cursor: pointer;
-    position: relative;
-    transition: .3s;
-}
-
-.header .Header_icons .icon:hover {
-    background: var(--primary);
-    color: #fff;
-    transform: translateY(-3px);
-}
-
-.header .Header_icons .icon .count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--primary-dark);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.login-icon {
-    width: 22px;
-    height: 22px;
-}
-
-.login-icon-mobile {
-    display: none;
-}
-
-.login-icon-desktop {
-    display: flex;
-    align-items: center;
-}
-
-.wishlist-icon-mobile {
-    display: none;
-}
-
-.wishlist-icon-desktop {
-    display: flex;
-    align-items: center;
-    margin-right: 14px;
-}
 /* ================= NAVBAR ================= */
 
 .navbar {
     display: flex;
     align-items: center;
-    margin-right: 40px;
+    justify-content: center;
+    width: 100%;
+    padding: 14px 50px;
+    background: #fff;
+}
+
+.header:not(.active) .navbar {
+    background: rgba(255, 255, 255, 0.92);
 }
 
 .navbar-toggle {
@@ -320,8 +359,16 @@
 
 @media (max-width:1200px){
 
-    .header .container{
-        padding:15px 30px;
+    .topbar-inner{
+        padding: 8px 30px;
+    }
+
+    .header-main-inner{
+        padding: 14px 30px;
+    }
+
+    .navbar{
+        padding: 12px 30px;
     }
 
     .nav-links{
@@ -337,8 +384,20 @@
 
 @media (max-width:992px){
 
-    .header .container{
-        padding:15px 20px;
+    :root{
+        --header-height: 156px;
+    }
+
+    .topbar-inner{
+        padding: 8px 20px;
+    }
+
+    .header-main-inner{
+        padding: 12px 20px;
+    }
+
+    .navbar{
+        padding: 10px 20px;
     }
 
     .header .search-box{
@@ -353,13 +412,8 @@
         font-size:15px;
     }
 
-    .Header_icons{
-        gap:12px;
-    }
-
-    .Header_icons .icon{
-        width:40px;
-        height:40px;
+    .header-icons{
+        gap:14px;
     }
 
 }
@@ -367,11 +421,15 @@
 
 @media (max-width:768px){
 
-    .header{
-        height:70px;
+    :root{
+        --header-height: 122px;
     }
 
-    .header .container{
+    .header-topbar{
+        display: none;
+    }
+
+    .header-main-inner{
         justify-content:space-between;
     }
 
@@ -379,25 +437,22 @@
         display:none;
     }
 
+    .header-icons .icon-label{
+        display: none;
+    }
+
     .navbar{
-        margin-right: 0;
+        justify-content: flex-start;
+        padding: 10px 20px;
     }
 
     .navbar-toggle{
         display: flex;
     }
 
-    .login-icon-desktop{
-        display: none;
-    }
-
-    .wishlist-icon-desktop{
-        display: none;
-    }
-
     .nav-links{
         position: fixed;
-        top: 70px;
+        top: var(--header-height);
         left: 0;
         width: 100%;
         flex-direction: column;
@@ -442,30 +497,13 @@
         display: flex;
     }
 
-    .login-icon-mobile{
-        display: flex;
-        align-items: center;
-        padding: 12px 24px;
+    .header .logo img{
+        width:48px;
+        height:48px;
     }
 
-    .wishlist-icon-mobile{
-        display: flex;
-        align-items: center;
-        padding: 12px 24px;
-    }
-
-    .Header_icons{
-        gap:10px;
-    }
-
-    .Header_icons .icon{
-        width:38px;
-        height:38px;
-        font-size:16px;
-    }
-
-    .header .logo{
-        width:60px;
+    .header .logo span{
+        font-size: 17px;
     }
 
     .sidebar{
@@ -477,31 +515,27 @@
 
 @media (max-width:576px){
 
-    .header .container{
-        padding:12px 15px;
+    :root{
+        --header-height: 112px;
     }
 
-    .header{
-        height:65px;
+    .header-main-inner{
+        padding: 10px 15px;
     }
 
-    .header .logo{
-        width:55px;
+    .header-icons{
+        gap:10px;
     }
 
-    .Header_icons{
-        gap:8px;
-    }
-
-    .Header_icons .icon{
-        width:34px;
-        height:34px;
-    }
-
-    .Header_icons .icon .count{
+    .header-icons .count{
         width:16px;
         height:16px;
         font-size:10px;
+    }
+
+    .header .logo img{
+        width:42px;
+        height:42px;
     }
 
 }

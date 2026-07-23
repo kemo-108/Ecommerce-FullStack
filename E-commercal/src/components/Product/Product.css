@@ -16,13 +16,16 @@
 }
 
 .product-image {
+    position: relative;
+    background: var(--main-color);
+    aspect-ratio: 1 / 1;
     width: 200px;
     height: 90px;
     border-radius: 16px;
     background: #f8f9fc;
     display: flex;
     justify-content: center;
-    align-items: center;
+    padding: 18px;
 }
 
 .product-image img {

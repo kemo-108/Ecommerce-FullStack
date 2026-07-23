@@ -29,7 +29,6 @@ namespace E_commercal_APi.ViewModels
         public decimal Discount { get; set; }
         [Required] public int Qty { get; set; }
         public string Code { get; set; }
-        public string Weight { get; set; }
         public string Description { get; set; }
         public List<IFormFile> Images { get; set; }
     }
@@ -40,6 +39,7 @@ namespace E_commercal_APi.ViewModels
         public string Category { get; set; }
         public string Brand { get; set; }
         [Required] public decimal Price { get; set; }
+        public decimal Discount { get; set; }
         [Required] public int Qty { get; set; }
         public string ImageUrl { get; set; }
         public string Description { get; set; }

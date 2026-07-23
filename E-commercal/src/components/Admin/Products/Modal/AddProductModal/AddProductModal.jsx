@@ -10,17 +10,14 @@ import "./AddProductModal.css";
 const AddProductModal = ({ setOpenAddModal, onSaved }) => {
   const [categories, setCategories] = useState([]);
 
-  const [formData, setFormData] = useState({
+ const [formData, setFormData] = useState({
     name: "",
     category: "",
     brand: "",
     code: "",
-    sku: "",
     price: "",
-    oldPrice: "",
     discount: "",
     stock: "",
-    weight: "",
     description: "",
     images: [],
   });
@@ -104,16 +101,20 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
 
       payload.append("ProductName", formData.name);
       payload.append("Price", formData.price);
-      payload.append("OldPrice", formData.oldPrice || 0);
       payload.append("Discount", formData.discount || 0);
       payload.append("Brand", formData.brand);
 
       // مهم جدًا
       payload.append("Code", formData.code);
 
-      payload.append("Sku", formData.sku);
-      payload.append("Description", formData.description);
-      payload.append("CategoryId", formData.category);
+  
+     payload.append("Description", formData.description);
+      payload.append("Qty", formData.stock || 0);
+
+      const selectedCategory = categories.find(
+        (cat) => String(cat.id) === String(formData.category)
+      );
+      payload.append("Category", selectedCategory ? selectedCategory.name : "");
 
       formData.images.forEach((file) => {
         payload.append("Images", file);
@@ -271,17 +272,7 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                 />
               </div>
 
-              <div className="input-group">
-                <label>SKU</label>
-
-                <input
-                  type="text"
-                  name="sku"
-                  value={formData.sku}
-                  onChange={handleChange}
-                  placeholder="SKU-001"
-                />
-              </div>
+              
             </div>
             <div className="double-input">
               <div className="input-group">
@@ -300,17 +291,7 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                 )}
               </div>
 
-              <div className="input-group">
-                <label>Old Price</label>
-
-                <input
-                  type="number"
-                  name="oldPrice"
-                  value={formData.oldPrice}
-                  onChange={handleChange}
-                  placeholder="0.00"
-                />
-              </div>
+              
             </div>
 
             <div className="double-input">
@@ -339,17 +320,7 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
               </div>
             </div>
 
-            <div className="input-group">
-              <label>Weight (Kg)</label>
-
-              <input
-                type="number"
-                name="weight"
-                value={formData.weight}
-                onChange={handleChange}
-                placeholder="0"
-              />
-            </div>
+            
 
             <div className="input-group">
               <label>Description</label>

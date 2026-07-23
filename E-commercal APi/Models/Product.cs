@@ -51,8 +51,7 @@ namespace E_commercal_APi.Models
         [MaxLength(100)]
         public string? Brand { get; set; }
 
-        [MaxLength(50)]
-        public string? Sku { get; set; }
+        
 
         [Column(TypeName = "decimal(5,2)")]
         [Range(0, 100)]

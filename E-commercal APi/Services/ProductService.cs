@@ -134,6 +134,8 @@ namespace E_commercal_APi.Services
             product.ProductName = dto.ProductName;
             product.Brand = dto.Brand;
             product.Price = dto.Price;
+            product.Discount = dto.Discount;
+            product.OldPrice = dto.Discount > 0 ? dto.Price / (1 - dto.Discount / 100) : null;
             product.Description = dto.Description;
             product.UpdatedAt = DateTime.UtcNow;
 

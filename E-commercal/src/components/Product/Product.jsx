@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import "./Product.css";
 import { useEffect, useState } from "react";
 import { AddToCart } from "../../services/CartService";
-import { AddToWishlist, RemoveFromWishlist, GetWishlist } from "../../services/WishlistService";
+import {
+  AddToWishlist,
+  RemoveFromWishlist,
+  GetWishlist,
+} from "../../services/WishlistService";
 import { IsAuthenticated } from "../../services/AuthService";
 import { toast } from "react-toastify";
 
@@ -19,7 +23,7 @@ const Product = ({ product, showExtraBtn }) => {
     GetWishlist()
       .then((items) => {
         const match = (items || []).find(
-          (item) => item.productId === product.productId
+          (item) => item.productId === product.productId,
         );
         if (match) {
           setFavorite(true);
@@ -111,7 +115,6 @@ const Product = ({ product, showExtraBtn }) => {
             <FiPlus />
           </button>
         )}
-
         <img
           src={`https://localhost:7069/${product.imageUrl}`}
           alt={product.productName}
@@ -124,7 +127,9 @@ const Product = ({ product, showExtraBtn }) => {
         <h3>{product.productName}</h3>
 
         <div className="price-row">
-          <span className="price">EGP {Number(product.price || 0).toFixed(0)}</span>
+          <span className="price">
+            EGP {Number(product.price || 0).toFixed(0)}
+          </span>
 
           {hasDiscount && (
             <del className="old-price">

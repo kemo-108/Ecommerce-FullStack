@@ -1,5 +1,6 @@
 ﻿using E_commercal_APi.Services;
 using E_commercal_APi.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commercal_APi.Controllers
@@ -34,6 +35,7 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto dto)
         {
             var created = await _categoryService.CreateAsync(dto);
@@ -41,6 +43,7 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryCreateDto dto)
         {
             try
@@ -55,6 +58,7 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try

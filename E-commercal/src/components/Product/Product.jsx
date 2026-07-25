@@ -122,10 +122,9 @@ const Product = ({ product, showExtraBtn }) => {
       </div>
 
       <div className="product-info">
-        {product.category && <span className="brand">{product.category}</span>}
-
         <h3>{product.productName}</h3>
 
+        {product.category && <span className="brand">{product.category}</span>}
         <div className="price-row">
           <span className="price">
             EGP {Number(product.price || 0).toFixed(0)}

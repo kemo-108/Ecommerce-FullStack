@@ -1,4 +1,5 @@
 import "./ProductsTab.css";
+import { useEffect, useState } from "react";
 
 import AnalyticsCard from "../../Components/AnalyticsCard/AnalyticsCard";
 import AnalyticsChart from "../../Components/AnalyticsChart/AnalyticsChart";
@@ -25,16 +26,59 @@ import {
   Legend,
 } from "recharts";
 
-import {
-  categorySalesData,
-  categoryDistributionData,
-  bestSellingProducts,
-  leastSellingProducts,
-} from "../../Mock/reportsData";
+import { GetProductsReport } from "../../../../../services/ReportsService";
+import { formatCurrency } from "../../Utils/reportHelpers";
 
 const COLORS = ["#FF4D8D", "#3B82F6", "#22C55E", "#F59E0B", "#A855F7"];
 
+const ProductRow = (item) => (
+  <tr key={item.productId}>
+    <td>
+      <div className="product-info">
+        <img src={item.image || "https://placehold.co/60x60"} alt={item.name} />
+
+        <span>{item.name}</span>
+      </div>
+    </td>
+
+    <td>
+      <span className="category-badge">{item.category}</span>
+    </td>
+
+    <td>{item.sold}</td>
+
+    <td className="revenue">{formatCurrency(item.revenue)}</td>
+  </tr>
+);
+
 const ProductsTab = () => {
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await GetProductsReport();
+        setReport(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  if (loading) return <div className="products-tab">Loading products report...</div>;
+  if (!report) return <div className="products-tab">Couldn't load the products report.</div>;
+
+  const categorySalesData = report.categorySales.map((c) => ({
+    category: c.name,
+    sales: c.value,
+  }));
+  const categoryDistributionData = report.categoryDistribution.map((c) => ({
+    name: c.name,
+    value: c.value,
+  }));
+
   return (
     <div className="products-tab">
       {/* ================= Stats ================= */}
@@ -42,7 +86,7 @@ const ProductsTab = () => {
       <div className="products-stats">
         <AnalyticsCard
           title="Total Products"
-          value="248"
+          value={report.totalProducts.toLocaleString()}
           subtitle="Across all categories"
           icon={FiPackage}
           color="#3B82F6"
@@ -50,7 +94,7 @@ const ProductsTab = () => {
 
         <AnalyticsCard
           title="Active Products"
-          value="224"
+          value={report.activeProducts.toLocaleString()}
           subtitle="Available for sale"
           icon={FiCheckCircle}
           color="#22C55E"
@@ -58,7 +102,7 @@ const ProductsTab = () => {
 
         <AnalyticsCard
           title="Low Stock"
-          value="18"
+          value={report.lowStock.toLocaleString()}
           subtitle="Need restocking"
           icon={FiAlertTriangle}
           color="#F59E0B"
@@ -66,7 +110,7 @@ const ProductsTab = () => {
 
         <AnalyticsCard
           title="Out of Stock"
-          value="6"
+          value={report.outOfStock.toLocaleString()}
           subtitle="Currently unavailable"
           icon={FiXCircle}
           color="#EF4444"
@@ -108,7 +152,7 @@ const ProductsTab = () => {
           </ResponsiveContainer>
         </AnalyticsChart>
 
-        <AnalyticsChart title="Category Distribution">
+        <AnalyticsChart title="Category Distribution (by revenue)">
           <ResponsiveContainer width="100%" height={320}>
             <PieChart>
               <Pie
@@ -119,7 +163,7 @@ const ProductsTab = () => {
                 animationDuration={1200}
               >
                 {categoryDistributionData.map((entry, index) => (
-                  <Cell key={index} fill={COLORS[index]} />
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
 
@@ -142,51 +186,15 @@ const ProductsTab = () => {
         <AnalyticsTable
           title="Best Selling Products"
           columns={["Product", "Category", "Sold", "Revenue"]}
-          data={bestSellingProducts}
-          renderRow={(item) => (
-            <tr key={item.id}>
-              <td>
-                <div className="product-info">
-                  <img src={item.image} alt={item.name} />
-
-                  <span>{item.name}</span>
-                </div>
-              </td>
-
-              <td>
-                <span className="category-badge">{item.category}</span>
-              </td>
-
-              <td>{item.sold}</td>
-
-              <td className="revenue">{item.revenue}</td>
-            </tr>
-          )}
+          data={report.bestSelling}
+          renderRow={ProductRow}
         />
 
         <AnalyticsTable
           title="Least Selling Products"
           columns={["Product", "Category", "Sold", "Revenue"]}
-          data={leastSellingProducts}
-          renderRow={(item) => (
-            <tr key={item.id}>
-              <td>
-                <div className="product-info">
-                  <img src={item.image} alt={item.name} />
-
-                  <span>{item.name}</span>
-                </div>
-              </td>
-
-              <td>
-                <span className="category-badge">{item.category}</span>
-              </td>
-
-              <td>{item.sold}</td>
-
-              <td className="revenue">{item.revenue}</td>
-            </tr>
-          )}
+          data={report.leastSelling}
+          renderRow={ProductRow}
         />
       </div>
     </div>

@@ -82,6 +82,11 @@ const Invoice = ({ order }) => {
             <span>Payment</span>
             <strong>{order.paymentStatus}</strong>
           </div>
+
+          <div className="info-row">
+            <span>Shipping Address</span>
+            <strong>{order.address || "—"}</strong>
+          </div>
         </div>
       </div>
       {/* ================= Products ================= */}
@@ -98,19 +103,22 @@ const Invoice = ({ order }) => {
           </thead>
 
           <tbody>
-            {order.items.map((item, index) => (
-              <tr key={item.productId}>
+            {(order.items || []).map((item, index) => (
+              <tr key={item.productId ?? index}>
                 <td>{index + 1}</td>
+
                 <td className="product-name">{item.productName}</td>
+
                 <td>{item.quantity}</td>
-                <td>${item.price.toFixed(2)}</td>
-                <td>${(item.price * item.quantity).toFixed(2)}</td>
+
+                <td>${Number(item.price).toFixed(2)}</td>
+
+                <td>${(Number(item.price) * Number(item.quantity)).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {/* Summary يبدأ في الجزء الثاني */}{" "}
       {/* ================= Summary ================= */}
       <div className="invoice-summary">
         <div className="payment-card">
@@ -118,12 +126,12 @@ const Invoice = ({ order }) => {
 
           <div className="summary-row">
             <span>Payment Method</span>
-            <strong>Cash On Delivery</strong>
+            <strong>{order.paymentMethod || "—"}</strong>
           </div>
 
           <div className="summary-row">
-            <span>Payment Method</span>
-            <strong>{order.paymentMethod}</strong>
+            <span>Payment Status</span>
+            <strong>{order.paymentStatus}</strong>
           </div>
 
           <div className="summary-row">
@@ -135,27 +143,27 @@ const Invoice = ({ order }) => {
         <div className="total-card">
           <div className="total-row">
             <span>Subtotal</span>
-            <strong>${order.subtotal.toFixed(2)}</strong>
+            <strong>${Number(order.subtotal).toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
             <span>Shipping</span>
-            <strong>${order.shipping.toFixed(2)}</strong>
+            <strong>${Number(order.shipping).toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
             <span>Discount</span>
-            <strong>$0.00</strong>
+            <strong>-${Number(order.discount || 0).toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
-            <span>VAT</span>
-            <strong>${order.tax.toFixed(2)}</strong>
+            <span>Tax</span>
+            <strong>${Number(order.tax).toFixed(2)}</strong>
           </div>
 
           <div className="grand-total">
             <span>Grand Total</span>
-            <strong>${order.total.toFixed(2)}</strong>
+            <strong>${Number(order.total).toFixed(2)}</strong>
           </div>
         </div>
       </div>

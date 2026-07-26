@@ -8,18 +8,20 @@ import {
   FiUser,
   FiPhone,
   FiTruck,
+  FiShield,
 } from "react-icons/fi";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { GetCart } from "../../services/CartService";
 import { GetWishlist } from "../../services/WishlistService";
-import { IsAuthenticated } from "../../services/AuthService";
+import { IsAuthenticated, GetCurrentUser } from "../../services/AuthService";
 
 const Header = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const isAdmin = IsAuthenticated() && GetCurrentUser()?.role === "admin";
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -118,6 +120,13 @@ const Header = () => {
               <FiUser size={22} />
               <span className="icon-label">Account</span>
             </Link>
+
+            {isAdmin && (
+              <Link to="/admin/dashboard" className="icon-link">
+                <FiShield size={22} />
+                <span className="icon-label">Admin Panel</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>

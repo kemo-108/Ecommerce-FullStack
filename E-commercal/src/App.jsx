@@ -31,6 +31,7 @@ import Addresses from "./components/User/Addresses/Addresses";
 import Security from "./components/User/Security/Security";
 import Returns from "./components/User/Returns/Returns";
 import Refunds from "./components/Admin/Refunds/Refunds";
+import { RequireAuth, RequireAdmin } from "./components/Auth/RouteGuards/RouteGuards";
 
 function App() {
   const location = useLocation();
@@ -71,32 +72,36 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          <Route path="/account" element={<Account />}>
-            <Route index element={<Navigate to="/account/profile" replace />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/account" element={<Account />}>
+              <Route index element={<Navigate to="/account/profile" replace />} />
 
-            <Route path="profile" element={<Profile />} />
+              <Route path="profile" element={<Profile />} />
 
-            <Route path="orders" element={<MyOrder />} />
+              <Route path="orders" element={<MyOrder />} />
 
-            <Route path="addresses" element={<Addresses />} />
+              <Route path="addresses" element={<Addresses />} />
 
-            <Route path="security" element={<Security />} />
+              <Route path="security" element={<Security />} />
 
-            <Route path="returns" element={<Returns />} />
+              <Route path="returns" element={<Returns />} />
+            </Route>
           </Route>
 
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="products" element={<Products />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="customers" element={<Customers />} />
-            <Route path="category" element={<AdminCategories />} />
-            <Route path="coupons" element={<Coupons />} />
-            <Route path="inventory" element={<Inventory />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="refunds" element={<Refunds />} />
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="products" element={<Products />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="customers" element={<Customers />} />
+              <Route path="category" element={<AdminCategories />} />
+              <Route path="coupons" element={<Coupons />} />
+              <Route path="inventory" element={<Inventory />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="refunds" element={<Refunds />} />
+            </Route>
           </Route>
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>

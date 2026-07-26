@@ -1,4 +1,5 @@
 import "./CustomersTab.css";
+import { useEffect, useState } from "react";
 
 import AnalyticsCard from "../../Components/AnalyticsCard/AnalyticsCard";
 
@@ -6,7 +7,6 @@ import { FiUsers, FiUserPlus, FiRefreshCw, FiUserCheck } from "react-icons/fi";
 import AnalyticsChart from "../../Components/AnalyticsChart/AnalyticsChart";
 import AnalyticsTable from "../../Components/AnalyticsTable/AnalyticsTable";
 
-import { topCustomers } from "../../Mock/reportsData";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -21,14 +21,43 @@ import {
   YAxis,
 } from "recharts";
 
-import { customerGrowthData, customerTypeData } from "../../Mock/reportsData";
+import { GetCustomersReport } from "../../../../../services/ReportsService";
+import { formatCurrency } from "../../Utils/reportHelpers";
+
 const CustomersTab = () => {
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await GetCustomersReport();
+        setReport(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  if (loading) return <div className="customers-tab">Loading customers report...</div>;
+  if (!report) return <div className="customers-tab">Couldn't load the customers report.</div>;
+
+  const customerGrowthData = report.customerGrowth.map((m) => ({
+    month: m.month,
+    customers: m.value,
+  }));
+  const customerTypeData = report.customerTypeSplit.map((c) => ({
+    name: c.name,
+    value: c.value,
+  }));
+
   return (
     <div className="customers-tab">
       <div className="customers-stats">
         <AnalyticsCard
           title="Total Customers"
-          value="4,280"
+          value={report.totalCustomers.toLocaleString()}
           subtitle="Registered customers"
           icon={FiUsers}
           color="#3B82F6"
@@ -36,7 +65,7 @@ const CustomersTab = () => {
 
         <AnalyticsCard
           title="New Customers"
-          value="186"
+          value={report.newCustomersThisMonth.toLocaleString()}
           subtitle="This month"
           icon={FiUserPlus}
           color="#22C55E"
@@ -44,7 +73,7 @@ const CustomersTab = () => {
 
         <AnalyticsCard
           title="Returning"
-          value="1,245"
+          value={report.returningCustomers.toLocaleString()}
           subtitle="Repeat purchases"
           icon={FiRefreshCw}
           color="#F59E0B"
@@ -52,8 +81,8 @@ const CustomersTab = () => {
 
         <AnalyticsCard
           title="Active Customers"
-          value="3,940"
-          subtitle="Purchased recently"
+          value={report.activeCustomers.toLocaleString()}
+          subtitle="Ordered in the last 90 days"
           icon={FiUserCheck}
           color="#FF4D8D"
         />
@@ -117,7 +146,7 @@ const CustomersTab = () => {
                 animationDuration={1200}
               >
                 {customerTypeData.map((entry, index) => (
-                  <Cell key={index} fill={["#22C55E", "#FF4D8D"][index]} />
+                  <Cell key={index} fill={["#22C55E", "#FF4D8D"][index % 2]} />
                 ))}
               </Pie>
 
@@ -132,7 +161,26 @@ const CustomersTab = () => {
         <AnalyticsTable
           title="Top Customers"
           columns={["Customer", "Email", "Orders", "Total Spent"]}
-          data={topCustomers}
+          data={report.topCustomers}
+          renderRow={(item) => (
+            <tr key={item.userId}>
+              <td>
+                <div className="product-info">
+                  <img
+                    src={item.image || "https://placehold.co/60x60"}
+                    alt={item.name}
+                  />
+                  <span>{item.name}</span>
+                </div>
+              </td>
+
+              <td>{item.email}</td>
+
+              <td>{item.orders}</td>
+
+              <td className="revenue">{formatCurrency(item.spent)}</td>
+            </tr>
+          )}
         />
       </div>
     </div>

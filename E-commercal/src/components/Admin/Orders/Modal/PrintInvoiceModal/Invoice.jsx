@@ -98,43 +98,15 @@ const Invoice = ({ order }) => {
           </thead>
 
           <tbody>
-            {/* هنربطها بالـ API بعدين */}
-
-            <tr>
-              <td>1</td>
-
-              <td className="product-name">Abstract Wall Art Canvas</td>
-
-              <td>2</td>
-
-              <td>$120.00</td>
-
-              <td>$240.00</td>
-            </tr>
-
-            <tr>
-              <td>2</td>
-
-              <td className="product-name">Modern Wooden Frame</td>
-
-              <td>1</td>
-
-              <td>$80.00</td>
-
-              <td>$80.00</td>
-            </tr>
-
-            <tr>
-              <td>3</td>
-
-              <td className="product-name">Decorative Painting</td>
-
-              <td>3</td>
-
-              <td>$60.00</td>
-
-              <td>$180.00</td>
-            </tr>
+            {order.items.map((item, index) => (
+              <tr key={item.productId}>
+                <td>{index + 1}</td>
+                <td className="product-name">{item.productName}</td>
+                <td>{item.quantity}</td>
+                <td>${item.price.toFixed(2)}</td>
+                <td>${(item.price * item.quantity).toFixed(2)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -150,8 +122,8 @@ const Invoice = ({ order }) => {
           </div>
 
           <div className="summary-row">
-            <span>Payment Status</span>
-            <strong>{order.paymentStatus}</strong>
+            <span>Payment Method</span>
+            <strong>{order.paymentMethod}</strong>
           </div>
 
           <div className="summary-row">
@@ -163,12 +135,12 @@ const Invoice = ({ order }) => {
         <div className="total-card">
           <div className="total-row">
             <span>Subtotal</span>
-            <strong>$500.00</strong>
+            <strong>${order.subtotal.toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
             <span>Shipping</span>
-            <strong>$20.00</strong>
+            <strong>${order.shipping.toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
@@ -177,13 +149,13 @@ const Invoice = ({ order }) => {
           </div>
 
           <div className="total-row">
-            <span>VAT (14%)</span>
-            <strong>$70.00</strong>
+            <span>VAT</span>
+            <strong>${order.tax.toFixed(2)}</strong>
           </div>
 
           <div className="grand-total">
             <span>Grand Total</span>
-            <strong>$590.00</strong>
+            <strong>${order.total.toFixed(2)}</strong>
           </div>
         </div>
       </div>

@@ -28,13 +28,24 @@ const Cart = () => {
     fetchCart();
   }, []);
 
+  const [removingIds, setRemovingIds] = useState(new Set());
+
   const handleRemove = async (id) => {
+    if (removingIds.has(id)) return; // في نفس الطلب لسه شغال، تجاهل أي ضغطة زيادة
+
+    setRemovingIds((prev) => new Set(prev).add(id));
     try {
       await DeletetCart(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
       console.error(error);
       toast.error("Could not remove item");
+    } finally {
+      setRemovingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     }
   };
 
@@ -43,7 +54,7 @@ const Cart = () => {
     if (newQty < 1) return;
 
     setItems((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, Qty: newQty } : i))
+      prev.map((i) => (i.id === item.id ? { ...i, Qty: newQty } : i)),
     );
 
     try {
@@ -57,7 +68,7 @@ const Cart = () => {
 
   const subtotal = items.reduce(
     (total, item) => total + (item.price || 0) * (item.Qty || 1),
-    0
+    0,
   );
   const delivery = items.length > 0 ? 50 : 0;
   const discount = 0;
@@ -101,6 +112,7 @@ const Cart = () => {
                             <button
                               className="remove-btn"
                               onClick={() => handleRemove(item.id)}
+                              disabled={removingIds.has(item.id)}
                             >
                               X
                             </button>
@@ -131,7 +143,10 @@ const Cart = () => {
                             </div>
                           </td>
                           <td>
-                            ${(Number(item.price || 0) * (item.Qty || 1)).toFixed(2)}
+                            $
+                            {(
+                              Number(item.price || 0) * (item.Qty || 1)
+                            ).toFixed(2)}
                           </td>
                         </tr>
                       ))}

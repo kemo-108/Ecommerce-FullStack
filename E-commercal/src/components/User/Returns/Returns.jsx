@@ -11,6 +11,8 @@ import { GetMyReturns } from "../../../services/ReturnsService";
 
 const capitalize = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
+const RETURNS_PER_PAGE = 8;
+
 const Returns = () => {
   const [returns, setReturns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,7 @@ const Returns = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [sortBy, setSortBy] = useState("Latest");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const loadReturns = async () => {
     setLoading(true);
@@ -44,7 +47,7 @@ const Returns = () => {
               })
             : "",
           status: capitalize(r.status),
-        }))
+        })),
       );
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to load returns.");
@@ -73,8 +76,19 @@ const Returns = () => {
     .sort((a, b) =>
       sortBy === "Oldest"
         ? new Date(a.date) - new Date(b.date)
-        : new Date(b.date) - new Date(a.date)
+        : new Date(b.date) - new Date(a.date),
     );
+
+  // Jump back to page 1 whenever the filters (or the data) change, so we
+  // never end up "stuck" on a page that no longer has any results.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedStatus, sortBy]);
+
+  const paginatedReturns = filteredReturns.slice(
+    (currentPage - 1) * RETURNS_PER_PAGE,
+    currentPage * RETURNS_PER_PAGE,
+  );
 
   return (
     <div className="returns-page">
@@ -92,10 +106,15 @@ const Returns = () => {
       {loading ? (
         <p>Loading returns...</p>
       ) : (
-        <ReturnsTable items={filteredReturns} />
+        <ReturnsTable items={paginatedReturns} />
       )}
 
-      <ReturnsPagination totalItems={filteredReturns.length} />
+      <ReturnsPagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalItems={filteredReturns.length}
+        itemsPerPage={RETURNS_PER_PAGE}
+      />
 
       {openModal && (
         <RequestReturnModal

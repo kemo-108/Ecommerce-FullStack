@@ -26,7 +26,8 @@ namespace E_commercal_APi.Services
             Discount = o.Discount,
             Total = o.Total,
             PaymentStatus = o.PaymentStatus,
-            PaymentMethod = o.Payment?.Method,
+
+            PaymentMethod = o.PaymentMethod,
             Status = o.Status,
             Address = o.AddressSnapshot,
             Notes = o.Notes,
@@ -35,6 +36,7 @@ namespace E_commercal_APi.Services
             {
                 ProductId = i.ProductId,
                 ProductName = i.ProductName,
+                ImageUrl = i.ImageUrl,
                 Price = i.Price,
                 Quantity = i.Quantity,
             }).ToList() ?? new(),
@@ -42,23 +44,31 @@ namespace E_commercal_APi.Services
 
         public async Task<OrderDto> PlaceOrderAsync(int userId, PlaceOrderDto dto)
         {
+            var user = await _db.Users.FindAsync(userId);
+
             var order = new Order
             {
                 UserId = userId,
                 CustomerName = dto.CustomerName,
                 CustomerEmail = dto.CustomerEmail,
+                CustomerImage = user?.Avatar ?? "",
                 Subtotal = dto.Subtotal,
                 Shipping = dto.Shipping,
                 Tax = 0,
                 Total = dto.Total,
                 PaymentStatus = "pending",
+                PaymentMethod = string.IsNullOrWhiteSpace(dto.PaymentMethod)
+                                ? "Cash On Delivery"
+                                : dto.PaymentMethod,
                 Status = "pending",
                 AddressSnapshot = dto.Address,
+                Notes = "",
                 OrderDate = DateTime.UtcNow,
                 Items = dto.Items.Select(i => new OrderItem
                 {
                     ProductId = i.ProductId,
                     ProductName = i.ProductName,
+                    ImageUrl = i.ImageUrl,
                     Price = i.Price,
                     Quantity = i.Quantity,
                 }).ToList(),
@@ -138,6 +148,7 @@ namespace E_commercal_APi.Services
                 Tax = 0,
                 Total = dto.Total,
                 PaymentStatus = dto.PaymentStatus,
+                PaymentMethod = "Cash On Delivery",
                 Status = dto.Status,
                 OrderDate = DateTime.UtcNow,
                 Items = dto.Items.Select(i => new OrderItem
@@ -167,6 +178,16 @@ namespace E_commercal_APi.Services
         public async Task DeleteAsync(int orderId)
         {
             var order = await _db.Orders.FindAsync(orderId)
+                ?? throw new KeyNotFoundException("Order not found.");
+
+            _db.Orders.Remove(order);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task DeleteMyOrderAsync(int userId, int orderId)
+        {
+            var order = await _db.Orders
+                .FirstOrDefaultAsync(o => o.OrderId == orderId && o.UserId == userId)
                 ?? throw new KeyNotFoundException("Order not found.");
 
             _db.Orders.Remove(order);

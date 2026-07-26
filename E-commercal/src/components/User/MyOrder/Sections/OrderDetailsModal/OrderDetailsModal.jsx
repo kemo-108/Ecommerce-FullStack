@@ -28,8 +28,12 @@ const OrderDetailsModal = ({ order, onClose }) => {
         <div className="modal-items">
           {order.items?.map((item, index) => (
             <div className="modal-product" key={index}>
-              <img src={item.imageUrl} alt={item.productName} />
-
+              <img
+                src={
+                  item.imageUrl ? `https://localhost:7069/${item.imageUrl}` : ""
+                }
+                alt={item.productName}
+              />
               <div>
                 <h3>{item.productName}</h3>
                 <p>

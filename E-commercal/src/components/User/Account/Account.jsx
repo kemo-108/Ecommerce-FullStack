@@ -1,5 +1,5 @@
 import "./Account.css";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import AccountSidebar from "./Sections/AccountSidebar/AccountSidebar";
 
 const Account = () => {
@@ -7,12 +7,14 @@ const Account = () => {
     <section className="account-page">
       <div className="account-container">
         <div className="account-header">
-          <span>Home / My Account</span>
+          <Link to="/">Home</Link>
+          <span>/ My Account</span>
 
           <h1>My Account</h1>
 
           <p>
-            Manage your profile information, orders and addresses from one place.
+            Manage your profile information, orders and addresses from one
+            place.
           </p>
         </div>
 

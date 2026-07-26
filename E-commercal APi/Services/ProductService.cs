@@ -32,15 +32,32 @@ namespace E_commercal_APi.Services
             CreatedAt = p.CreatedAt.ToString("dd MMM yyyy"),
         };
 
-        public async Task<List<ProductDto>> GetAllAsync()
+        public async Task<(List<ProductDto> Products, int TotalCount)> GetAllAsync(string? search = null, int page = 1, int pageSize = 12)
         {
-            var products = await _db.Products
+            var query = _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var term = search.Trim();
+                query = query.Where(p =>
+                    EF.Functions.Like(p.ProductName, $"%{term}%") ||
+                    (p.Brand != null && EF.Functions.Like(p.Brand, $"%{term}%")) ||
+                    (p.Code != null && EF.Functions.Like(p.Code, $"%{term}%")) ||
+                    (p.Category != null && EF.Functions.Like(p.Category.Name, $"%{term}%")));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var products = await query
                 .OrderByDescending(p => p.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return products.Select(ToDto).ToList();
+            return (products.Select(ToDto).ToList(), totalCount);
         }
 
         public async Task<ProductDto?> GetByIdAsync(int id)

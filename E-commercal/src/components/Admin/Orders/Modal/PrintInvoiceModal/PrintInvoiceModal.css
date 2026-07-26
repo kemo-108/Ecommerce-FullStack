@@ -167,4 +167,14 @@
     overflow:visible;
   }
 
+  .invoice-page{
+    width:210mm;
+    margin:0 auto;
+    display:block;
+  }
+
+  .invoice-scale-content{
+    transform-origin: top center;
+  }
+
 }

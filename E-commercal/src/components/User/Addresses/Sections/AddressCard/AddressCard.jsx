@@ -9,20 +9,29 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 
-const AddressCard = ({ address }) => {
+const AddressCard = ({ address, onEdit, onDelete, onSetDefault }) => {
+  const isHome = address.type?.toLowerCase() === "home";
+
   return (
     <div className="address-card">
       <div className="address-card-header">
         <div className="address-type">
-          {address.type === "Home" ? <FiHome /> : <FiBriefcase />}
+          {isHome ? <FiHome /> : <FiBriefcase />}
           <h3>{address.type}</h3>
         </div>
 
-        {address.default && (
+        {address.default ? (
           <span className="default-badge">
             <FiCheckCircle />
             Default
           </span>
+        ) : (
+          <button
+            className="set-default-btn"
+            onClick={() => onSetDefault(address.id)}
+          >
+            Set as default
+          </button>
         )}
       </div>
 
@@ -31,7 +40,7 @@ const AddressCard = ({ address }) => {
 
         <p>
           <FiMapPin />
-          {address.address}
+          {address.addressLine}
         </p>
 
         <p>
@@ -51,12 +60,12 @@ const AddressCard = ({ address }) => {
       </div>
 
       <div className="address-actions">
-        <button className="edit-btn">
+        <button className="edit-btn" onClick={() => onEdit(address)}>
           <FiEdit2 />
           Edit
         </button>
 
-        <button className="delete-btn">
+        <button className="delete-btn" onClick={() => onDelete(address.id)}>
           <FiTrash2 />
           Delete
         </button>

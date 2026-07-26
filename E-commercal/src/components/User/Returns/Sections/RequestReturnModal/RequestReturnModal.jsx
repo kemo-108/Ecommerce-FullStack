@@ -5,7 +5,7 @@ import "./RequestReturnModal.css";
 
 import { GetMyOrders } from "../../../../../services/OrderService";
 import { CreateReturn } from "../../../../../services/ReturnsService";
-
+import { CreateRefund } from "../../../../../services/RefundsService";
 const RequestReturnModal = ({ onClose, onCreated }) => {
   const [orders, setOrders] = useState([]);
   const [selectedOrderId, setSelectedOrderId] = useState("");
@@ -22,7 +22,9 @@ const RequestReturnModal = ({ onClose, onCreated }) => {
       .catch(() => {});
   }, []);
 
-  const selectedOrder = orders.find((o) => o.orderId === Number(selectedOrderId));
+  const selectedOrder = orders.find(
+    (o) => o.orderId === Number(selectedOrderId),
+  );
 
   const handleQtyChange = (productId, value) => {
     setQuantities((prev) => ({ ...prev, [productId]: value }));
@@ -50,7 +52,7 @@ const RequestReturnModal = ({ onClose, onCreated }) => {
       .filter((item) => quantities[item.productId] > 0)
       .reduce(
         (sum, item) => sum + item.price * Number(quantities[item.productId]),
-        0
+        0,
       );
 
     setSaving(true);
@@ -61,12 +63,20 @@ const RequestReturnModal = ({ onClose, onCreated }) => {
         total,
         items,
       });
+
+      // Also raise a refund request so it shows up in Admin > Refunds
+      await CreateRefund({
+        orderId: Number(selectedOrderId),
+        amount: total,
+        reason,
+      });
+
       toast.success("Return request submitted successfully.");
       onCreated();
       onClose();
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to submit return request."
+        error.response?.data?.message || "Failed to submit return request.",
       );
     } finally {
       setSaving(false);
@@ -137,7 +147,11 @@ const RequestReturnModal = ({ onClose, onCreated }) => {
           <button className="cancel-btn" onClick={onClose}>
             Cancel
           </button>
-          <button className="submit-btn" onClick={handleSubmit} disabled={saving}>
+          <button
+            className="submit-btn"
+            onClick={handleSubmit}
+            disabled={saving}
+          >
             {saving ? "Submitting..." : "Submit Request"}
           </button>
         </div>

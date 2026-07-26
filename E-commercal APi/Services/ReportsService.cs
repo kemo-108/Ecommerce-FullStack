@@ -48,9 +48,9 @@ namespace E_commercal_APi.Services
             // translatable and avoids repeat round-trips per month.
             var sixMonthsAgo = thisMonthStart.AddMonths(-5);
             var orderRows = await _db.Orders
-                .Where(o => o.OrderDate >= sixMonthsAgo)
-                .Select(o => new { o.OrderDate, o.Total, o.PaymentStatus })
-                .ToListAsync();
+    .Where(o => o.OrderDate >= sixMonthsAgo)
+    .Select(o => new { o.OrderDate, o.Total, o.PaymentStatus, o.PaymentMethod })
+    .ToListAsync();
 
             decimal RevenueInRange(DateTime start, DateTime end) => orderRows
                 .Where(o => o.PaymentStatus == "paid" && o.OrderDate >= start && o.OrderDate < end)
@@ -98,10 +98,10 @@ namespace E_commercal_APi.Services
                 })
                 .ToList();
 
-            var paymentMethods = await _db.Payments
-                .GroupBy(p => p.Method)
-                .Select(g => new NameValueDto { Name = g.Key, Value = g.Count() })
-                .ToListAsync();
+            var paymentMethods = orderRows
+    .GroupBy(o => o.PaymentMethod)
+    .Select(g => new NameValueDto { Name = g.Key ?? "Unknown", Value = g.Count() })
+    .ToList();
 
             var topProducts = await _db.OrderItems
                 .GroupBy(oi => new { oi.ProductId, oi.ProductName, oi.Product.ImageUrl, CategoryName = oi.Product.Category.Name })

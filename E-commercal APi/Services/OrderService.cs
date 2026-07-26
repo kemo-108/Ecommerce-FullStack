@@ -100,7 +100,7 @@ namespace E_commercal_APi.Services
         {
             var order = await _db.Orders
     .Include(o => o.Items)
-    .Include(o => o.Payment)
+    
     .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
             return order == null ? null : ToDto(order);
@@ -110,7 +110,7 @@ namespace E_commercal_APi.Services
         {
             var orders = await _db.Orders
             .Include(o => o.Items)
-            .Include(o => o.Payment)
+            
             .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
 

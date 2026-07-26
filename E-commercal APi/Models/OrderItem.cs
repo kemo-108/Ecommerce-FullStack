@@ -25,6 +25,9 @@ namespace E_commercal_APi.Models
         [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
 
+        [MaxLength(300)]
+        public string? ImageUrl { get; set; }
+
         // snapshot السعر وقت الطلب
         [Required, Column(TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }

@@ -11,5 +11,6 @@ namespace E_commercal_APi.Services
         Task<OrderDto> AdminCreateOrderAsync(AdminCreateOrderDto dto);
         Task UpdateStatusAsync(int orderId, string status);
         Task DeleteAsync(int orderId);
+        Task DeleteMyOrderAsync(int userId, int orderId);
     }
 }

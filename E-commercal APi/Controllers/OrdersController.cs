@@ -92,5 +92,21 @@ namespace E_commercal_APi.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        // Customer removing their own order from "My Orders" (e.g. after Buy Again)
+        [HttpDelete("my-orders/{id:int}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteMyOrder(int id)
+        {
+            try
+            {
+                await _orderService.DeleteMyOrderAsync(UserId, id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
     }
 }

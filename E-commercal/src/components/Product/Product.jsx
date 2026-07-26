@@ -89,7 +89,7 @@ const Product = ({ product, showExtraBtn }) => {
 
   return (
     <Link to={`/single-product/${product.productId}`} className="product-card">
-      <div className="product-image">
+      <div className="pcard-image">
         {hasDiscount && (
           <span className="save-badge">Save {savings.toFixed(0)} EGP</span>
         )}
@@ -121,7 +121,7 @@ const Product = ({ product, showExtraBtn }) => {
         />
       </div>
 
-      <div className="product-info">
+      <div className="pcard-info">
         <h3>{product.productName}</h3>
 
         {product.category && <span className="brand">{product.category}</span>}

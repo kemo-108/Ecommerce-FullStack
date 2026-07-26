@@ -49,6 +49,7 @@ namespace E_commercal_APi.ViewModels
         public decimal Shipping { get; set; }
         public decimal Total { get; set; }
         public string PaymentStatus { get; set; }
+        public string PaymentMethod { get; set; }
         public string Status { get; set; }
         public string Address { get; set; }
         public string Notes { get; set; }

@@ -47,11 +47,12 @@ namespace E_commercal_APi.Models
 
         [Required, Column(TypeName = "decimal(10,2)")]
         public decimal Total { get; set; }
-
         // paid | pending | failed
         [Required, MaxLength(20)]
         public string PaymentStatus { get; set; } = "pending";
 
+        [MaxLength(30)]
+        public string PaymentMethod { get; set; } = "Cash On Delivery";
         // pending | processing | shipped | delivered | cancelled
         [Required, MaxLength(20)]
         public string Status { get; set; } = "pending";

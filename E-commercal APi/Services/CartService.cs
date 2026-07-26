@@ -82,7 +82,17 @@ namespace E_commercal_APi.Services
                 ?? throw new KeyNotFoundException("Cart item not found.");
 
             _db.CartItems.Remove(item);
-            await _db.SaveChangesAsync();
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // الصف اتحذف بالفعل من طلب تاني (double click) قبل ما إحنا
+                // نوصل للـ SaveChanges بتاعتنا. النتيجة اللي إحنا عايزينها
+                // (العنصر يتشال) أصلاً حصلت، فمنعتبرهاش مشكلة.
+            }
         }
     }
 }

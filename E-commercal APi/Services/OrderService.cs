@@ -25,6 +25,7 @@ namespace E_commercal_APi.Services
             Shipping = o.Shipping,
             Total = o.Total,
             PaymentStatus = o.PaymentStatus,
+            PaymentMethod = o.PaymentMethod,
             Status = o.Status,
             Address = o.AddressSnapshot,
             Notes = o.Notes,
@@ -54,6 +55,9 @@ namespace E_commercal_APi.Services
                 Tax = 0,
                 Total = dto.Total,
                 PaymentStatus = "pending",
+                PaymentMethod = string.IsNullOrWhiteSpace(dto.PaymentMethod)
+                                ? "Cash On Delivery"
+                                : dto.PaymentMethod,
                 Status = "pending",
                 AddressSnapshot = dto.Address,
                 Notes = "",
@@ -140,6 +144,7 @@ namespace E_commercal_APi.Services
                 Tax = 0,
                 Total = dto.Total,
                 PaymentStatus = dto.PaymentStatus,
+                PaymentMethod = "Cash On Delivery",
                 Status = dto.Status,
                 OrderDate = DateTime.UtcNow,
                 Items = dto.Items.Select(i => new OrderItem

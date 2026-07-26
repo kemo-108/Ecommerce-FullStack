@@ -30,9 +30,11 @@ const Home = () => {
   useEffect(() => {
     getProducts().then((data) => setProducts(data || []));
   }, []);
+  const dealsProducts = products
+    .filter((p) => p.oldPrice && p.oldPrice > p.price)
+    .slice(0, 10);
 
-  const dealsProducts = products.slice(0, 10);
-  const newProducts = products.slice(10, 20);
+  const newProducts = products.slice(0, 10);
 
   return (
     <>

@@ -1,7 +1,7 @@
 import "./OrdersList.css";
 import OrderRow from "../OrderRow/OrderRow";
 
-const OrdersList = ({ orders, setSelectedOrder }) => {
+const OrdersList = ({ orders, setSelectedOrder, onOrderRemoved }) => {
   return (
     <div className="orders-table">
       <div className="table-head">
@@ -25,6 +25,7 @@ const OrdersList = ({ orders, setSelectedOrder }) => {
               key={order.orderId}
               order={order}
               setSelectedOrder={setSelectedOrder}
+              onOrderRemoved={onOrderRemoved}
             />
           ))
         ) : (

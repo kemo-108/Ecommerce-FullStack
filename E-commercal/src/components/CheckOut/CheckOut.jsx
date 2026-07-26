@@ -46,7 +46,7 @@ const CheckOut = () => {
 
   const subtotal = cartItems.reduce(
     (total, item) => total + (item.price || 0) * (item.Qty || 1),
-    0
+    0,
   );
   const delivery = cartItems.length > 0 ? 10 : 0;
   const discount = 0;
@@ -86,7 +86,13 @@ const CheckOut = () => {
         phone: form.phone,
         address: `${form.street}, ${form.city}, ${form.postalCode}, ${form.country}`,
         paymentMethod,
-        items: cartItems,
+        items: cartItems.map((item) => ({
+          productId: item.productId,
+          productName: item.productName,
+          imageUrl: item.imageUrl,
+          price: item.price,
+          quantity: item.qty,
+        })),
         subtotal,
         shipping: delivery,
         total,

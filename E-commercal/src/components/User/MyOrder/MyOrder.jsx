@@ -23,7 +23,7 @@ const MyOrder = () => {
         setOrders(Array.isArray(data) ? data : []);
       } catch (error) {
         toast.error(
-          error.response?.data?.message || "Failed to load your orders."
+          error.response?.data?.message || "Failed to load your orders.",
         );
       } finally {
         setLoading(false);
@@ -74,7 +74,13 @@ const MyOrder = () => {
       {loading && <p>Loading your orders...</p>}
 
       {!loading && (
-        <OrdersList orders={filteredOrders} setSelectedOrder={setSelectedOrder} />
+        <OrdersList
+          orders={filteredOrders}
+          setSelectedOrder={setSelectedOrder}
+          onOrderRemoved={(orderId) =>
+            setOrders((prev) => prev.filter((o) => o.orderId !== orderId))
+          }
+        />
       )}
 
       {selectedOrder && (

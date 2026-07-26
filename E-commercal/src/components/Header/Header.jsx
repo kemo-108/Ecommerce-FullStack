@@ -35,7 +35,7 @@ const Header = () => {
       .then((data) =>
         setCartCount(
           Array.isArray(data)
-            ? data.reduce((sum, item) => sum + (item.Qty || 1), 0)
+            ? data.reduce((sum, item) => sum + (item.qty || 1), 0)
             : 0,
         ),
       )

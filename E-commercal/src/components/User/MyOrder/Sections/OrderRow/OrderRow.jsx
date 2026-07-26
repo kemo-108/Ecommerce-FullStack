@@ -1,7 +1,14 @@
+import Products from "../../../../Admin/Products/Products";
+import Product from "../../../../Product/Product";
 import "./OrderRow.css";
+import { useState } from "react";
 import { FiEye, FiRotateCw } from "react-icons/fi";
+import { AddToCart } from "../../../../../services/CartService";
+import { DeleteMyOrder } from "../../../../../services/OrderService";
+import { toast } from "react-toastify";
 
-const OrderRow = ({ order, setSelectedOrder }) => {
+const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
+  const [reordering, setReordering] = useState(false);
   const firstItem = order.items?.[0];
   const totalQuantity =
     order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
@@ -10,8 +17,14 @@ const OrderRow = ({ order, setSelectedOrder }) => {
   return (
     <div className="order-row">
       <div className="order-product">
-        <img src={firstItem?.imageUrl} alt={firstItem?.productName} />
-
+        <img
+          src={
+            firstItem?.imageUrl
+              ? `https://localhost:7069/${Product.imageUrl}`
+              : ""
+          }
+          alt={firstItem?.productName}
+        />
         <div>
           <h4>
             {firstItem?.productName}
@@ -39,7 +52,35 @@ const OrderRow = ({ order, setSelectedOrder }) => {
           <FiEye />
         </button>
 
-        <button className="again-btn" title="Buy Again">
+        <button
+          className="again-btn"
+          title="Buy Again"
+          disabled={reordering}
+          onClick={async () => {
+            if (!order.items?.length) return;
+            setReordering(true);
+            try {
+              await Promise.all(
+                order.items.map((item) =>
+                  AddToCart({
+                    productId: item.productId,
+                    productName: item.productName,
+                    imageUrl: item.imageUrl,
+                    price: item.price,
+                    qty: item.quantity,
+                  }),
+                ),
+              );
+              await DeleteMyOrder(order.orderId);
+              toast.success("Items added to your cart");
+              onOrderRemoved?.(order.orderId);
+            } catch {
+              toast.error("Could not add these items to your cart");
+            } finally {
+              setReordering(false);
+            }
+          }}
+        >
           <FiRotateCw />
         </button>
       </div>

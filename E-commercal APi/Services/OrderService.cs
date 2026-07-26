@@ -23,8 +23,10 @@ namespace E_commercal_APi.Services
             Subtotal = o.Subtotal,
             Tax = o.Tax,
             Shipping = o.Shipping,
+            Discount = o.Discount,
             Total = o.Total,
             PaymentStatus = o.PaymentStatus,
+            PaymentMethod = o.Payment?.Method,
             Status = o.Status,
             Address = o.AddressSnapshot,
             Notes = o.Notes,
@@ -87,8 +89,9 @@ namespace E_commercal_APi.Services
         public async Task<OrderDto?> GetByIdAsync(int orderId)
         {
             var order = await _db.Orders
-                .Include(o => o.Items)
-                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+    .Include(o => o.Items)
+    .Include(o => o.Payment)
+    .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
             return order == null ? null : ToDto(order);
         }
@@ -96,9 +99,10 @@ namespace E_commercal_APi.Services
         public async Task<List<OrderDto>> GetAllAsync()
         {
             var orders = await _db.Orders
-                .Include(o => o.Items)
-                .OrderByDescending(o => o.OrderDate)
-                .ToListAsync();
+            .Include(o => o.Items)
+            .Include(o => o.Payment)
+            .OrderByDescending(o => o.OrderDate)
+            .ToListAsync();
 
             return orders.Select(ToDto).ToList();
         }

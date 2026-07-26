@@ -1,4 +1,5 @@
 import "./SalesTab.css";
+import { useEffect, useState } from "react";
 
 import AnalyticsCard from "../../Components/AnalyticsCard/AnalyticsCard";
 import AnalyticsChart from "../../Components/AnalyticsChart/AnalyticsChart";
@@ -27,17 +28,49 @@ import {
   Tooltip,
 } from "recharts";
 
-import {
-  revenueData,
-  ordersData,
-  paymentData,
-  profitData,
-  topProducts,
-} from "../../Mock/reportsData";
+import { GetSalesReport } from "../../../../../services/ReportsService";
+import { formatCurrency } from "../../Utils/reportHelpers";
 
 const COLORS = ["#FF4D8D", "#3B82F6", "#22C55E", "#F59E0B"];
 
+const signedPercent = (value) => `${value > 0 ? "+" : ""}${value}%`;
+
 const SalesTab = () => {
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await GetSalesReport();
+        setReport(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  if (loading) return <div className="sales-tab">Loading sales report...</div>;
+  if (!report) return <div className="sales-tab">Couldn't load the sales report.</div>;
+
+  const revenueByMonth = report.revenueByMonth.map((m) => ({
+    month: m.month,
+    revenue: m.value,
+  }));
+  const ordersByMonth = report.ordersByMonth.map((m) => ({
+    month: m.month,
+    orders: m.value,
+  }));
+  const profitByMonth = report.profitByMonth.map((m) => ({
+    month: m.month,
+    profit: m.value,
+  }));
+  const paymentData = report.paymentMethods.map((p) => ({
+    name: p.name,
+    value: p.value,
+  }));
+
   return (
     <div className="sales-tab">
       {/* ================= Stats ================= */}
@@ -45,32 +78,32 @@ const SalesTab = () => {
       <div className="sales-stats">
         <AnalyticsCard
           title="Revenue"
-          value="$28,450"
-          subtitle="+12.5% than last month"
+          value={formatCurrency(report.revenue)}
+          subtitle={`${signedPercent(report.revenueChangePercent)} than last month`}
           icon={FiDollarSign}
           color="#22C55E"
         />
 
         <AnalyticsCard
           title="Orders"
-          value="1,284"
-          subtitle="82 new today"
+          value={report.totalOrders.toLocaleString()}
+          subtitle={`${report.newOrdersToday} new today`}
           icon={FiShoppingBag}
           color="#3B82F6"
         />
 
         <AnalyticsCard
           title="Profit"
-          value="$9,720"
-          subtitle="+8.1% growth"
+          value={formatCurrency(report.profit)}
+          subtitle={`${signedPercent(report.profitChangePercent)} growth`}
           icon={FiTrendingUp}
           color="#FF4D8D"
         />
 
         <AnalyticsCard
           title="Average Order"
-          value="$64"
-          subtitle="Per customer"
+          value={formatCurrency(report.averageOrderValue)}
+          subtitle="This month"
           icon={FiCreditCard}
           color="#F59E0B"
         />
@@ -81,7 +114,7 @@ const SalesTab = () => {
       <div className="sales-charts">
         <AnalyticsChart title="Revenue Overview">
           <ResponsiveContainer width="100%" height={320}>
-            <AreaChart data={revenueData}>
+            <AreaChart data={revenueByMonth}>
               <defs>
                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#ff4d8d" stopOpacity={0.35} />
@@ -125,7 +158,7 @@ const SalesTab = () => {
 
         <AnalyticsChart title="Orders By Month">
           <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={ordersData}>
+            <BarChart data={ordersByMonth}>
               <CartesianGrid
                 strokeDasharray="4 4"
                 vertical={false}
@@ -190,7 +223,7 @@ const SalesTab = () => {
 
         <AnalyticsChart title="Monthly Profit">
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={profitData}>
+            <AreaChart data={profitByMonth}>
               <defs>
                 <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#22C55E" stopOpacity={0.35} />
@@ -235,12 +268,12 @@ const SalesTab = () => {
       <AnalyticsTable
         title="Top Selling Products"
         columns={["Product", "Category", "Sold", "Revenue"]}
-        data={topProducts}
+        data={report.topProducts}
         renderRow={(item) => (
-          <tr key={item.id}>
+          <tr key={item.productId}>
             <td>
               <div className="product-info">
-                <img src={item.image} alt={item.name} />
+                <img src={item.image || "https://placehold.co/60x60"} alt={item.name} />
 
                 <span>{item.name}</span>
               </div>
@@ -252,7 +285,7 @@ const SalesTab = () => {
 
             <td>{item.sold}</td>
 
-            <td className="revenue">{item.revenue}</td>
+            <td className="revenue">{formatCurrency(item.revenue)}</td>
           </tr>
         )}
       />

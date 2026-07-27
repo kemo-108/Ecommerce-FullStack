@@ -4,7 +4,18 @@
     text-align: center;
     padding: 70px 20px;
 }
-
+.category-banner a {
+    position: relative;
+    top: 90%;
+    transform: translate(-50%, -50%);
+    padding: 10px 24px;
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 1;
+}
 .category-banner h1{
     color: #fff;
     font-size: 38px;

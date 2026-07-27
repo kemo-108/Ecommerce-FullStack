@@ -112,26 +112,6 @@ const RequestReturnModal = ({ onClose, onCreated }) => {
             </select>
           </div>
 
-          {selectedOrder && (
-            <div className="return-items">
-              {selectedOrder.items.map((item) => (
-                <div className="return-item-row" key={item.productId}>
-                  <span>{item.productName}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max={item.quantity}
-                    placeholder="Qty to return"
-                    value={quantities[item.productId] || ""}
-                    onChange={(e) =>
-                      handleQtyChange(item.productId, e.target.value)
-                    }
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-
           <div className="input-group">
             <label>Reason</label>
             <textarea
@@ -140,6 +120,25 @@ const RequestReturnModal = ({ onClose, onCreated }) => {
               value={reason}
               onChange={(e) => setReason(e.target.value)}
             />
+            {selectedOrder && (
+              <div className="return-items">
+                {selectedOrder.items.map((item) => (
+                  <div className="return-item-row" key={item.productId}>
+                    <span>{item.productName}</span>
+                    <input
+                      type="number"
+                      min="0"
+                      max={item.quantity}
+                      placeholder="Qty to return"
+                      value={quantities[item.productId] || ""}
+                      onChange={(e) =>
+                        handleQtyChange(item.productId, e.target.value)
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

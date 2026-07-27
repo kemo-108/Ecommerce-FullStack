@@ -7,7 +7,12 @@ import CategoryImg3 from "../../image/category3.png";
 import CategoryImg4 from "../../image/category4.png";
 import "./Category.css";
 
-const FALLBACK_IMAGES = [CategoryImg1, CategoryImg2, CategoryImg3, CategoryImg4];
+const FALLBACK_IMAGES = [
+  CategoryImg1,
+  CategoryImg2,
+  CategoryImg3,
+  CategoryImg4,
+];
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
@@ -24,6 +29,8 @@ const Category = () => {
       <div className="category-banner">
         <h1>Shop by Category</h1>
         <p>Browse our full range of stationery and art supplies</p>
+        <br />
+        <a href="/">Home</a>
       </div>
 
       <div className="container">
@@ -43,11 +50,14 @@ const Category = () => {
               >
                 <img
                   src={
-                    cat.image
-                      ? `https://localhost:7069/${cat.image}`
-                      : FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
+                    cat.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
                   }
                   alt={cat.name}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src =
+                      FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
+                  }}
                 />
                 <div className="category-tile-info">
                   <h3>{cat.name}</h3>

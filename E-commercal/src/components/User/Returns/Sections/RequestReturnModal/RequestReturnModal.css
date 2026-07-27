@@ -15,6 +15,7 @@
   max-width: 500px;
   max-height: 85vh;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px;
 }
 
@@ -60,8 +61,17 @@
   gap: 10px;
 }
 
+.return-item-row span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .return-item-row input {
   width: 120px;
+  flex-shrink: 0;   /* ← أضف السطر ده عشان الـ input متتقلصش */
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ddd;

@@ -4,7 +4,7 @@ import axios from "axios";
 import "./Shop.css";
 import { useSearchParams } from "react-router-dom";
 import Product from "../Product/Product";
-
+import { getCategories } from "../../services/CategoryService";
 const Shop = () => {
   const [searchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
@@ -14,12 +14,21 @@ const Shop = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [sortOption, setSortOption] = useState("default");
 
   const pageSize = 12;
 
   useEffect(() => {
-    setPage(1);
-  }, [searchQuery]);
+  getCategories()
+    .then((data) => setCategories(Array.isArray(data) ? data : []))
+    .catch(() => setCategories([]));
+}, []);
+
+useEffect(() => {
+  setPage(1);
+}, [searchQuery, selectedCategoryId]);
 
   useEffect(() => {
     setLoading(true);
@@ -51,77 +60,127 @@ const Shop = () => {
       .finally(() => setLoading(false));
   }, [page, searchQuery]);
 
-  const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
+const filteredProducts = products
+  .filter((p) => !selectedCategoryId || p.categoryId === selectedCategoryId)
+  .sort((a, b) => {
+    if (sortOption === "price-asc") return a.price - b.price;
+    if (sortOption === "price-desc") return b.price - a.price;
+    return 0;
+  });
 
-  return (
-    <div className="shop">
-      <div className="shopImg">
-        <img src={Image} alt="shop" />
-        <h1>My Shop</h1>
-        <a href="/">Home</a>
-      </div>
+const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+const pagedProducts = filteredProducts.slice((page - 1) * pageSize, page * pageSize);
 
-      <div className="container">
-        {searchQuery && (
-          <p className="shop-search-info">
-            Search results for: <strong>{searchQuery}</strong>
-          </p>
-        )}
+ return (
+  <div className="shop">
+    <div className="shopImg">
+      <img src={Image} alt="shop" />
+      <h1>My Shop</h1>
+      <a href="/">Home</a>
+    </div>
 
-        {loading && <p className="shop-status">Loading products...</p>}
-
-        {!loading && error && (
-          <p className="shop-status">
-            Something went wrong while loading products. Please try again.
-          </p>
-        )}
-
-        {!loading && !error && products.length === 0 && (
-          <p className="shop-status">No products found.</p>
-        )}
-
-        {!loading && !error && products.length > 0 && (
-          <>
-            <div className="product-grid">
-              {products.map((product) => (
-                <Product
-                  key={product.productId}
-                  product={product}
-                  showExtraBtn={true}
-                />
-              ))}
-            </div>
-
-            <div className="pagination">
+    <div className="container">
+      <div className="shop-layout">
+        <aside className="shop-sidebar">
+          <h3 className="sidebar-title">Categories</h3>
+          <ul className="category-list">
+            <li>
               <button
-                onClick={() => setPage((prev) => prev - 1)}
-                disabled={page === 1}
+                className={!selectedCategoryId ? "active" : ""}
+                onClick={() => setSelectedCategoryId(null)}
               >
-                {"<"}
+                All Products
               </button>
+            </li>
+            {categories.map((cat) => (
+            <li key={cat.id}>
+              <button
+                className={selectedCategoryId === cat.id ? "active" : ""}
+                onClick={() => setSelectedCategoryId(cat.id)}
+              >
+                {cat.name}
+              </button>
+            </li>
+          ))}
+          </ul>
+        </aside>
 
-              {[...Array(totalPages).keys()].map((pageNumber) => (
-                <button
-                  key={pageNumber}
-                  onClick={() => setPage(pageNumber + 1)}
-                  className={page === pageNumber + 1 ? "active" : ""}
+        <div className="shop-main">
+          {searchQuery && (
+            <p className="shop-search-info">
+              Search results for: <strong>{searchQuery}</strong>
+            </p>
+          )}
+
+          {loading && <p className="shop-status">Loading products...</p>}
+
+          {!loading && error && (
+            <p className="shop-status">
+              Something went wrong while loading products. Please try again.
+            </p>
+          )}
+
+          {!loading && !error && filteredProducts.length === 0 && (
+            <p className="shop-status">No products found.</p>
+          )}
+
+          {!loading && !error && filteredProducts.length > 0 && (
+            <>
+              <div className="shop-toolbar">
+                <span>{filteredProducts.length} products</span>
+                <select
+                  className="sort-select"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
                 >
-                  {pageNumber + 1}
-                </button>
-              ))}
+                  <option value="default">Sort: Default</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                </select>
+              </div>
 
-              <button
-                onClick={() => setPage((prev) => prev + 1)}
-                disabled={page === totalPages}
-              >
-                {">"}
-              </button>
-            </div>
-          </>
-        )}
+              <div className="product-grid">
+                {pagedProducts.map((product) => (
+                  <Product
+                    key={product.productId}
+                    product={product}
+                    showExtraBtn={true}
+                  />
+                ))}
+              </div>
+
+              <div className="pagination">
+                <button
+                  onClick={() => setPage((prev) => prev - 1)}
+                  disabled={page === 1}
+                >
+                  {"<"}
+                </button>
+
+                {[...Array(totalPages).keys()].map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setPage(pageNumber + 1)}
+                    className={page === pageNumber + 1 ? "active" : ""}
+                  >
+                    {pageNumber + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disabled={page === totalPages}
+                >
+                  {">"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default Shop;

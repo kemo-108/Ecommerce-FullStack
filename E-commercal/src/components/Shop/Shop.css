@@ -42,6 +42,92 @@
     object-fit: cover;
     display:block;
 }
+/* ====================================================================================== */
+.shop-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.shop-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--gray-light);
+    border-radius: 14px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.category-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.category-list button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--gray);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.category-list button:hover {
+    background: var(--gray-light);
+    color: var(--dark);
+}
+
+.category-list button.active {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+}
+
+.shop-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.shop-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: var(--gray);
+}
+
+.sort-select {
+    padding: 8px 12px;
+    border: 1px solid var(--gray-light);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--dark);
+    background: var(--surface);
+    cursor: pointer;
+}
+
+
+/* ====================================================================================== */
 .shop .container{
     padding-top: 40px;
     padding-bottom: 60px;
@@ -79,7 +165,7 @@
 }
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 24px;
     margin-top: 30px;
 }
@@ -105,5 +191,15 @@
     .product-grid{
         grid-template-columns: repeat(2, 1fr);
         gap: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .shop-layout {
+        flex-direction: column;
+    }
+    .shop-sidebar {
+        width: 100%;
+        position: static;
     }
 }

@@ -15,20 +15,24 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import getProducts from "../../services/ProductService";
+import { getCategories } from "../../services/CategoryService";
 import Product from "../Product/Product";
 
-const CATEGORIES = [
-  { name: "Art Supplies", image: Category1, query: "Art Supplies" },
-  { name: "Notebooks", image: Category2, query: "Notebooks" },
-  { name: "Office Tools", image: Category3, query: "Office Tools" },
-  { name: "School Kits", image: Category4, query: "School Kits" },
-];
+// Used only as a fallback image when a category from the API has no image
+const FALLBACK_IMAGES = [Category1, Category2, Category3, Category4];
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     getProducts().then((data) => setProducts(data || []));
+  }, []);
+
+  useEffect(() => {
+    getCategories()
+      .then((data) => setCategories(data || []))
+      .catch(() => setCategories([]));
   }, []);
   const dealsProducts = products
     .filter((p) => p.oldPrice && p.oldPrice > p.price)
@@ -59,19 +63,30 @@ const Home = () => {
       {/* ================= Category strip ================= */}
       <section className="category-strip">
         <div className="container category-strip-inner">
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat, index) => (
             <Link
-              to={`/shop?search=${encodeURIComponent(cat.query)}`}
+              to={`/shop?search=${encodeURIComponent(cat.name)}`}
               className="category-chip"
-              key={cat.name}
+              key={cat.id || cat.name}
             >
               <div className="category-chip-icon">
-                <img src={cat.image} alt={cat.name} />
+                <img
+                  src={
+                    cat.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
+                  }
+                  alt={cat.name}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src =
+                      FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
+                  }}
+                />
               </div>
               <span>{cat.name}</span>
             </Link>
           ))}
 
+          {/* Always stays last in the row, however many categories are added */}
           <Link to="/category" className="category-chip category-chip-all">
             <div className="category-chip-icon all-icon">
               <FiChevronRight />

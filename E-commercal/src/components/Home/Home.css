@@ -97,6 +97,24 @@
     gap: 22px;
     overflow-x: auto;
     padding-bottom: 6px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-light) transparent;
+}
+
+.category-strip-inner::-webkit-scrollbar{
+    height: 6px;
+}
+
+.category-strip-inner::-webkit-scrollbar-thumb{
+    background: var(--gray-light);
+    border-radius: 10px;
+}
+
+.category-strip-inner::-webkit-scrollbar-track{
+    background: transparent;
 }
 
 .category-chip{
@@ -107,6 +125,7 @@
     flex-shrink: 0;
     width: 96px;
     text-align: center;
+    scroll-snap-align: start;
 }
 
 .category-chip-icon{

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./WishList.css";
-import BannerImage from "../../../image/image-Collection.png";
 
 import WishlistToolbar from "./Sections/WishlistToolbar/WishlistToolbar";
 import WishlistGrid from "./Sections/WishlistGrid/WishlistGrid";
@@ -48,12 +47,6 @@ const WishList = () => {
 
   return (
     <section className="wishlist">
-      <div className="wishlistImg">
-        <img src={BannerImage} alt="wishlist" />
-        <h1>My Wishlist</h1>
-        <a href="/">Home</a>
-      </div>
-
       <div className="container">
         <WishlistToolbar
           searchTerm={searchTerm}

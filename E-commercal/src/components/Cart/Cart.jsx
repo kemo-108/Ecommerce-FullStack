@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Product from "../OurProduct/OurProduct";
-import Image from "../../image/image-cart.png";
 import { GetCart, UpdatCart, DeletetCart } from "../../services/CartService";
 import "./Cart.css";
 import { Link } from "react-router-dom";
@@ -76,11 +75,6 @@ const Cart = () => {
 
   return (
     <div className="cart">
-      <div className="cartImg">
-        <img src={Image} alt="cart" />
-        <h1>My Cart</h1>
-        <a href="/">Home</a>
-      </div>
       <div className="container">
         {loading && <p className="cart-status">Loading your cart...</p>}
 

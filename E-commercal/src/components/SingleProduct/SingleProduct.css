@@ -11,19 +11,6 @@
    Banner
 =========================================================== */
 
-.sp-banner{
-    position:relative;
-    width:100%;
-    height:350px;
-    overflow:hidden;
-    margin-top:90px;
-}
-
-.sp-banner img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
 
 .sp-banner-overlay{
     position:absolute;

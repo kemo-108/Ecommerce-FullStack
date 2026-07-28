@@ -3,16 +3,10 @@ import "./Contact.css";
 import SendMessage from "../../services/ContactService";
 import DeleteMessage from "../../services/ContactService";
 import From from "../Form/Form";
-import Image from "../../image/image-Collection.png";
 import { Link } from "react-router-dom";
 const Contact = () => {
   return (
     <div className="contact">
-      <div className="contactImg">
-        <img src={Image} alt="contact" />
-        <h1>Contact-us</h1>
-        <Link to="/">Home</Link>
-      </div>
       <div className="container">
         <div className="map">
           <iframe

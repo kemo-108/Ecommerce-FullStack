@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Home.css";
 import HeroImage from "../../image/image-Home.png";
 import AboutImage from "../../image/image-about.png";
-import Category1 from "../../image/category1.png";
-import Category2 from "../../image/category2.png";
-import Category3 from "../../image/category3.png";
-import Category4 from "../../image/category4.png";
+
 import { Link } from "react-router-dom";
 import {
   FiTruck,
@@ -19,7 +16,7 @@ import { getCategories } from "../../services/CategoryService";
 import Product from "../Product/Product";
 
 // Used only as a fallback image when a category from the API has no image
-const FALLBACK_IMAGES = [Category1, Category2, Category3, Category4];
+// const FALLBACK_IMAGES = [Category1, Category2, Category3, Category4];
 
 const Home = () => {
   const [products, setProducts] = useState([]);

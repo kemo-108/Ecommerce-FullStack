@@ -58,5 +58,16 @@ namespace E_commercal_APi.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+        // Public: called from the customer's cart when they click "Apply".
+        // Overrides the controller's [Authorize(Roles = "admin")] on purpose —
+        // checking a code's validity isn't an admin action.
+        [HttpPost("apply")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Apply(ApplyCouponDto dto)
+        {
+            var result = await _couponService.ValidateAsync(dto);
+            return Ok(result);
+        }
     }
 }

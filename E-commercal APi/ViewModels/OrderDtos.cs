@@ -20,6 +20,9 @@ namespace E_commercal_APi.ViewModels
         public decimal Subtotal { get; set; }
         public decimal Shipping { get; set; }
         public decimal Total { get; set; }
+        // Optional coupon code the customer applied on the cart page.
+        // Re-validated and re-priced server-side — never trust the client's discount.
+        public string? CouponCode { get; set; }
     }
 
     // Used by Admin > Orders > "Create New Order" (walk-in customers)

@@ -30,6 +30,25 @@ namespace E_commercal_APi.ViewModels
         public string Status { get; set; } = "active";
     }
 
+    // Sent from the customer's cart when they click "Apply" on the coupon field
+    public class ApplyCouponDto
+    {
+        [Required] public string Code { get; set; }
+        public decimal OrderTotal { get; set; }
+    }
+
+    // Returned to the cart: whether the code is usable, and how much it saves
+    public class CouponApplyResultDto
+    {
+        public bool Valid { get; set; }
+        public string Message { get; set; }
+        public int? CouponId { get; set; }
+        public string Code { get; set; }
+        public string DiscountType { get; set; }
+        public decimal DiscountValue { get; set; }
+        public decimal DiscountAmount { get; set; }
+    }
+
     public class WishlistItemDto
     {
         public int Id { get; set; }

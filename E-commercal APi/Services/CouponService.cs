@@ -85,5 +85,99 @@ namespace E_commercal_APi.Services
             _db.Coupons.Remove(coupon);
             await _db.SaveChangesAsync();
         }
+
+        public async Task<CouponApplyResultDto> ValidateAsync(ApplyCouponDto dto)
+        {
+            var code = (dto.Code ?? string.Empty).Trim();
+
+            if (string.IsNullOrEmpty(code))
+            {
+                return new CouponApplyResultDto
+                {
+                    Valid = false,
+                    Message = "Please enter a coupon code.",
+                };
+            }
+
+            var coupon = await _db.Coupons
+                .FirstOrDefaultAsync(c => c.Code.ToLower() == code.ToLower());
+
+            if (coupon == null)
+            {
+                return new CouponApplyResultDto
+                {
+                    Valid = false,
+                    Message = "This coupon code doesn't exist.",
+                };
+            }
+
+            if (!string.Equals(coupon.Status, "active", StringComparison.OrdinalIgnoreCase))
+            {
+                return new CouponApplyResultDto
+                {
+                    Valid = false,
+                    Message = "This coupon is not currently active.",
+                };
+            }
+
+            if (coupon.ExpiryDate.Date < DateTime.UtcNow.Date)
+            {
+                return new CouponApplyResultDto
+                {
+                    Valid = false,
+                    Message = "This coupon has expired.",
+                };
+            }
+
+            if (coupon.UseageLimit > 0 && coupon.Useage >= coupon.UseageLimit)
+            {
+                return new CouponApplyResultDto
+                {
+                    Valid = false,
+                    Message = "This coupon has reached its usage limit.",
+                };
+            }
+
+            if (coupon.MinOrder > 0 && dto.OrderTotal < coupon.MinOrder)
+            {
+                return new CouponApplyResultDto
+                {
+                    Valid = false,
+                    Message = $"This coupon needs a minimum order of {coupon.MinOrder:0.##}.",
+                };
+            }
+
+            decimal discountAmount;
+            if (string.Equals(coupon.DiscountType, "Percentage", StringComparison.OrdinalIgnoreCase))
+            {
+                discountAmount = dto.OrderTotal * (coupon.DiscountValue / 100m);
+                if (coupon.MaxDiscount > 0 && discountAmount > coupon.MaxDiscount)
+                {
+                    discountAmount = coupon.MaxDiscount;
+                }
+            }
+            else
+            {
+                discountAmount = coupon.DiscountValue;
+            }
+
+            if (discountAmount > dto.OrderTotal)
+            {
+                discountAmount = dto.OrderTotal;
+            }
+
+            discountAmount = Math.Round(discountAmount, 2);
+
+            return new CouponApplyResultDto
+            {
+                Valid = true,
+                Message = "Coupon applied successfully.",
+                CouponId = coupon.Id,
+                Code = coupon.Code,
+                DiscountType = coupon.DiscountType,
+                DiscountValue = coupon.DiscountValue,
+                DiscountAmount = discountAmount,
+            };
+        }
     }
 }

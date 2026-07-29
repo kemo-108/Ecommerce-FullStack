@@ -46,6 +46,52 @@ namespace E_commercal_APi.Services
         {
             var user = await _db.Users.FindAsync(userId);
 
+            // Re-check the coupon here instead of trusting a discount amount
+            // sent from the client — codes can expire, hit their usage limit,
+            // or stop meeting MinOrder between "Apply" on the cart and checkout.
+            decimal discount = 0;
+            Coupon coupon = null;
+
+            if (!string.IsNullOrWhiteSpace(dto.CouponCode))
+            {
+                var code = dto.CouponCode.Trim();
+                coupon = await _db.Coupons
+                    .FirstOrDefaultAsync(c => c.Code.ToLower() == code.ToLower());
+
+                var isUsable = coupon != null
+                    && string.Equals(coupon.Status, "active", StringComparison.OrdinalIgnoreCase)
+                    && coupon.ExpiryDate.Date >= DateTime.UtcNow.Date
+                    && (coupon.UseageLimit <= 0 || coupon.Useage < coupon.UseageLimit)
+                    && (coupon.MinOrder <= 0 || dto.Subtotal >= coupon.MinOrder);
+
+                if (isUsable)
+                {
+                    discount = string.Equals(coupon.DiscountType, "Percentage", StringComparison.OrdinalIgnoreCase)
+                        ? dto.Subtotal * (coupon.DiscountValue / 100m)
+                        : coupon.DiscountValue;
+
+                    if (coupon.MaxDiscount > 0 && discount > coupon.MaxDiscount)
+                    {
+                        discount = coupon.MaxDiscount;
+                    }
+
+                    if (discount > dto.Subtotal)
+                    {
+                        discount = dto.Subtotal;
+                    }
+
+                    discount = Math.Round(discount, 2);
+                }
+                else
+                {
+                    // Coupon stopped being valid by the time the order was placed —
+                    // silently drop it rather than failing the whole checkout.
+                    coupon = null;
+                }
+            }
+
+            var total = dto.Subtotal + dto.Shipping - discount;
+
             var order = new Order
             {
                 UserId = userId,
@@ -55,7 +101,9 @@ namespace E_commercal_APi.Services
                 Subtotal = dto.Subtotal,
                 Shipping = dto.Shipping,
                 Tax = 0,
-                Total = dto.Total,
+                Discount = discount,
+                CouponId = coupon?.Id,
+                Total = total,
                 PaymentStatus = "pending",
                 PaymentMethod = string.IsNullOrWhiteSpace(dto.PaymentMethod)
                                 ? "Cash On Delivery"
@@ -76,11 +124,28 @@ namespace E_commercal_APi.Services
 
             _db.Orders.Add(order);
 
+            if (coupon != null)
+            {
+                coupon.Useage += 1;
+            }
+
             // Clear the user's cart now that the order has been placed.
             var cartItems = _db.CartItems.Where(c => c.UserId == userId);
             _db.CartItems.RemoveRange(cartItems);
 
             await _db.SaveChangesAsync();
+
+            if (coupon != null)
+            {
+                _db.CouponRedemptions.Add(new CouponRedemption
+                {
+                    CouponId = coupon.Id,
+                    UserId = userId,
+                    OrederId = order.OrderId,
+                    RedeemAt = DateTime.UtcNow,
+                });
+                await _db.SaveChangesAsync();
+            }
 
             return ToDto(order);
         }
@@ -100,7 +165,7 @@ namespace E_commercal_APi.Services
         {
             var order = await _db.Orders
     .Include(o => o.Items)
-    
+
     .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
             return order == null ? null : ToDto(order);
@@ -110,7 +175,7 @@ namespace E_commercal_APi.Services
         {
             var orders = await _db.Orders
             .Include(o => o.Items)
-            
+
             .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
 

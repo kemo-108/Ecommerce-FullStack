@@ -8,5 +8,6 @@ namespace E_commercal_APi.Services
         Task<CouponDto> CreateAsync(CouponCreateDto dto);
         Task<CouponDto> UpdateAsync(int id, CouponCreateDto dto);
         Task DeleteAsync(int id);
+        Task<CouponApplyResultDto> ValidateAsync(ApplyCouponDto dto);
     }
 }

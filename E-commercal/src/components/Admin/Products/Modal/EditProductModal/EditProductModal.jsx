@@ -50,7 +50,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
     });
 
     if (product.imageUrl) {
-      setPreviewImage(`https://localhost:7069${product.imageUrl}`);
+      setPreviewImage(`https://localhost:7069 ${product.imageUrl}`);
     }
   }, [product]);
 

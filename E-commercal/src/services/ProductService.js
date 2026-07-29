@@ -14,7 +14,7 @@ export const getProducts = async () => {
 
 export const getProductById = async (id) => {
   try {
-    const { data } = await axios.get(`${API}/${id}`);
+    const { data } = await axios.get(` ${API}/ ${id}`);
     return data;
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -39,7 +39,7 @@ export const createProduct = async (formData) => {
 
 export const updateProduct = async (id, formData) => {
   try {
-    const { data } = await axios.put(`${API}/${id}`, formData, {
+    const { data } = await axios.put(` ${API}/ ${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -54,7 +54,7 @@ export const updateProduct = async (id, formData) => {
 
 export const deleteProduct = async (id) => {
   try {
-    await axios.delete(`${API}/${id}`);
+    await axios.delete(` ${API}/ ${id}`);
     return true;
   } catch (error) {
     console.error("Error deleting product:", error);

@@ -29,12 +29,12 @@ const Returns = () => {
       setReturns(
         data.map((r) => ({
           id: r.returnId,
-          returnId: `RT${r.returnId}`,
-          orderId: `ORD${r.orderId}`,
+          returnId: `RT ${r.returnId}`,
+          orderId: `ORD ${r.orderId}`,
           image: r.items?.[0]?.imageUrl,
           name:
             r.items?.length > 1
-              ? `${r.items[0].productName} +${r.items.length - 1} more`
+              ? ` ${r.items[0].productName} + ${r.items.length - 1} more`
               : r.items?.[0]?.productName,
           qty: r.qty,
           total: r.total,

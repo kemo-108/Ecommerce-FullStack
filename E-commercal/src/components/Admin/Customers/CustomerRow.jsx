@@ -24,7 +24,7 @@ const CustomerRow = ({
             <img src={customer.avatar} alt={customer.customerName} />
 
             <span
-              className={`customer-online ${customer.status.toLowerCase()}`}
+              className={`customer-online  ${customer.status.toLowerCase()}`}
             ></span>
           </div>
 
@@ -63,12 +63,12 @@ const CustomerRow = ({
 
       <td>
         <span className="spent-badge">
-          <FiDollarSign />${customer.totalSpent.toLocaleString()}
+          <FiDollarSign /> ${customer.totalSpent.toLocaleString()}
         </span>
       </td>
 
       <td>
-        <span className={`status ${customer.status.toLowerCase()}`}>
+        <span className={`status  ${customer.status.toLowerCase()}`}>
           {customer.status}
         </span>
       </td>

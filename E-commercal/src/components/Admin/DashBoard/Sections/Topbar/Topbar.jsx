@@ -13,7 +13,7 @@ const Topbar = () => {
     e.preventDefault();
     const term = query.trim();
     if (term) {
-      navigate(`/admin/products?search=${encodeURIComponent(term)}`);
+      navigate(`/admin/products?search= ${encodeURIComponent(term)}`);
     }
   };
 

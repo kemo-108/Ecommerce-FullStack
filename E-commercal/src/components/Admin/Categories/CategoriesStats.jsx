@@ -24,7 +24,7 @@ const CategoriesStats = ({ categories }) => {
     {
       title: "Active Categories",
       value: activeCategories,
-      sub: `${Math.round(
+      sub: ` ${Math.round(
         (activeCategories / totalCategories) * 100,
       )}% of total`,
       icon: <FiCheckCircle />,
@@ -40,7 +40,7 @@ const CategoriesStats = ({ categories }) => {
     {
       title: "Featured Categories",
       value: featuredCategories,
-      sub: `${Math.round(
+      sub: ` ${Math.round(
         (featuredCategories / totalCategories) * 100,
       )}% of total`,
       icon: <FiStar />,
@@ -52,7 +52,7 @@ const CategoriesStats = ({ categories }) => {
     <div className="categories-stats">
       {stats.map((item, index) => (
         <div className="category-stat-card" key={index}>
-          <div className={`stat-icon ${item.color}`}>{item.icon}</div>
+          <div className={`stat-icon  ${item.color}`}>{item.icon}</div>
 
           <div className="stat-info">
             <h4>{item.title}</h4>

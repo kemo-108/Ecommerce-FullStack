@@ -27,7 +27,7 @@ const CategoriesPagination = ({
       {pages.map((page) => (
         <button
           key={page}
-          className={`page-number ${currentPage === page ? "active" : ""}`}
+          className={`page-number  ${currentPage === page ? "active" : ""}`}
           onClick={() => setCurrentPage(page)}
         >
           {page}

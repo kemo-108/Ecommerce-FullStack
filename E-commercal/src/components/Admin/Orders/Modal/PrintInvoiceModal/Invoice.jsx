@@ -111,9 +111,12 @@ const Invoice = ({ order }) => {
 
                 <td>{item.quantity}</td>
 
-                <td>${Number(item.price).toFixed(2)}</td>
+                <td> ${Number(item.price).toFixed(2)}</td>
 
-                <td>${(Number(item.price) * Number(item.quantity)).toFixed(2)}</td>
+                <td>
+                  {" "}
+                  ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -143,27 +146,27 @@ const Invoice = ({ order }) => {
         <div className="total-card">
           <div className="total-row">
             <span>Subtotal</span>
-            <strong>${Number(order.subtotal).toFixed(2)}</strong>
+            <strong> ${Number(order.subtotal).toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
             <span>Shipping</span>
-            <strong>${Number(order.shipping).toFixed(2)}</strong>
+            <strong> ${Number(order.shipping).toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
             <span>Discount</span>
-            <strong>-${Number(order.discount || 0).toFixed(2)}</strong>
+            <strong>- ${Number(order.discount || 0).toFixed(2)}</strong>
           </div>
 
           <div className="total-row">
             <span>Tax</span>
-            <strong>${Number(order.tax).toFixed(2)}</strong>
+            <strong> ${Number(order.tax).toFixed(2)}</strong>
           </div>
 
           <div className="grand-total">
             <span>Grand Total</span>
-            <strong>${Number(order.total).toFixed(2)}</strong>
+            <strong> ${Number(order.total).toFixed(2)}</strong>
           </div>
         </div>
       </div>

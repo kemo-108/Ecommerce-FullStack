@@ -8,7 +8,7 @@ export const getCustomers = async () => {
 };
 
 export const getCustomerById = async (id) => {
-  const response = await axios.get(`${API}/${id}`);
+  const response = await axios.get(` ${API}/ ${id}`);
   return response.data;
 };
 
@@ -18,11 +18,11 @@ export const createCustomer = async (customer) => {
 };
 
 export const updateCustomer = async (id, customer) => {
-  const response = await axios.put(`${API}/${id}`, customer);
+  const response = await axios.put(` ${API}/ ${id}`, customer);
   return response.data;
 };
 
 export const deleteCustomer = async (id) => {
-  const response = await axios.delete(`${API}/${id}`);
+  const response = await axios.delete(` ${API}/ ${id}`);
   return response.data;
 };

@@ -27,7 +27,7 @@ const Header = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const query = searchTerm.trim();
-    navigate(query ? `/shop?search=${encodeURIComponent(query)}` : "/shop");
+    navigate(query ? `/shop?search= ${encodeURIComponent(query)}` : "/shop");
   };
 
   const refreshCartCount = () => {
@@ -39,7 +39,7 @@ const Header = () => {
       .then((data) =>
         setCartCount(
           Array.isArray(data)
-            ? data.reduce((sum, item) => sum + (item.Qty || 1), 0)
+            ? data.reduce((sum, item) => sum + (item.qty || 1), 0)
             : 0,
         ),
       )
@@ -77,7 +77,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className={`header ${scrolled ? "active" : ""}`}>
+    <div className={`header  ${scrolled ? "active" : ""}`}>
       {/* ================= Top utility bar ================= */}
       <div className="header-topbar">
         <div className="container topbar-inner">

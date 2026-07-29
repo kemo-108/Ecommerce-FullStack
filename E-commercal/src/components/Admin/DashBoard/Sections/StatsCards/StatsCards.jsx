@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import "./StatsCards.css";
 import StatCard from "./StatCards";
 
-import { FaDollarSign, FaShoppingBag, FaUsers, FaBoxOpen } from "react-icons/fa";
+import {
+  FaDollarSign,
+  FaShoppingBag,
+  FaUsers,
+  FaBoxOpen,
+} from "react-icons/fa";
 import { GetDashboardStats } from "../../../../../services/DashboardService";
 
 const StatsCards = () => {
@@ -23,7 +28,7 @@ const StatsCards = () => {
     <div className="stats-cards">
       <StatCard
         title="Revenue"
-        value={`$${Number(stats.totalRevenue).toLocaleString()}`}
+        value={` $ ${Number(stats.totalRevenue).toLocaleString()}`}
         color="#E9F8EE"
         icon={<FaDollarSign />}
       />

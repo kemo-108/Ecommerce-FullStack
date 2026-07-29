@@ -37,7 +37,7 @@ export const topProducts = [
     name: "Gaming Mouse",
     category: "Accessories",
     sold: 420,
-    revenue: "$8,400",
+    revenue: " $8,400",
   },
   {
     id: 2,
@@ -46,7 +46,7 @@ export const topProducts = [
     name: "Mechanical Keyboard",
     category: "Accessories",
     sold: 385,
-    revenue: "$11,550",
+    revenue: " $11,550",
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ export const topProducts = [
     name: "27'' Monitor",
     category: "Monitors",
     sold: 240,
-    revenue: "$18,200",
+    revenue: " $18,200",
   },
   {
     id: 4,
@@ -64,7 +64,7 @@ export const topProducts = [
     name: "Wireless Headset",
     category: "Audio",
     sold: 198,
-    revenue: "$9,900",
+    revenue: " $9,900",
   },
 ];
 export const categorySalesData = [
@@ -89,7 +89,7 @@ export const bestSellingProducts = [
     name: "Gaming Mouse",
     category: "Accessories",
     sold: 420,
-    revenue: "$8,400",
+    revenue: " $8,400",
   },
   {
     id: 2,
@@ -97,7 +97,7 @@ export const bestSellingProducts = [
     name: "Mechanical Keyboard",
     category: "Accessories",
     sold: 385,
-    revenue: "$11,550",
+    revenue: " $11,550",
   },
   {
     id: 3,
@@ -105,7 +105,7 @@ export const bestSellingProducts = [
     name: "27'' Monitor",
     category: "Monitors",
     sold: 240,
-    revenue: "$18,200",
+    revenue: " $18,200",
   },
 ];
 
@@ -116,7 +116,7 @@ export const leastSellingProducts = [
     name: "USB Cable",
     category: "Accessories",
     sold: 18,
-    revenue: "$180",
+    revenue: " $180",
   },
   {
     id: 2,
@@ -124,7 +124,7 @@ export const leastSellingProducts = [
     name: "Mouse Pad",
     category: "Gaming",
     sold: 25,
-    revenue: "$320",
+    revenue: " $320",
   },
   {
     id: 3,
@@ -132,7 +132,7 @@ export const leastSellingProducts = [
     name: "HDMI Adapter",
     category: "Electronics",
     sold: 31,
-    revenue: "$465",
+    revenue: " $465",
   },
 ];
 export const customerGrowthData = [
@@ -155,7 +155,7 @@ export const topCustomers = [
     name: "Ahmed Mostafa",
     email: "ahmed@gmail.com",
     orders: 32,
-    spent: "$5,420",
+    spent: " $5,420",
   },
   {
     id: 2,
@@ -163,7 +163,7 @@ export const topCustomers = [
     name: "Sara Ali",
     email: "sara@gmail.com",
     orders: 28,
-    spent: "$4,870",
+    spent: " $4,870",
   },
   {
     id: 3,
@@ -171,7 +171,7 @@ export const topCustomers = [
     name: "Omar Khaled",
     email: "omar@gmail.com",
     orders: 24,
-    spent: "$4,120",
+    spent: " $4,120",
   },
   {
     id: 4,
@@ -179,7 +179,7 @@ export const topCustomers = [
     name: "Mohamed Hassan",
     email: "mohamed@gmail.com",
     orders: 19,
-    spent: "$3,650",
+    spent: " $3,650",
   },
 ];
 export const financeOverviewData = [
@@ -203,7 +203,7 @@ export const financialTransactions = [
     image: "https://placehold.co/60x60",
     name: "Order #10542",
     type: "Sale",
-    amount: "$1,240",
+    amount: " $1,240",
     status: "Completed",
   },
   {
@@ -211,7 +211,7 @@ export const financialTransactions = [
     image: "https://placehold.co/60x60",
     name: "Facebook Ads",
     type: "Expense",
-    amount: "$620",
+    amount: " $620",
     status: "Paid",
   },
   {
@@ -219,7 +219,7 @@ export const financialTransactions = [
     image: "https://placehold.co/60x60",
     name: "Order #10539",
     type: "Refund",
-    amount: "$180",
+    amount: " $180",
     status: "Refunded",
   },
   {
@@ -227,7 +227,7 @@ export const financialTransactions = [
     image: "https://placehold.co/60x60",
     name: "Google Ads",
     type: "Expense",
-    amount: "$450",
+    amount: " $450",
     status: "Paid",
   },
 ];

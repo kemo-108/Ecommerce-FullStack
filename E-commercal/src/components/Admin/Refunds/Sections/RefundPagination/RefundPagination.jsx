@@ -24,7 +24,7 @@ const RefundPagination = ({
       {[...Array(totalPages)].map((_, index) => (
         <button
           key={index}
-          className={`page-number ${currentPage === index + 1 ? "active" : ""}`}
+          className={`page-number  ${currentPage === index + 1 ? "active" : ""}`}
           onClick={() => setCurrentPage(index + 1)}
         >
           {index + 1}

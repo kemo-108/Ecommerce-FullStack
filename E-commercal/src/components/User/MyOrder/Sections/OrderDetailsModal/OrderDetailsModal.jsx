@@ -30,7 +30,9 @@ const OrderDetailsModal = ({ order, onClose }) => {
             <div className="modal-product" key={index}>
               <img
                 src={
-                  item.imageUrl ? `https://localhost:7069/${item.imageUrl}` : ""
+                  item.imageUrl
+                    ? `https://localhost:7069/ ${item.imageUrl}`
+                    : ""
                 }
                 alt={item.productName}
               />
@@ -80,22 +82,22 @@ const OrderDetailsModal = ({ order, onClose }) => {
         <div className="price-summary">
           <div>
             <span>Subtotal</span>
-            <h4>${Number(order.subtotal).toFixed(2)}</h4>
+            <h4> ${Number(order.subtotal).toFixed(2)}</h4>
           </div>
 
           <div>
             <span>Shipping</span>
-            <h4>${Number(order.shipping).toFixed(2)}</h4>
+            <h4> ${Number(order.shipping).toFixed(2)}</h4>
           </div>
 
           <div>
             <span>Tax</span>
-            <h4>${Number(order.tax).toFixed(2)}</h4>
+            <h4> ${Number(order.tax).toFixed(2)}</h4>
           </div>
 
           <div className="grand-total">
             <span>Total</span>
-            <h2>${Number(order.total).toFixed(2)}</h2>
+            <h2> ${Number(order.total).toFixed(2)}</h2>
           </div>
         </div>
 

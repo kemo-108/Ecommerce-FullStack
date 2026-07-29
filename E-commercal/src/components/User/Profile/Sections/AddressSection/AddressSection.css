@@ -75,3 +75,23 @@
     background:#ffedf3;
     color:#ff4f86;
 }
+
+.address-status{
+    color:#888;
+    margin-top:20px;
+}
+
+.set-default-btn{
+    background:none;
+    border:1px solid #ccc;
+    border-radius:20px;
+    padding:6px 14px;
+    font-size:12px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.set-default-btn:hover{
+    border-color:#ff4f86;
+    color:#ff4f86;
+}

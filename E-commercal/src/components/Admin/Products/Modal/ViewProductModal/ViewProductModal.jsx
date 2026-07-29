@@ -13,15 +13,15 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
     product.qty === 0
       ? "Out Of Stock"
       : product.qty <= 10
-      ? "Low Stock"
-      : "In Stock";
+        ? "Low Stock"
+        : "In Stock";
 
   const stockClass =
     product.qty === 0
       ? "out-of-stock"
       : product.qty <= 10
-      ? "low-stock"
-      : "in-stock";
+        ? "low-stock"
+        : "in-stock";
 
   return (
     <div className="modal-overlay">
@@ -41,7 +41,7 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
           <div className="view-product-content">
             <div className="view-product-image">
               <img
-                src={`https://localhost:7069/${product.imageUrl}`}
+                src={`https://localhost:7069/ ${product.imageUrl}`}
                 alt={product.productName}
               />
             </div>
@@ -67,11 +67,11 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
                   <span>Price</span>
 
                   <div className="price-box">
-                    <h4>${Number(product.price || 0).toFixed(2)}</h4>
+                    <h4> ${Number(product.price || 0).toFixed(2)}</h4>
 
                     {hasDiscount && (
                       <>
-                        <del>${Number(product.oldPrice).toFixed(2)}</del>
+                        <del> ${Number(product.oldPrice).toFixed(2)}</del>
                         <small>-{discountPercent}%</small>
                       </>
                     )}
@@ -90,7 +90,7 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
 
                 <div className="info-item">
                   <span>Weight</span>
-                  <h4>{product.weight ? `${product.weight} Kg` : "N/A"}</h4>
+                  <h4>{product.weight ? ` ${product.weight} Kg` : "N/A"}</h4>
                 </div>
 
                 <div className="info-item">
@@ -106,7 +106,7 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
               </div>
               <div className="product-extra-card">
                 <div className="product-status">
-                  <span className={`status ${stockClass}`}>{stockLabel}</span>
+                  <span className={`status  ${stockClass}`}>{stockLabel}</span>
                 </div>
               </div>
 

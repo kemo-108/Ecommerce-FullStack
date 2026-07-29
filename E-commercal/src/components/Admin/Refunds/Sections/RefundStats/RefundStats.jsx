@@ -39,7 +39,7 @@ const RefundStats = ({ refunds = [] }) => {
     {
       id: 4,
       title: "Total Refunded Amount",
-      value: `$${totalAmount.toFixed(2)}`,
+      value: ` $ ${totalAmount.toFixed(2)}`,
       icon: <FiDollarSign />,
       className: "amount",
     },
@@ -49,7 +49,7 @@ const RefundStats = ({ refunds = [] }) => {
     <section className="refund-stats">
       {stats.map((stat) => (
         <div className="refund-stat-card" key={stat.id}>
-          <div className={`refund-stat-icon ${stat.className}`}>
+          <div className={`refund-stat-icon  ${stat.className}`}>
             {stat.icon}
           </div>
 

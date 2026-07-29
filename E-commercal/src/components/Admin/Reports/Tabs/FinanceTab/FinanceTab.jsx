@@ -38,7 +38,7 @@ const FinanceTab = () => {
       <div className="finance-stats">
         <AnalyticsCard
           title="Revenue"
-          value="$84,250"
+          value=" $84,250"
           subtitle="+14.2% this month"
           icon={FiDollarSign}
           color="#22C55E"
@@ -46,7 +46,7 @@ const FinanceTab = () => {
 
         <AnalyticsCard
           title="Expenses"
-          value="$31,420"
+          value=" $31,420"
           subtitle="Operating expenses"
           icon={FiTrendingDown}
           color="#EF4444"
@@ -54,7 +54,7 @@ const FinanceTab = () => {
 
         <AnalyticsCard
           title="Net Profit"
-          value="$52,830"
+          value=" $52,830"
           subtitle="After all expenses"
           icon={FiTrendingUp}
           color="#3B82F6"
@@ -62,7 +62,7 @@ const FinanceTab = () => {
 
         <AnalyticsCard
           title="Refunds"
-          value="$1,280"
+          value=" $1,280"
           subtitle="Refunded orders"
           icon={FiRotateCcw}
           color="#F59E0B"

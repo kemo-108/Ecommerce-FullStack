@@ -10,7 +10,7 @@ const ReportsTabs = ({ activeTab, setActiveTab }) => {
         return (
           <button
             key={tab.id}
-            className={`report-tab ${activeTab === tab.id ? "active" : ""}`}
+            className={`report-tab  ${activeTab === tab.id ? "active" : ""}`}
             onClick={() => setActiveTab(tab.id)}
           >
             <Icon />

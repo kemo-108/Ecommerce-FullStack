@@ -62,7 +62,7 @@ const Home = () => {
         <div className="container category-strip-inner">
           {categories.map((cat, index) => (
             <Link
-              to={`/shop?search=${encodeURIComponent(cat.name)}`}
+              to={`/shop?search= ${encodeURIComponent(cat.name)}`}
               className="category-chip"
               key={cat.id || cat.name}
             >

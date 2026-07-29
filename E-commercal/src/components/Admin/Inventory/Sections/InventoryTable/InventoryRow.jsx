@@ -6,8 +6,7 @@ import useInventory from "../../hooks/useInventory";
 import { getInventoryStatus } from "../../utils/inventoryStatus";
 
 const InventoryRow = ({ product }) => {
-  const { openViewModal, openEditModal, openUpdateStockModal } =
-    useInventory();
+  const { openViewModal, openEditModal, openUpdateStockModal } = useInventory();
 
   const status = getInventoryStatus(product.stock, product.minStock);
 
@@ -35,7 +34,7 @@ const InventoryRow = ({ product }) => {
       <td>{product.minStock}</td>
 
       <td>
-        <span className={`status ${status.toLowerCase().replace(/\s/g, "-")}`}>
+        <span className={`status  ${status.toLowerCase().replace(/\s/g, "-")}`}>
           {status}
         </span>
       </td>

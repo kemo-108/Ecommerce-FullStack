@@ -39,7 +39,7 @@ const InventoryTab = () => {
       <div className="inventory-stats">
         <AnalyticsCard
           title="Inventory Value"
-          value="$182,450"
+          value=" $182,450"
           subtitle="Current stock value"
           icon={FiArchive}
           color="#3B82F6"

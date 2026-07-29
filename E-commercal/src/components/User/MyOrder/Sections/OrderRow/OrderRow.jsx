@@ -20,7 +20,7 @@ const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
         <img
           src={
             firstItem?.imageUrl
-              ? `https://localhost:7069/${Product.imageUrl}`
+              ? `https://localhost:7069/ ${Product.imageUrl}`
               : ""
           }
           alt={firstItem?.productName}
@@ -28,7 +28,7 @@ const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
         <div>
           <h4>
             {firstItem?.productName}
-            {extraItemsCount > 0 && ` +${extraItemsCount} more`}
+            {extraItemsCount > 0 && ` + ${extraItemsCount} more`}
           </h4>
 
           <span>Qty : {totalQuantity}</span>
@@ -41,9 +41,9 @@ const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
         {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : ""}
       </div>
 
-      <div className="order-total">${Number(order.total).toFixed(2)}</div>
+      <div className="order-total"> ${Number(order.total).toFixed(2)}</div>
 
-      <div className={`order-status ${order.status?.toLowerCase()}`}>
+      <div className={`order-status  ${order.status?.toLowerCase()}`}>
         {order.status}
       </div>
 

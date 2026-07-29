@@ -39,7 +39,7 @@ const CategoryRow = ({
       {/* Featured */}
 
       <td>
-        <span className={`featured-badge ${category.featured ? "yes" : "no"}`}>
+        <span className={`featured-badge  ${category.featured ? "yes" : "no"}`}>
           <FiStar />
           {category.featured ? "Yes" : "No"}
         </span>
@@ -49,7 +49,7 @@ const CategoryRow = ({
 
       <td>
         <span
-          className={`status-badge ${
+          className={`status-badge  ${
             category.status === "Active" ? "active" : "hidden"
           }`}
         >

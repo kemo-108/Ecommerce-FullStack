@@ -10,7 +10,7 @@ const SettingsSwitch = ({
     <div className="settings-switch">
       <span>{label}</span>
 
-      <label className={`switch ${disabled ? "disabled" : ""}`}>
+      <label className={`switch  ${disabled ? "disabled" : ""}`}>
         <input
           type="checkbox"
           checked={checked}

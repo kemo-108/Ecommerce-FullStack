@@ -14,7 +14,7 @@ export const getCategories = async () => {
 
 export const getCategoryById = async (id) => {
   try {
-    const { data } = await axios.get(`${API}/${id}`);
+    const { data } = await axios.get(` ${API}/ ${id}`);
     return data;
   } catch (error) {
     console.error("Error fetching category:", error);
@@ -34,7 +34,7 @@ export const createCategory = async (category) => {
 
 export const updateCategory = async (id, category) => {
   try {
-    const { data } = await axios.put(`${API}/${id}`, category);
+    const { data } = await axios.put(` ${API}/ ${id}`, category);
     return data;
   } catch (error) {
     console.error("Error updating category:", error);
@@ -44,7 +44,7 @@ export const updateCategory = async (id, category) => {
 
 export const deleteCategory = async (id) => {
   try {
-    const { data } = await axios.delete(`${API}/${id}`);
+    const { data } = await axios.delete(` ${API}/ ${id}`);
     return data;
   } catch (error) {
     console.error("Error deleting category:", error);

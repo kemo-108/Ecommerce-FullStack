@@ -74,7 +74,7 @@ const Product = ({ product, showExtraBtn }) => {
         price: product.price,
         Qty: 1,
       });
-      toast.success(`${product.productName} added to cart`);
+      toast.success(` ${product.productName} added to cart`);
       window.dispatchEvent(new Event("cart-updated"));
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -88,10 +88,10 @@ const Product = ({ product, showExtraBtn }) => {
   const savings = hasDiscount ? product.oldPrice - product.price : 0;
 
   return (
-    <Link to={`/single-product/${product.productId}`} className="product-card">
+    <Link to={`/single-product/ ${product.productId}`} className="product-card">
       <div className="pcard-image">
         {hasDiscount && (
-          <span className="save-badge">Save {savings.toFixed(0)} EGP</span>
+          <span className="save-badge">Save {savings.toFixed(0)} $</span>
         )}
 
         <button
@@ -116,7 +116,7 @@ const Product = ({ product, showExtraBtn }) => {
           </button>
         )}
         <img
-          src={`https://localhost:7069/${product.imageUrl}`}
+          src={`https://localhost:7069/ ${product.imageUrl}`}
           alt={product.productName}
         />
       </div>
@@ -127,12 +127,12 @@ const Product = ({ product, showExtraBtn }) => {
         {product.category && <span className="brand">{product.category}</span>}
         <div className="price-row">
           <span className="price">
-            EGP {Number(product.price || 0).toFixed(0)}
+            $ {Number(product.price || 0).toFixed(0)}
           </span>
 
           {hasDiscount && (
             <del className="old-price">
-              EGP {Number(product.oldPrice).toFixed(0)}
+              $ {Number(product.oldPrice).toFixed(0)}
             </del>
           )}
         </div>

@@ -18,7 +18,7 @@ export const AddToWishlist = async (productId) => {
 };
 
 export const RemoveFromWishlist = async (id) => {
-  const response = await axios.delete(`${API}/${id}`);
+  const response = await axios.delete(` ${API}/ ${id}`);
   notifyWishlistUpdated();
   return response.data;
 };

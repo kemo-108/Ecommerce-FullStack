@@ -12,11 +12,11 @@ const RefundRow = ({ refund, refreshRefunds }) => {
     setBusy(true);
     try {
       await UpdateRefundStatus(refund.id, status);
-      toast.success(`Refund ${status} successfully.`);
+      toast.success(`Refund  ${status} successfully.`);
       await refreshRefunds();
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to update refund status."
+        error.response?.data?.message || "Failed to update refund status.",
       );
     } finally {
       setBusy(false);
@@ -41,9 +41,9 @@ const RefundRow = ({ refund, refreshRefunds }) => {
 
       <span>{refund.reason}</span>
 
-      <strong>${Number(refund.amount).toFixed(2)}</strong>
+      <strong> ${Number(refund.amount).toFixed(2)}</strong>
 
-      <span className={`refund-status ${refund.status.toLowerCase()}`}>
+      <span className={`refund-status  ${refund.status.toLowerCase()}`}>
         {refund.status}
       </span>
 

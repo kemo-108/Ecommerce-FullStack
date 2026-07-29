@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Product from "../OurProduct/OurProduct";
 import { GetCart, UpdatCart, DeletetCart } from "../../services/CartService";
+import { applyCoupon } from "../../services/CouponsService";
 import "./Cart.css";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -49,15 +50,15 @@ const Cart = () => {
   };
 
   const handleQuantityChange = async (item, delta) => {
-    const newQty = (item.Qty || 1) + delta;
+    const newQty = (item.qty || 1) + delta;
     if (newQty < 1) return;
 
     setItems((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, Qty: newQty } : i)),
+      prev.map((i) => (i.id === item.id ? { ...i, qty: newQty } : i)),
     );
 
     try {
-      await UpdatCart(item.id, { ...item, Qty: newQty });
+      await UpdatCart(item.id, { ...item, qty: newQty });
     } catch (error) {
       console.error(error);
       toast.error("Could not update quantity");
@@ -66,12 +67,107 @@ const Cart = () => {
   };
 
   const subtotal = items.reduce(
-    (total, item) => total + (item.price || 0) * (item.Qty || 1),
+    (total, item) => total + (item.price || 0) * (item.qty || 1),
     0,
   );
   const delivery = items.length > 0 ? 50 : 0;
-  const discount = 0;
+
+  // ---------------- Coupon ----------------
+  const COUPON_STORAGE_KEY = "cartCouponCode";
+
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null); // full result from the API
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
+
+  const tryApplyCoupon = async (code, currentSubtotal) => {
+    const result = await applyCoupon(code, currentSubtotal);
+    if (result.valid) {
+      setAppliedCoupon(result);
+      setCouponCode(result.code);
+      localStorage.setItem(COUPON_STORAGE_KEY, result.code);
+    } else {
+      setAppliedCoupon(null);
+      localStorage.removeItem(COUPON_STORAGE_KEY);
+    }
+    return result;
+  };
+
+  // Restore a previously applied coupon (e.g. after a page refresh) once the
+  // cart has loaded and we know the real subtotal.
+  useEffect(() => {
+    if (loading) return;
+    const savedCode = localStorage.getItem(COUPON_STORAGE_KEY);
+    if (!savedCode || items.length === 0) return;
+
+    tryApplyCoupon(savedCode, subtotal).catch(() => {
+      localStorage.removeItem(COUPON_STORAGE_KEY);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  const handleApplyCoupon = async () => {
+    const code = couponCode.trim();
+    if (!code) {
+      setCouponError("Please enter a coupon code.");
+      return;
+    }
+
+    setCouponLoading(true);
+    setCouponError("");
+    try {
+      const result = await tryApplyCoupon(code, subtotal);
+      if (result.valid) {
+        setCouponError("");
+        toast.success(result.message || "Coupon applied.");
+      } else {
+        setCouponError(result.message || "Invalid coupon code.");
+      }
+    } catch (error) {
+      console.error(error);
+      setAppliedCoupon(null);
+      localStorage.removeItem(COUPON_STORAGE_KEY);
+      setCouponError(
+        error.response?.data?.message || "Could not apply coupon. Try again.",
+      );
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    setCouponError("");
+    localStorage.removeItem(COUPON_STORAGE_KEY);
+  };
+
+  // Keep the discount accurate if the cart changes (item removed / qty
+  // changed) while a coupon is already applied — re-checks against the
+  // new subtotal so percentage discounts and min-order rules stay correct.
+  useEffect(() => {
+    if (!appliedCoupon) return;
+
+    applyCoupon(appliedCoupon.code, subtotal)
+      .then((result) => {
+        if (result.valid) {
+          setAppliedCoupon(result);
+        } else {
+          setAppliedCoupon(null);
+          localStorage.removeItem(COUPON_STORAGE_KEY);
+          setCouponError(result.message || "Coupon no longer applies.");
+        }
+      })
+      .catch(() => {
+        // If the recheck itself fails (e.g. network hiccup), leave the
+        // previously applied coupon in place instead of clearing it.
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subtotal]);
+
+  const discount = appliedCoupon ? appliedCoupon.discountAmount : 0;
   const total = subtotal + delivery - discount;
+  // -----------------------------------------
 
   return (
     <div className="cart">
@@ -113,12 +209,12 @@ const Cart = () => {
                           </td>
                           <td className="product-cell">
                             <img
-                              src={`https://localhost:7069/${item.imageUrl}`}
+                              src={`https://localhost:7069/ ${item.imageUrl}`}
                               alt={item.productName}
                             />
                             <span>{item.productName}</span>
                           </td>
-                          <td>${Number(item.price || 0).toFixed(2)}</td>
+                          <td> ${Number(item.price || 0).toFixed(2)}</td>
                           <td>
                             <div className="qty-control">
                               <button
@@ -127,7 +223,7 @@ const Cart = () => {
                               >
                                 -
                               </button>
-                              <span>{item.Qty || 1}</span>
+                              <span>{item.qty || 1}</span>
                               <button
                                 type="button"
                                 onClick={() => handleQuantityChange(item, 1)}
@@ -139,7 +235,7 @@ const Cart = () => {
                           <td>
                             $
                             {(
-                              Number(item.price || 0) * (item.Qty || 1)
+                              Number(item.price || 0) * (item.qty || 1)
                             ).toFixed(2)}
                           </td>
                         </tr>
@@ -158,11 +254,61 @@ const Cart = () => {
                 <br />
                 <p>Delivery: ${delivery.toFixed(2)}</p>
                 <br />
-                <p>Discount: ${discount.toFixed(2)}</p>
+                <p>
+                  Discount: - ${discount.toFixed(2)}
+                  {appliedCoupon && (
+                    <span className="coupon-applied-tag">
+                      ({appliedCoupon.code})
+                    </span>
+                  )}
+                </p>
                 <br />
                 <hr />
                 <br />
                 <p>Total: ${total.toFixed(2)}</p>
+                <br />
+
+                <div className="coupon-field">
+                  <input
+                    className="coupon-btn"
+                    type="text"
+                    placeholder="coupon"
+                    value={couponCode}
+                    disabled={!!appliedCoupon}
+                    onChange={(e) => {
+                      setCouponCode(e.target.value);
+                      if (couponError) setCouponError("");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleApplyCoupon();
+                      }
+                    }}
+                  />
+
+                  {appliedCoupon ? (
+                    <button
+                      type="button"
+                      className="coupon-apply-btn"
+                      onClick={handleRemoveCoupon}
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="coupon-apply-btn"
+                      onClick={handleApplyCoupon}
+                      disabled={couponLoading}
+                    >
+                      {couponLoading ? "Checking..." : "Apply"}
+                    </button>
+                  )}
+                </div>
+
+                {couponError && <p className="coupon-error">{couponError}</p>}
+
                 <br />
                 <Link to="/checkout">
                   <button className="checkout-btn">Proceed to Checkout</button>

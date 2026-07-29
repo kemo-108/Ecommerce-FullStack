@@ -33,7 +33,7 @@ import { formatCurrency } from "../../Utils/reportHelpers";
 
 const COLORS = ["#FF4D8D", "#3B82F6", "#22C55E", "#F59E0B"];
 
-const signedPercent = (value) => `${value > 0 ? "+" : ""}${value}%`;
+const signedPercent = (value) => ` ${value > 0 ? "+" : ""} ${value}%`;
 
 const SalesTab = () => {
   const [report, setReport] = useState(null);
@@ -52,7 +52,8 @@ const SalesTab = () => {
   }, []);
 
   if (loading) return <div className="sales-tab">Loading sales report...</div>;
-  if (!report) return <div className="sales-tab">Couldn't load the sales report.</div>;
+  if (!report)
+    return <div className="sales-tab">Couldn't load the sales report.</div>;
 
   const revenueByMonth = report.revenueByMonth.map((m) => ({
     month: m.month,
@@ -79,7 +80,7 @@ const SalesTab = () => {
         <AnalyticsCard
           title="Revenue"
           value={formatCurrency(report.revenue)}
-          subtitle={`${signedPercent(report.revenueChangePercent)} than last month`}
+          subtitle={` ${signedPercent(report.revenueChangePercent)} than last month`}
           icon={FiDollarSign}
           color="#22C55E"
         />
@@ -87,7 +88,7 @@ const SalesTab = () => {
         <AnalyticsCard
           title="Orders"
           value={report.totalOrders.toLocaleString()}
-          subtitle={`${report.newOrdersToday} new today`}
+          subtitle={` ${report.newOrdersToday} new today`}
           icon={FiShoppingBag}
           color="#3B82F6"
         />
@@ -95,7 +96,7 @@ const SalesTab = () => {
         <AnalyticsCard
           title="Profit"
           value={formatCurrency(report.profit)}
-          subtitle={`${signedPercent(report.profitChangePercent)} growth`}
+          subtitle={` ${signedPercent(report.profitChangePercent)} growth`}
           icon={FiTrendingUp}
           color="#FF4D8D"
         />
@@ -273,7 +274,10 @@ const SalesTab = () => {
           <tr key={item.productId}>
             <td>
               <div className="product-info">
-                <img src={item.image || "https://placehold.co/60x60"} alt={item.name} />
+                <img
+                  src={item.image || "https://placehold.co/60x60"}
+                  alt={item.name}
+                />
 
                 <span>{item.name}</span>
               </div>

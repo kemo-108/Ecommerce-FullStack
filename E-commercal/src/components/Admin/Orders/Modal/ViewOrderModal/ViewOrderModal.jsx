@@ -54,7 +54,7 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
         </div>
         {/* Timeline */}
         <div className="order-timeline">
-          <div className={`timeline-step ${pendingActive ? "active" : ""}`}>
+          <div className={`timeline-step  ${pendingActive ? "active" : ""}`}>
             <div className="timeline-icon">
               <FiClock />
             </div>
@@ -63,10 +63,10 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
           </div>
 
           <div
-            className={`timeline-line ${processingActive ? "active" : ""}`}
+            className={`timeline-line  ${processingActive ? "active" : ""}`}
           />
 
-          <div className={`timeline-step ${processingActive ? "active" : ""}`}>
+          <div className={`timeline-step  ${processingActive ? "active" : ""}`}>
             <div className="timeline-icon">
               <FiTruck />
             </div>
@@ -74,9 +74,11 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
             <span>Processing</span>
           </div>
 
-          <div className={`timeline-line ${deliveredActive ? "active" : ""}`} />
+          <div
+            className={`timeline-line  ${deliveredActive ? "active" : ""}`}
+          />
 
-          <div className={`timeline-step ${deliveredActive ? "active" : ""}`}>
+          <div className={`timeline-step  ${deliveredActive ? "active" : ""}`}>
             <div className="timeline-icon">
               <FiCheckCircle />
             </div>
@@ -89,14 +91,14 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
           <div className="detail-card">
             <span>Status</span>
 
-            <div className={`status-badge ${status}`}>{order.status}</div>
+            <div className={`status-badge  ${status}`}>{order.status}</div>
           </div>
 
           <div className="detail-card">
             <span>Payment</span>
 
             <div
-              className={`payment-badge ${order.paymentStatus.toLowerCase()}`}
+              className={`payment-badge  ${order.paymentStatus.toLowerCase()}`}
             >
               {order.paymentStatus}
             </div>
@@ -111,7 +113,7 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
           <div className="detail-card">
             <span>Total Amount</span>
 
-            <h4>${order.total}</h4>
+            <h4> ${order.total}</h4>
           </div>
         </div>{" "}
         {/* Shipping */}
@@ -133,24 +135,24 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
         <div className="order-summary">
           <div className="summary-row">
             <span>Subtotal</span>
-            <strong>${order.subtotal || order.total}</strong>
+            <strong> ${order.subtotal || order.total}</strong>
           </div>
 
           <div className="summary-row">
             <span>Shipping</span>
-            <strong>${order.shipping || 0}</strong>
+            <strong> ${order.shipping || 0}</strong>
           </div>
 
           <div className="summary-row">
             <span>Tax</span>
-            <strong>${order.tax || 0}</strong>
+            <strong> ${order.tax || 0}</strong>
           </div>
 
           <div className="summary-divider"></div>
 
           <div className="summary-row total">
             <span>Total</span>
-            <strong>${order.total}</strong>
+            <strong> ${order.total}</strong>
           </div>
         </div>
         {/* Footer */}

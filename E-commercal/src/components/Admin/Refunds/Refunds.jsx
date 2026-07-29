@@ -30,7 +30,7 @@ const Refunds = () => {
           id: r.id,
           customer: r.customerName,
           avatar: r.customerAvatar,
-          orderId: `#ORD-${r.orderId}`,
+          orderId: `#ORD- ${r.orderId}`,
           reason: r.reason,
           amount: r.amount,
           status: capitalize(r.status),

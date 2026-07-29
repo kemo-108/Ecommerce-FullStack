@@ -52,7 +52,7 @@ const CustomersStats = ({ customers }) => {
       icon: <FiUserCheck />,
       value: activeCustomers,
       title: "Active Customers",
-      subtitle: `${activeRate}% Active`,
+      subtitle: ` ${activeRate}% Active`,
       progress: activeRate,
       trend: "+6%",
       className: "active",
@@ -61,14 +61,14 @@ const CustomersStats = ({ customers }) => {
       icon: <FiAward />,
       value: vipCustomers,
       title: "VIP Customers",
-      subtitle: `${vipRate}% Premium`,
+      subtitle: ` ${vipRate}% Premium`,
       progress: vipRate,
       trend: "+3%",
       className: "vip",
     },
     {
       icon: <FiDollarSign />,
-      value: `$${totalRevenue.toLocaleString()}`,
+      value: ` $ ${totalRevenue.toLocaleString()}`,
       title: "Revenue",
       subtitle: "Generated Revenue",
       progress: revenueRate,
@@ -80,7 +80,7 @@ const CustomersStats = ({ customers }) => {
   return (
     <div className="customers-stats">
       {cards.map((card, index) => (
-        <div className={`customer-stat-card ${card.className}`} key={index}>
+        <div className={`customer-stat-card  ${card.className}`} key={index}>
           <div className="card-number">
             {String(index + 1).padStart(2, "0")}
           </div>
@@ -103,7 +103,7 @@ const CustomersStats = ({ customers }) => {
           <div className="progress-bar">
             <span
               style={{
-                width: `${card.progress}%`,
+                width: ` ${card.progress}%`,
               }}
             ></span>
           </div>

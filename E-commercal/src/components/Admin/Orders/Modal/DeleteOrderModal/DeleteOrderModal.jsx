@@ -15,9 +15,7 @@ const DeleteOrderModal = ({ order, refreshOrders, setOpenDeleteModal }) => {
       await refreshOrders();
       setOpenDeleteModal(false);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to delete order."
-      );
+      toast.error(error.response?.data?.message || "Failed to delete order.");
     } finally {
       setDeleting(false);
     }
@@ -44,7 +42,7 @@ const DeleteOrderModal = ({ order, refreshOrders, setOpenDeleteModal }) => {
 
           <p>{order.customerEmail}</p>
 
-          <strong>${order.total}</strong>
+          <strong> ${order.total}</strong>
         </div>
 
         <div className="delete-actions">
@@ -56,7 +54,11 @@ const DeleteOrderModal = ({ order, refreshOrders, setOpenDeleteModal }) => {
             Cancel
           </button>
 
-          <button className="delete-btn" onClick={handleDelete} disabled={deleting}>
+          <button
+            className="delete-btn"
+            onClick={handleDelete}
+            disabled={deleting}
+          >
             <FiTrash2 />
             {deleting ? "Deleting..." : "Delete"}
           </button>

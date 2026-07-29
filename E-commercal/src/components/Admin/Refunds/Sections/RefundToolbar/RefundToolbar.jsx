@@ -17,7 +17,7 @@ const RefundToolbar = ({ refunds = [] }) => {
     const csvContent = [headers, ...rows]
       .map((row) =>
         row
-          .map((cell) => `"${String(cell ?? "").replace(/"/g, '""')}"`)
+          .map((cell) => `" ${String(cell ?? "").replace(/"/g, '""')}"`)
           .join(","),
       )
       .join("\n");
@@ -27,7 +27,7 @@ const RefundToolbar = ({ refunds = [] }) => {
 
     const link = document.createElement("a");
     link.href = url;
-    link.download = `refunds-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `refunds- ${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
 
     URL.revokeObjectURL(url);

@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./CheckOut.css";
 import { GetCart } from "../../services/CartService";
 import { PlaceOrder } from "../../services/OrderService";
+import { applyCoupon } from "../../services/CouponsService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+const COUPON_STORAGE_KEY = "cartCouponCode";
 
 const initialForm = {
   firstName: "",
@@ -25,6 +28,7 @@ const CheckOut = () => {
   const [loadingCart, setLoadingCart] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [placingOrder, setPlacingOrder] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
 
   useEffect(() => {
     GetCart()
@@ -45,11 +49,34 @@ const CheckOut = () => {
   };
 
   const subtotal = cartItems.reduce(
-    (total, item) => total + (item.price || 0) * (item.Qty || 1),
+    (total, item) => total + (item.price || 0) * (item.qty || 1),
     0,
   );
   const delivery = cartItems.length > 0 ? 10 : 0;
-  const discount = 0;
+
+  // Re-validate whatever coupon was applied back on the Cart page, against
+  // this page's own subtotal — same reasoning as the cart: codes can expire
+  // or fall out of MinOrder range between "Apply" and checkout.
+  useEffect(() => {
+    if (loadingCart || cartItems.length === 0) return;
+
+    const savedCode = localStorage.getItem(COUPON_STORAGE_KEY);
+    if (!savedCode) return;
+
+    applyCoupon(savedCode, subtotal)
+      .then((result) => {
+        if (result.valid) {
+          setAppliedCoupon(result);
+        } else {
+          setAppliedCoupon(null);
+          localStorage.removeItem(COUPON_STORAGE_KEY);
+        }
+      })
+      .catch(() => setAppliedCoupon(null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingCart, subtotal]);
+
+  const discount = appliedCoupon ? appliedCoupon.discountAmount : 0;
   const total = subtotal + delivery - discount;
 
   const requiredFields = [
@@ -81,10 +108,10 @@ const CheckOut = () => {
     setPlacingOrder(true);
     try {
       await PlaceOrder({
-        customerName: `${form.firstName} ${form.lastName}`,
+        customerName: ` ${form.firstName}  ${form.lastName}`,
         customerEmail: form.email,
         phone: form.phone,
-        address: `${form.street}, ${form.city}, ${form.postalCode}, ${form.country}`,
+        address: ` ${form.street},  ${form.city},  ${form.postalCode},  ${form.country}`,
         paymentMethod,
         items: cartItems.map((item) => ({
           productId: item.productId,
@@ -96,7 +123,11 @@ const CheckOut = () => {
         subtotal,
         shipping: delivery,
         total,
+        couponCode: appliedCoupon ? appliedCoupon.code : null,
       });
+      // The order has been placed (with the coupon usage recorded server-side
+      // if one applied), so clear it for the next cart.
+      localStorage.removeItem(COUPON_STORAGE_KEY);
       toast.success("Order placed successfully!");
       navigate("/account/orders");
     } catch (error) {
@@ -218,22 +249,25 @@ const CheckOut = () => {
               <>
                 <div className="item">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span> ${subtotal.toFixed(2)}</span>
                 </div>
 
                 <div className="item">
                   <span>Delivery</span>
-                  <span>${delivery.toFixed(2)}</span>
+                  <span> ${delivery.toFixed(2)}</span>
                 </div>
 
                 <div className="item">
                   <span>Discount</span>
-                  <span>${discount.toFixed(2)}</span>
+                  <span>
+                    - ${discount.toFixed(2)}
+                    {appliedCoupon ? ` ( ${appliedCoupon.code})` : ""}
+                  </span>
                 </div>
                 <hr />
                 <div className="checkout-item-total">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span> ${total.toFixed(2)}</span>
                 </div>
               </>
             )}

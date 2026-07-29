@@ -36,10 +36,10 @@ const RecentOrders = () => {
 
                 <td>{order.customerName}</td>
 
-                <td>${Number(order.total).toFixed(2)}</td>
+                <td> ${Number(order.total).toFixed(2)}</td>
 
                 <td>
-                  <span className={`status ${order.status?.toLowerCase()}`}>
+                  <span className={`status  ${order.status?.toLowerCase()}`}>
                     {order.status}
                   </span>
                 </td>

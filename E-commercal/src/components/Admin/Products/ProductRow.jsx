@@ -19,7 +19,7 @@ const ProductRow = ({
     <tr>
       <td className="product-info">
         <img
-          src={`https://localhost:7069/${product.imageUrl}`}
+          src={`https://localhost:7069/ ${product.imageUrl}`}
           alt={product.productName}
         />
 
@@ -31,12 +31,12 @@ const ProductRow = ({
 
       <td>{product.category}</td>
 
-      <td className="price">${Number(product.price || 0).toFixed(2)}</td>
+      <td className="price"> ${Number(product.price || 0).toFixed(2)}</td>
 
       <td>{product.qty}</td>
 
       <td>
-        <span className={`status ${stock.className}`}>{stock.label}</span>
+        <span className={`status  ${stock.className}`}>{stock.label}</span>
       </td>
 
       <td>{product.createdAt}</td>

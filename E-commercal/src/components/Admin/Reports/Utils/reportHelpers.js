@@ -11,7 +11,7 @@ export const formatNumber = (value) => {
 };
 
 export const formatPercentage = (value) => {
-  return `${value}%`;
+  return ` ${value}%`;
 };
 
 export const getGrowthColor = (value) => {

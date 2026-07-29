@@ -29,20 +29,20 @@ const CouponsStats = ({ coupons }) => {
     {
       title: "Active Coupons",
       value: activeCoupons,
-      sub: `${activeCoupons} Active`,
+      sub: ` ${activeCoupons} Active`,
       icon: <FiCheckCircle />,
       color: "green",
     },
     {
       title: "Expired Coupons",
       value: expiredCoupons,
-      sub: `${expiredCoupons} Expired`,
+      sub: ` ${expiredCoupons} Expired`,
       icon: <FiClock />,
       color: "orange",
     },
     {
       title: "Total Savings",
-      value: `$${totalSavings}`,
+      value: ` $ ${totalSavings}`,
       sub: "Available Discounts",
       icon: <FiDollarSign />,
       color: "blue",
@@ -53,7 +53,7 @@ const CouponsStats = ({ coupons }) => {
     <div className="coupons-stats">
       {stats.map((item, index) => (
         <div className="coupon-stat-card" key={index}>
-          <div className={`stat-icon ${item.color}`}>{item.icon}</div>
+          <div className={`stat-icon  ${item.color}`}>{item.icon}</div>
 
           <div className="stat-info">
             <h4>{item.title}</h4>

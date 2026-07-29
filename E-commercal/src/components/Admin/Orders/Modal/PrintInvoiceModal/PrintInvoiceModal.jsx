@@ -16,7 +16,7 @@ const PrintInvoiceModal = ({ order, setOpenPrintModal }) => {
 
   const handlePrint = useReactToPrint({
     contentRef: invoiceRef,
-    documentTitle: `Invoice-${order?.orderId}`,
+    documentTitle: `Invoice- ${order?.orderId}`,
 
     // Runs right before the print dialog opens.
     // Measures the invoice height and shrinks it just enough
@@ -36,11 +36,11 @@ const PrintInvoiceModal = ({ order, setOpenPrintModal }) => {
             naturalHeight > A4_HEIGHT_PX ? A4_HEIGHT_PX / naturalHeight : 1;
 
           content.style.transformOrigin = "top center";
-          content.style.transform = `scale(${scale})`;
+          content.style.transform = `scale( ${scale})`;
 
           // Shrink the page box to match the scaled content so the
           // browser doesn't leave a blank second page behind it.
-          page.style.height = `${naturalHeight * scale}px`;
+          page.style.height = ` ${naturalHeight * scale}px`;
           page.style.overflow = "hidden";
         }
 

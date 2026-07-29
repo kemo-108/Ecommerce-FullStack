@@ -25,7 +25,7 @@ const TopProducts = () => {
 
               <div className="product-info">
                 <h4>{product.productName}</h4>
-                <p>${Number(product.revenue).toFixed(2)} revenue</p>
+                <p> ${Number(product.revenue).toFixed(2)} revenue</p>
               </div>
 
               <span>{product.quantitySold} Sales</span>

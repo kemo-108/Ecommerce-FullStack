@@ -27,7 +27,7 @@ const ProfitCard = () => {
         </select>
       </div>
 
-      <h2>$6,540</h2>
+      <h2> $6,540</h2>
 
       <span className="profit-growth">+10.2%</span>
 

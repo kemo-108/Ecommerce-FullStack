@@ -6,7 +6,10 @@ import SettingsCard from "../../Shared/SettingsCard/SettingsCard";
 import SettingsInput from "../../Shared/SettingsInput/SettingsInput";
 import SettingsSelect from "../../Shared/SettingsSelect/SettingsSelect";
 import SaveButton from "../../Shared/SaveButton/SaveButton";
-import { GetSettings, UpdateSettings } from "../../../../../services/SettingsService";
+import {
+  GetSettings,
+  UpdateSettings,
+} from "../../../../../services/SettingsService";
 
 const DEFAULTS = {
   storeName: "My Store",
@@ -94,13 +97,16 @@ const GeneralSettings = () => {
         onChange={(e) =>
           setGeneralSettings({ ...generalSettings, currency: e.target.value })
         }
-        options={["USD ($)", "EUR (€)", "EGP (E£)", "SAR (﷼)"]}
+        options={["USD ( $)", "EUR (€)", "EGP (E£)", "SAR (﷼)"]}
       />
       <SettingsInput
         label="Store Description"
         value={generalSettings.description}
         onChange={(e) =>
-          setGeneralSettings({ ...generalSettings, description: e.target.value })
+          setGeneralSettings({
+            ...generalSettings,
+            description: e.target.value,
+          })
         }
       />
       <SaveButton onClick={handleSave} disabled={saving}>

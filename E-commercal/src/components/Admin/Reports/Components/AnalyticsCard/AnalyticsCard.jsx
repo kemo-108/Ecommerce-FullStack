@@ -12,7 +12,7 @@ const AnalyticsCard = ({
       <div className="analytics-card-top">
         <div
           className="analytics-card-icon"
-          style={{ backgroundColor: `${color}15`, color }}
+          style={{ backgroundColor: ` ${color}15`, color }}
         >
           {Icon && <Icon />}
         </div>

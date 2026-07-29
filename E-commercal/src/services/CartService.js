@@ -17,13 +17,13 @@ export const AddToCart = async (item) => {
 };
 
 export const UpdatCart = async (id, item) => {
-  const response = await axios.put(`${API}/${id}`, item);
+  const response = await axios.put(` ${API}/ ${id}`, item);
   notifyCartUpdated();
   return response.data;
 };
 
 export const DeletetCart = async (id) => {
-  const response = await axios.delete(`${API}/${id}`);
+  const response = await axios.delete(` ${API}/ ${id}`);
   notifyCartUpdated();
   return response.data;
 };

@@ -10,7 +10,7 @@ import "./AddProductModal.css";
 const AddProductModal = ({ setOpenAddModal, onSaved }) => {
   const [categories, setCategories] = useState([]);
 
- const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     category: "",
     brand: "",
@@ -107,12 +107,11 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
       // مهم جدًا
       payload.append("Code", formData.code);
 
-  
-     payload.append("Description", formData.description);
+      payload.append("Description", formData.description);
       payload.append("Qty", formData.stock || 0);
 
       const selectedCategory = categories.find(
-        (cat) => String(cat.id) === String(formData.category)
+        (cat) => String(cat.id) === String(formData.category),
       );
       payload.append("Category", selectedCategory ? selectedCategory.name : "");
 
@@ -191,7 +190,7 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                         ✕
                       </button>
 
-                      <img src={image.url} alt={`Preview ${index + 1}`} />
+                      <img src={image.url} alt={`Preview  ${index + 1}`} />
                     </div>
                   ))}
 
@@ -271,8 +270,6 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                   placeholder="PRD-001"
                 />
               </div>
-
-              
             </div>
             <div className="double-input">
               <div className="input-group">
@@ -290,8 +287,6 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                   <span className="error-text">{errors.price}</span>
                 )}
               </div>
-
-              
             </div>
 
             <div className="double-input">
@@ -319,8 +314,6 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                 />
               </div>
             </div>
-
-            
 
             <div className="input-group">
               <label>Description</label>

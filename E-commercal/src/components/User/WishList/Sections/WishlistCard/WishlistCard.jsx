@@ -27,7 +27,7 @@ const WishlistCard = ({ product, onChanged }) => {
   };
 
   const handleView = () => {
-    navigate(`/single-product/${product.productId}`);
+    navigate(`/single-product/ ${product.productId}`);
   };
 
   const handleAddToCart = async () => {
@@ -41,7 +41,7 @@ const WishlistCard = ({ product, onChanged }) => {
         price: product.price,
         Qty: 1,
       });
-      toast.success(`${product.productName} added to cart`);
+      toast.success(` ${product.productName} added to cart`);
     } catch (error) {
       console.error(error);
       toast.error("Could not add product to cart");
@@ -65,7 +65,7 @@ const WishlistCard = ({ product, onChanged }) => {
         </button>
 
         <img
-          src={`https://localhost:7069/${product.imageUrl}`}
+          src={`https://localhost:7069/ ${product.imageUrl}`}
           alt={product.productName}
         />
       </div>
@@ -76,7 +76,7 @@ const WishlistCard = ({ product, onChanged }) => {
             {Array.from({ length: Math.round(product.rating) }).map(
               (_, index) => (
                 <FiStar key={index} />
-              )
+              ),
             )}
           </div>
         )}
@@ -84,14 +84,14 @@ const WishlistCard = ({ product, onChanged }) => {
         <h3>{product.productName}</h3>
 
         <div className="wishlist-price">
-          <span>${Number(product.price || 0).toFixed(2)}</span>
+          <span> ${Number(product.price || 0).toFixed(2)}</span>
 
           {product.oldPrice > product.price && (
-            <del>${Number(product.oldPrice).toFixed(2)}</del>
+            <del> ${Number(product.oldPrice).toFixed(2)}</del>
           )}
         </div>
 
-        <div className={`wishlist-stock ${isOutOfStock ? "out" : ""}`}>
+        <div className={`wishlist-stock  ${isOutOfStock ? "out" : ""}`}>
           {isOutOfStock ? "Out of Stock" : "In Stock"}
         </div>
 

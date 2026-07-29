@@ -46,7 +46,7 @@ const DebtsOverview = () => {
             <p>Total Debts</p>
           </div>
 
-          <strong>$4,350</strong>
+          <strong> $4,350</strong>
         </div>
 
         <div className="debts-item">
@@ -55,7 +55,7 @@ const DebtsOverview = () => {
             <p>Paid</p>
           </div>
 
-          <strong>$2,150</strong>
+          <strong> $2,150</strong>
         </div>
       </div>
     </div>

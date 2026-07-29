@@ -42,7 +42,7 @@ const SingleProduct = () => {
     setActiveTab("Description");
 
     axios
-      .get(`https://localhost:7069/api/products/${productId}`)
+      .get(`https://localhost:7069/api/products/ ${productId}`)
       .then((res) => {
         setProduct(res.data);
       })
@@ -64,7 +64,7 @@ const SingleProduct = () => {
   }, [productId]);
 
   const activeImage = product?.imageUrl
-    ? `https://localhost:7069/${product.imageUrl}`
+    ? `https://localhost:7069/ ${product.imageUrl}`
     : "https://placehold.co/700x700?text=No+Image";
 
   const inStock = product ? (product.stock ?? 1) > 0 : false;
@@ -89,7 +89,7 @@ const SingleProduct = () => {
         price: product.price,
         Qty: quantity,
       });
-      toast.success(`${product.productName} added to cart`);
+      toast.success(` ${product.productName} added to cart`);
     } catch (error) {
       console.error(error);
       toast.error("Could not add product to cart");
@@ -138,8 +138,6 @@ const SingleProduct = () => {
 
   return (
     <section className="sp-page">
-      {/* ================= Product ================= */}
-
       <div className="container">
         <div className="sp-wrapper">
           {/* ================= Left ================= */}
@@ -168,7 +166,7 @@ const SingleProduct = () => {
 
               <span>
                 {product.rating
-                  ? `(${product.rating.toFixed(1)})`
+                  ? `( ${product.rating.toFixed(1)})`
                   : "(No ratings yet)"}
               </span>
             </div>
@@ -180,13 +178,13 @@ const SingleProduct = () => {
 
               {hasDiscount && (
                 <>
-                  <del>${Number(product.oldPrice).toFixed(2)}</del>
+                  <del> ${Number(product.oldPrice).toFixed(2)}</del>
                   <span className="sp-discount">-{discountPercent}%</span>
                 </>
               )}
             </div>
 
-            <div className={`sp-stock ${inStock ? "" : "sp-out-of-stock"}`}>
+            <div className={`sp-stock  ${inStock ? "" : "sp-out-of-stock"}`}>
               {inStock ? "In Stock" : "Out of Stock"}
             </div>
 
@@ -313,7 +311,7 @@ const SingleProduct = () => {
           {TABS.map((tab) => (
             <button
               key={tab}
-              className={`sp-tab-btn ${activeTab === tab ? "sp-tab-active" : ""}`}
+              className={`sp-tab-btn  ${activeTab === tab ? "sp-tab-active" : ""}`}
               onClick={() => setActiveTab(tab)}
               type="button"
             >
@@ -341,7 +339,7 @@ const SingleProduct = () => {
               <li>
                 <strong>Stock:</strong>{" "}
                 {inStock
-                  ? `${product.stock ?? "Available"} units`
+                  ? ` ${product.stock ?? "Available"} units`
                   : "Out of stock"}
               </li>
             </ul>
@@ -364,18 +362,18 @@ const SingleProduct = () => {
           <div className="sp-related-grid">
             {relatedProducts.map((related) => (
               <Link
-                to={`/single-product/${related.productId}`}
+                to={`/single-product/ ${related.productId}`}
                 className="sp-related-card"
                 key={related.productId}
               >
                 <img
-                  src={`https://localhost:7069/${related.imageUrl}`}
+                  src={`https://localhost:7069/ ${related.imageUrl}`}
                   alt={related.productName}
                 />
 
                 <h4>{related.productName}</h4>
 
-                <span>${Number(related.price || 0).toFixed(2)}</span>
+                <span> ${Number(related.price || 0).toFixed(2)}</span>
               </Link>
             ))}
           </div>

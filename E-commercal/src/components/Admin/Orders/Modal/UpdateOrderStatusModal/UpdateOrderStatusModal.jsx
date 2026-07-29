@@ -4,7 +4,11 @@ import { toast } from "react-toastify";
 import "./UpdateOrderStatusModal.css";
 import { UpdateOrderStatus } from "../../../../../services/OrderService";
 
-const UpdateOrderStatusModal = ({ order, refreshOrders, setOpenStatusModal }) => {
+const UpdateOrderStatusModal = ({
+  order,
+  refreshOrders,
+  setOpenStatusModal,
+}) => {
   const [status, setStatus] = useState(order?.status || "Pending");
   const [saving, setSaving] = useState(false);
 
@@ -17,7 +21,7 @@ const UpdateOrderStatusModal = ({ order, refreshOrders, setOpenStatusModal }) =>
       setOpenStatusModal(false);
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to update order status."
+        error.response?.data?.message || "Failed to update order status.",
       );
     } finally {
       setSaving(false);
@@ -54,7 +58,7 @@ const UpdateOrderStatusModal = ({ order, refreshOrders, setOpenStatusModal }) =>
           <div className="status-info">
             <span>Current Status</span>
 
-            <div className={`status-badge ${order.status.toLowerCase()}`}>
+            <div className={`status-badge  ${order.status.toLowerCase()}`}>
               {order.status}
             </div>
           </div>

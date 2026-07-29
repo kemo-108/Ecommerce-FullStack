@@ -9,11 +9,7 @@
     align-items: center;
     text-align: center;
 }
-.cart .cartImg img {
-    width: 100%;
-    display:block;
-    margin: 100px auto ;
-}
+
 .cart .cart-products {
     width: 100%;
 
@@ -113,8 +109,59 @@ gap: 20px;
     background: var(--primary);
     color: #fff;
 }
+.coupon-btn{
+    width: 350px;
+    max-width: 100%;
+    padding: 12px;
+    margin-top: 40px;
+    border: 2px solid var(--primary);
+    cursor: pointer;
+    border-radius: 8px;
+}
+.coupon-field{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.coupon-field .coupon-btn{
+    flex: 1;
+    margin-top: 0;
+    cursor: text;
+}
+.coupon-field .coupon-btn:disabled{
+    background: #f5f5f5;
+    cursor: not-allowed;
+}
+.coupon-apply-btn{
+    margin-top: 0;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.coupon-apply-btn:hover{
+    background: none;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+.coupon-apply-btn:disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.coupon-applied-tag{
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 14px;
+}
+.coupon-error{
+    color: #eb6d6d;
+    font-size: 13px;
+    margin-top: 8px;
+}
 .checkout-btn {
-    
     width: 350px;
     max-width: 100%;
     padding: 12px;
@@ -152,4 +199,3 @@ gap: 20px;
         height: 50px;
     }
 }
-    

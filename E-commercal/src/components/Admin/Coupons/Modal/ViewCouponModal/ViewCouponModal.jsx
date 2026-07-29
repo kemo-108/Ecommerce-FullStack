@@ -56,8 +56,8 @@ const ViewCouponModal = ({ coupon, setOpenViewModal }) => {
 
                 <h4>
                   {coupon.discountType === "Percentage"
-                    ? `${coupon.discountValue}%`
-                    : `$${coupon.discountValue}`}
+                    ? ` ${coupon.discountValue}%`
+                    : ` $ ${coupon.discountValue}`}
                 </h4>
               </div>
             </div>
@@ -67,7 +67,7 @@ const ViewCouponModal = ({ coupon, setOpenViewModal }) => {
 
               <div>
                 <span>Minimum Order</span>
-                <h4>${coupon.minOrder}</h4>
+                <h4> ${coupon.minOrder}</h4>
               </div>
             </div>
 

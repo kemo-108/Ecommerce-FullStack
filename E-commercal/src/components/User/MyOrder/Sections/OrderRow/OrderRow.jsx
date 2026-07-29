@@ -20,7 +20,7 @@ const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
         <img
           src={
             firstItem?.imageUrl
-              ? `https://localhost:7069/ ${Product.imageUrl}`
+              ? `https://localhost:7069/${Product.imageUrl}`
               : ""
           }
           alt={firstItem?.productName}

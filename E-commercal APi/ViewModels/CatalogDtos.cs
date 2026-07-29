@@ -18,6 +18,7 @@ namespace E_commercal_APi.ViewModels
         public int Qty { get; set; }
         public string Status { get; set; }
         public string CreatedAt { get; set; }
+        public List<ProductColorDto> Colors { get; set; } = new();
     }
 
     public class ProductCreateDto
@@ -31,6 +32,9 @@ namespace E_commercal_APi.ViewModels
         public string Code { get; set; }
         public string Description { get; set; }
         public List<IFormFile> Images { get; set; }
+        public List<string>? ColorNames { get; set; }
+        public List<string>? ColorHexes { get; set; }
+        public List<IFormFile>? ColorImages { get; set; }
     }
 
     public class ProductUpdateDto
@@ -43,6 +47,10 @@ namespace E_commercal_APi.ViewModels
         [Required] public int Qty { get; set; }
         public string ImageUrl { get; set; }
         public string Description { get; set; }
+        public List<string>? ColorNames { get; set; }
+        public List<string>? ColorHexes { get; set; }
+        public List<IFormFile>? ColorImages { get; set; }
+        public List<string>? ColorExistingImageUrls { get; set; }
     }
 
     public class CategoryDto
@@ -65,5 +73,12 @@ namespace E_commercal_APi.ViewModels
         public string Image { get; set; }
         public bool Featured { get; set; }
         public string Status { get; set; } = "Active";
+    }
+    public class ProductColorDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string? HexCode { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

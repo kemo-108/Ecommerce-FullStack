@@ -12,6 +12,7 @@ namespace E_commercal_APi.Data
         public DbSet<Address> Addresses { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductColor> ProductColors { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
         public DbSet<CouponRedemption> CouponRedemptions { get; set; }
         public DbSet<Coupon> Coupons { get; set; }

@@ -19,7 +19,7 @@ const ProductRow = ({
     <tr>
       <td className="product-info">
         <img
-          src={`https://localhost:7069/ ${product.imageUrl}`}
+          src={`https://localhost:7069/${product.imageUrl}`}
           alt={product.productName}
         />
 

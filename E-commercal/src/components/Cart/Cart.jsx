@@ -209,7 +209,7 @@ const Cart = () => {
                           </td>
                           <td className="product-cell">
                             <img
-                              src={`https://localhost:7069/ ${item.imageUrl}`}
+                              src={`https://localhost:7069/${item.imageUrl}`}
                               alt={item.productName}
                             />
                             <span>{item.productName}</span>

@@ -18,7 +18,6 @@ import getProducts from "../../services/ProductService";
 import { toast } from "react-toastify";
 
 const TABS = ["Description", "Specifications", "Reviews"];
-
 const SingleProduct = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
@@ -30,6 +29,7 @@ const SingleProduct = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [addingToCart, setAddingToCart] = useState(false);
   const [addingToWishlist, setAddingToWishlist] = useState(false);
+const [selectedColor, setSelectedColor] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("lastViewedProduct", productId);
@@ -45,6 +45,7 @@ const SingleProduct = () => {
       .get(`https://localhost:7069/api/products/ ${productId}`)
       .then((res) => {
         setProduct(res.data);
+        setSelectedColor(res.data.colors?.[0] || null);
       })
       .catch((err) => {
         console.error(err);
@@ -63,9 +64,11 @@ const SingleProduct = () => {
       .catch((err) => console.error(err));
   }, [productId]);
 
-  const activeImage = product?.imageUrl
-    ? `https://localhost:7069/ ${product.imageUrl}`
-    : "https://placehold.co/700x700?text=No+Image";
+const activeImage = selectedColor?.imageUrl
+  ? `https://localhost:7069/${selectedColor.imageUrl}`
+  : product?.imageUrl
+  ? `https://localhost:7069/${product.imageUrl}`
+  : "https://placehold.co/700x700?text=No+Image";
 
   const inStock = product ? (product.stock ?? 1) > 0 : false;
 
@@ -187,7 +190,30 @@ const SingleProduct = () => {
             <div className={`sp-stock  ${inStock ? "" : "sp-out-of-stock"}`}>
               {inStock ? "In Stock" : "Out of Stock"}
             </div>
+{product.colors && product.colors.length > 0 && (
+  <div className="sp-color-section">
+    <h4>Color{selectedColor ? `: ${selectedColor.name}` : ""}</h4>
 
+    <div className="sp-color-options">
+      {product.colors.map((color) => (
+        <button
+          key={color.id}
+          type="button"
+          className={`sp-color-swatch ${selectedColor?.id === color.id ? "sp-color-active" : ""} ${
+            color.imageUrl ? "sp-color-photo" : "sp-color-dot"
+          }`}
+          style={!color.imageUrl ? { backgroundColor: color.hexCode || "#ccc" } : undefined}
+          onClick={() => setSelectedColor(color)}
+          title={color.name}
+        >
+          {color.imageUrl && (
+            <img src={`https://localhost:7069/${color.imageUrl}`} alt={color.name} />
+          )}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
             <p className="sp-description">{product.description}</p>
 
             {/* ================= Quantity ================= */}
@@ -367,7 +393,7 @@ const SingleProduct = () => {
                 key={related.productId}
               >
                 <img
-                  src={`https://localhost:7069/ ${related.imageUrl}`}
+                  src={`https://localhost:7069/${related.imageUrl}`}
                   alt={related.productName}
                 />
 

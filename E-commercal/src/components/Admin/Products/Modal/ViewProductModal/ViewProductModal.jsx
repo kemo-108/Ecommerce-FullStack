@@ -41,7 +41,7 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
           <div className="view-product-content">
             <div className="view-product-image">
               <img
-                src={`https://localhost:7069/ ${product.imageUrl}`}
+                src={`https://localhost:7069/${product.imageUrl}`}
                 alt={product.productName}
               />
             </div>

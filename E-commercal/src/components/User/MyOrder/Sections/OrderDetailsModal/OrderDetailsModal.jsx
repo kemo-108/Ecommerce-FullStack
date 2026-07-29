@@ -31,7 +31,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
               <img
                 src={
                   item.imageUrl
-                    ? `https://localhost:7069/ ${item.imageUrl}`
+                    ? `https://localhost:7069/${item.imageUrl}`
                     : ""
                 }
                 alt={item.productName}

@@ -9,7 +9,7 @@ const ReturnRow = ({ item }) => {
         <div>
           <h4>{item.name}</h4>
           <p>Qty : {item.qty}</p>
-          <span>Total : ${Number(item.total).toFixed(2)}</span>
+          <span>Total : EGP {Number(item.total).toFixed(2)}</span>
         </div>
       </div>
 

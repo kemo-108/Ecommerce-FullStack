@@ -173,12 +173,12 @@ const SingleProduct = () => {
 
             <div className="sp-price-wrapper">
               <h3 className="sp-price">
-                ${Number(product.price || 0).toFixed(2)}
+                EGP {Number(product.price || 0).toFixed(2)}
               </h3>
 
               {hasDiscount && (
                 <>
-                  <del> ${Number(product.oldPrice).toFixed(2)}</del>
+                  <del> EGP {Number(product.oldPrice).toFixed(2)}</del>
                   <span className="sp-discount">-{discountPercent}%</span>
                 </>
               )}
@@ -273,7 +273,7 @@ const SingleProduct = () => {
                 <div>
                   <h5>Free Shipping</h5>
 
-                  <p>Free shipping on all orders over $100.</p>
+                  <p>Free shipping on all orders over EGP100.</p>
                 </div>
               </div>
 
@@ -373,7 +373,7 @@ const SingleProduct = () => {
 
                 <h4>{related.productName}</h4>
 
-                <span> ${Number(related.price || 0).toFixed(2)}</span>
+                <span> EGP {Number(related.price || 0).toFixed(2)}</span>
               </Link>
             ))}
           </div>

@@ -39,7 +39,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
               <div>
                 <h3>{item.productName}</h3>
                 <p>
-                  Qty {item.quantity} × ${Number(item.price).toFixed(2)}
+                  Qty {item.quantity} × EGP {Number(item.price).toFixed(2)}
                 </p>
               </div>
             </div>
@@ -82,22 +82,22 @@ const OrderDetailsModal = ({ order, onClose }) => {
         <div className="price-summary">
           <div>
             <span>Subtotal</span>
-            <h4> ${Number(order.subtotal).toFixed(2)}</h4>
+            <h4> EGP {Number(order.subtotal).toFixed(2)}</h4>
           </div>
 
           <div>
             <span>Shipping</span>
-            <h4> ${Number(order.shipping).toFixed(2)}</h4>
+            <h4> EGP {Number(order.shipping).toFixed(2)}</h4>
           </div>
 
           <div>
             <span>Tax</span>
-            <h4> ${Number(order.tax).toFixed(2)}</h4>
+            <h4> EGP {Number(order.tax).toFixed(2)}</h4>
           </div>
 
           <div className="grand-total">
             <span>Total</span>
-            <h2> ${Number(order.total).toFixed(2)}</h2>
+            <h2> EGP {Number(order.total).toFixed(2)}</h2>
           </div>
         </div>
 

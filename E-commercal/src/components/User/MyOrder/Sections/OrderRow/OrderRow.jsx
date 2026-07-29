@@ -41,7 +41,7 @@ const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
         {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : ""}
       </div>
 
-      <div className="order-total"> ${Number(order.total).toFixed(2)}</div>
+      <div className="order-total"> EGP {Number(order.total).toFixed(2)}</div>
 
       <div className={`order-status  ${order.status?.toLowerCase()}`}>
         {order.status}

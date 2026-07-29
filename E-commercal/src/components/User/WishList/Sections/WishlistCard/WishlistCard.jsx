@@ -84,10 +84,10 @@ const WishlistCard = ({ product, onChanged }) => {
         <h3>{product.productName}</h3>
 
         <div className="wishlist-price">
-          <span> ${Number(product.price || 0).toFixed(2)}</span>
+          <span> EGP {Number(product.price || 0).toFixed(2)}</span>
 
           {product.oldPrice > product.price && (
-            <del> ${Number(product.oldPrice).toFixed(2)}</del>
+            <del> EGP {Number(product.oldPrice).toFixed(2)}</del>
           )}
         </div>
 

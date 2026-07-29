@@ -60,7 +60,7 @@ const ReturnDetailsModal = ({ setOpenModal }) => {
 
               <p>Qty : 1</p>
 
-              <span>Total : $180</span>
+              <span>Total : EGP 180</span>
             </div>
           </div>
         </div>

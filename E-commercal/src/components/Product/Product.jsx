@@ -91,7 +91,7 @@ const Product = ({ product, showExtraBtn }) => {
     <Link to={`/single-product/ ${product.productId}`} className="product-card">
       <div className="pcard-image">
         {hasDiscount && (
-          <span className="save-badge">Save {savings.toFixed(0)} $</span>
+          <span className="save-badge">Save {savings.toFixed(0)} EGP</span>
         )}
 
         <button
@@ -127,12 +127,12 @@ const Product = ({ product, showExtraBtn }) => {
         {product.category && <span className="brand">{product.category}</span>}
         <div className="price-row">
           <span className="price">
-            $ {Number(product.price || 0).toFixed(0)}
+            EGP {Number(product.price || 0).toFixed(0)}
           </span>
 
           {hasDiscount && (
             <del className="old-price">
-              $ {Number(product.oldPrice).toFixed(0)}
+              EGP {Number(product.oldPrice).toFixed(0)}
             </del>
           )}
         </div>

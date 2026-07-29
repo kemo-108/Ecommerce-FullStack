@@ -214,7 +214,7 @@ const Cart = () => {
                             />
                             <span>{item.productName}</span>
                           </td>
-                          <td> ${Number(item.price || 0).toFixed(2)}</td>
+                          <td> EGP {Number(item.price || 0).toFixed(2)}</td>
                           <td>
                             <div className="qty-control">
                               <button
@@ -233,7 +233,7 @@ const Cart = () => {
                             </div>
                           </td>
                           <td>
-                            $
+                            EGP
                             {(
                               Number(item.price || 0) * (item.qty || 1)
                             ).toFixed(2)}
@@ -250,12 +250,12 @@ const Cart = () => {
               <div className="summary-cart">
                 <h2>Cart Summary</h2>
                 <br />
-                <p>Subtotal: ${subtotal.toFixed(2)}</p>
+                <p>Subtotal: EGP {subtotal.toFixed(2)}</p>
                 <br />
-                <p>Delivery: ${delivery.toFixed(2)}</p>
+                <p>Delivery: EGP {delivery.toFixed(2)}</p>
                 <br />
                 <p>
-                  Discount: - ${discount.toFixed(2)}
+                  Discount: - EGP {discount.toFixed(2)}
                   {appliedCoupon && (
                     <span className="coupon-applied-tag">
                       ({appliedCoupon.code})
@@ -265,7 +265,7 @@ const Cart = () => {
                 <br />
                 <hr />
                 <br />
-                <p>Total: ${total.toFixed(2)}</p>
+                <p>Total: EGP {total.toFixed(2)}</p>
                 <br />
 
                 <div className="coupon-field">

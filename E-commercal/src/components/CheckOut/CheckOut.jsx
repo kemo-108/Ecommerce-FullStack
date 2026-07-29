@@ -249,25 +249,25 @@ const CheckOut = () => {
               <>
                 <div className="item">
                   <span>Subtotal</span>
-                  <span> ${subtotal.toFixed(2)}</span>
+                  <span> EGP {subtotal.toFixed(2)}</span>
                 </div>
 
                 <div className="item">
                   <span>Delivery</span>
-                  <span> ${delivery.toFixed(2)}</span>
+                  <span> EGP {delivery.toFixed(2)}</span>
                 </div>
 
                 <div className="item">
                   <span>Discount</span>
                   <span>
-                    - ${discount.toFixed(2)}
+                    - EGP {discount.toFixed(2)}
                     {appliedCoupon ? ` ( ${appliedCoupon.code})` : ""}
                   </span>
                 </div>
                 <hr />
                 <div className="checkout-item-total">
                   <span>Total</span>
-                  <span> ${total.toFixed(2)}</span>
+                  <span> EGP {total.toFixed(2)}</span>
                 </div>
               </>
             )}

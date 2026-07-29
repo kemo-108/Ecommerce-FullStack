@@ -28,7 +28,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
   const [errors, setErrors] = useState({});
 
   const [saving, setSaving] = useState(false);
-
+const [colors, setColors] = useState([]);
   useEffect(() => {
     loadCategories();
   }, []);
@@ -50,8 +50,38 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
     });
 
     if (product.imageUrl) {
-      setPreviewImage(`https://localhost:7069 ${product.imageUrl}`);
+      setPreviewImage(`https://localhost:7069${product.imageUrl}`);
     }
+    useEffect(() => {
+  if (!product) return;
+
+  setFormData({
+    productName: product.productName || "",
+    categoryId: product.categoryId || "",
+    brand: product.brand || "",
+    code: product.code || "",
+    sku: product.sku || "",
+    price: product.price || "",
+    oldPrice: product.oldPrice || "",
+    discount: product.discount || "",
+    description: product.description || "",
+    image: null,
+  });
+
+  if (product.imageUrl) {
+    setPreviewImage(`https://localhost:7069 ${product.imageUrl}`);
+  }
+
+  setColors(
+    (product.colors || []).map((c) => ({
+      name: c.name,
+      hex: c.hexCode || "#000000",
+      image: null,
+      previewUrl: c.imageUrl ? `https://localhost:7069/${c.imageUrl}` : "",
+      existingImageUrl: c.imageUrl || "",
+    }))
+  );
+}, [product]);
   }, [product]);
 
   const loadCategories = async () => {
@@ -85,6 +115,24 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
 
     setPreviewImage(URL.createObjectURL(file));
   };
+  const addColorRow = () => {
+  setColors((prev) => [...prev, { name: "", hex: "#000000", image: null, previewUrl: "", existingImageUrl: "" }]);
+};
+
+const updateColorRow = (index, field, value) => {
+  setColors((prev) => prev.map((c, i) => (i === index ? { ...c, [field]: value } : c)));
+};
+
+const handleColorImage = (index, file) => {
+  if (!file) return;
+  setColors((prev) =>
+    prev.map((c, i) => (i === index ? { ...c, image: file, previewUrl: URL.createObjectURL(file) } : c))
+  );
+};
+
+const removeColorRow = (index) => {
+  setColors((prev) => prev.filter((_, i) => i !== index));
+};
   const validateForm = () => {
     const newErrors = {};
 
@@ -128,8 +176,14 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
       // ارفع صورة جديدة فقط إذا المستخدم اختار واحدة
       if (formData.image) {
         payload.append("Images", formData.image);
-      }
-
+      } 
+      colors.forEach((c) => {
+  if (!c.name.trim()) return;
+  payload.append("ColorNames", c.name);
+  payload.append("ColorHexes", c.hex || "");
+  payload.append("ColorImages", c.image || new File([], ""));
+  payload.append("ColorExistingImageUrls", c.image ? "" : c.existingImageUrl || "");
+});
       await updateProduct(product.productId, payload);
 
       toast.success("Product updated successfully.");
@@ -283,6 +337,50 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
               />
             </div>
 
+{/* 👇 NEW 👇 */}
+<div className="input-group full-width">
+  <label>Colors (optional)</label>
+
+  {colors.map((color, index) => (
+    <div className="color-row" key={index}>
+      <input
+        type="text"
+        placeholder="Color name (e.g. Red)"
+        value={color.name}
+        onChange={(e) => updateColorRow(index, "name", e.target.value)}
+      />
+
+      <input
+        type="color"
+        value={color.hex}
+        onChange={(e) => updateColorRow(index, "hex", e.target.value)}
+      />
+
+      <label className="color-image-upload">
+        {color.previewUrl ? (
+          <img src={color.previewUrl} alt={color.name} />
+        ) : (
+          <FiUploadCloud />
+        )}
+        <input
+          type="file"
+          hidden
+          accept="image/*"
+          onChange={(e) => handleColorImage(index, e.target.files[0])}
+        />
+      </label>
+
+      <button type="button" className="remove-color-btn" onClick={() => removeColorRow(index)}>
+        <FiX />
+      </button>
+    </div>
+  ))}
+
+  <button type="button" className="add-color-btn" onClick={addColorRow}>
+    + Add Color
+  </button>
+</div>
+{/* 👆 end new 👆 */}
             <div className="input-group full-width">
               <label>Product Image</label>
 

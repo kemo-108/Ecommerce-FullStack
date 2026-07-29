@@ -25,7 +25,7 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
   const [previewImages, setPreviewImages] = useState([]);
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
-
+const [colors, setColors] = useState([]);
   useEffect(() => {
     loadCategories();
   }, []);
@@ -39,7 +39,24 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
       toast.error("Failed to load categories.");
     }
   };
+const addColorRow = () => {
+  setColors((prev) => [...prev, { name: "", hex: "#000000", image: null, previewUrl: "" }]);
+};
 
+const updateColorRow = (index, field, value) => {
+  setColors((prev) => prev.map((c, i) => (i === index ? { ...c, [field]: value } : c)));
+};
+
+const handleColorImage = (index, file) => {
+  if (!file) return;
+  setColors((prev) =>
+    prev.map((c, i) => (i === index ? { ...c, image: file, previewUrl: URL.createObjectURL(file) } : c))
+  );
+};
+
+const removeColorRow = (index) => {
+  setColors((prev) => prev.filter((_, i) => i !== index));
+};
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -124,7 +141,12 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
       for (const pair of payload.entries()) {
         console.log(pair[0], pair[1]);
       }
-
+colors.forEach((c) => {
+  if (!c.name.trim()) return;
+  payload.append("ColorNames", c.name);
+  payload.append("ColorHexes", c.hex || "");
+  payload.append("ColorImages", c.image || new File([], ""));
+});
       await createProduct(payload);
 
       toast.success("Product added successfully.");
@@ -326,6 +348,48 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
                 placeholder="Write product description..."
               />
             </div>
+            <div className="input-group">
+  <label>Colors (optional)</label>
+
+  {colors.map((color, index) => (
+    <div className="color-row" key={index}>
+      <input
+        type="text"
+        placeholder="Color name (e.g. Red)"
+        value={color.name}
+        onChange={(e) => updateColorRow(index, "name", e.target.value)}
+      />
+
+      <input
+        type="color"
+        value={color.hex}
+        onChange={(e) => updateColorRow(index, "hex", e.target.value)}
+      />
+
+      <label className="color-image-upload">
+        {color.previewUrl ? (
+          <img src={color.previewUrl} alt={color.name} />
+        ) : (
+          <FiUploadCloud />
+        )}
+        <input
+          type="file"
+          hidden
+          accept="image/*"
+          onChange={(e) => handleColorImage(index, e.target.files[0])}
+        />
+      </label>
+
+      <button type="button" className="remove-color-btn" onClick={() => removeColorRow(index)}>
+        <FiX />
+      </button>
+    </div>
+  ))}
+
+  <button type="button" className="add-color-btn" onClick={addColorRow}>
+    + Add Color
+  </button>
+</div>
           </div>
         </div>
 

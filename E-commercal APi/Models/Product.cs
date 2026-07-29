@@ -58,6 +58,7 @@ namespace E_commercal_APi.Models
         public decimal? Discount { get; set; }
 
         // Navigation
+        public ICollection<ProductColor>? Colors { get; set; }
         public ICollection<ProductImage> Images { get; set; }
         public ICollection<Inventory> InventoryRecords { get; set; }
         public ICollection<CartItem> CartItems { get; set; }

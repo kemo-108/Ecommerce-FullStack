@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Home.css";
 import HeroImage from "../../image/image-Home.png";
+import HeroImage2 from "../../image/image-Home2.png";
+
 import AboutImage from "../../image/image-about.png";
 
 import { Link } from "react-router-dom";
@@ -10,17 +12,21 @@ import {
   FiRefreshCw,
   FiHeadphones,
   FiChevronRight,
+  FiChevronLeft,
 } from "react-icons/fi";
 import getProducts from "../../services/ProductService";
 import { getCategories } from "../../services/CategoryService";
 import Product from "../Product/Product";
 
 // Used only as a fallback image when a category from the API has no image
-// const FALLBACK_IMAGES = [Category1, Category2, Category3, Category4];
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  const stripRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
     getProducts().then((data) => setProducts(data || []));
@@ -31,6 +37,29 @@ const Home = () => {
       .then((data) => setCategories(data || []))
       .catch(() => setCategories([]));
   }, []);
+
+  const updateArrows = () => {
+    const el = stripRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  useEffect(() => {
+    updateArrows();
+    window.addEventListener("resize", updateArrows);
+    return () => window.removeEventListener("resize", updateArrows);
+  }, [categories]);
+
+  const scrollStrip = (direction) => {
+    const el = stripRef.current;
+    if (!el) return;
+    el.scrollBy({
+      left: direction * (el.clientWidth * 0.6),
+      behavior: "smooth",
+    });
+  };
+
   const dealsProducts = products
     .filter((p) => p.oldPrice && p.oldPrice > p.price)
     .slice(0, 10);
@@ -44,6 +73,7 @@ const Home = () => {
         <div className="container">
           <div className="hero-banner-inner">
             <img src={HeroImage} alt="Art Corner" />
+            <img src={HeroImage2} alt="Art Corner" />
 
             <div className="hero-banner-content">
               <span className="hero-tag">New Season</span>
@@ -59,37 +89,66 @@ const Home = () => {
 
       {/* ================= Category strip ================= */}
       <section className="category-strip">
-        <div className="container category-strip-inner">
-          {categories.map((cat, index) => (
-            <Link
-              to={`/shop?search= ${encodeURIComponent(cat.name)}`}
-              className="category-chip"
-              key={cat.id || cat.name}
+        <div className="container category-strip-wrap">
+          {canScrollLeft && (
+            <button
+              type="button"
+              className="strip-arrow strip-arrow-left"
+              onClick={() => scrollStrip(-1)}
+              aria-label="Scroll categories left"
             >
-              <div className="category-chip-icon">
-                <img
-                  src={
-                    cat.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
-                  }
-                  alt={cat.name}
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src =
-                      FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
-                  }}
-                />
-              </div>
-              <span>{cat.name}</span>
-            </Link>
-          ))}
+              <FiChevronLeft />
+            </button>
+          )}
 
-          {/* Always stays last in the row, however many categories are added */}
-          <Link to="/category" className="category-chip category-chip-all">
-            <div className="category-chip-icon all-icon">
+          <div
+            className="category-strip-inner"
+            ref={stripRef}
+            onScroll={updateArrows}
+          >
+            {categories.map((cat, index) => (
+              <Link
+                to={`/shop?search=${encodeURIComponent(cat.name)}`}
+                className="category-chip"
+                key={cat.id || cat.name}
+              >
+                <div className="category-chip-icon">
+                  <img
+                    src={
+                      cat.image ||
+                      FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
+                    }
+                    alt={cat.name}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src =
+                        FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
+                    }}
+                  />
+                </div>
+                <span>{cat.name}</span>
+              </Link>
+            ))}
+
+            {/* Always stays last in the row, however many categories are added */}
+            <Link to="/category" className="category-chip category-chip-all">
+              <div className="category-chip-icon all-icon">
+                <FiChevronRight />
+              </div>
+              <span>All Categories</span>
+            </Link>
+          </div>
+
+          {canScrollRight && (
+            <button
+              type="button"
+              className="strip-arrow strip-arrow-right"
+              onClick={() => scrollStrip(1)}
+              aria-label="Scroll categories right"
+            >
               <FiChevronRight />
-            </div>
-            <span>All Categories</span>
-          </Link>
+            </button>
+          )}
         </div>
       </section>
 

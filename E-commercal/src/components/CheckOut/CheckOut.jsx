@@ -52,7 +52,7 @@ const CheckOut = () => {
     (total, item) => total + (item.price || 0) * (item.qty || 1),
     0,
   );
-  const delivery = cartItems.length > 0 ? 10 : 0;
+  const delivery = cartItems.length > 0 ? 50 : 0;
 
   // Re-validate whatever coupon was applied back on the Cart page, against
   // this page's own subtotal — same reasoning as the cart: codes can expire

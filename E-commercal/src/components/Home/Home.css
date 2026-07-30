@@ -92,6 +92,12 @@
     padding: 30px 0 10px;
 }
 
+.category-strip-wrap{
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .category-strip-inner{
     display: flex;
     gap: 22px;
@@ -102,6 +108,7 @@
     scroll-snap-type: x proximity;
     scrollbar-width: thin;
     scrollbar-color: var(--gray-light) transparent;
+    width: 100%;
 }
 
 .category-strip-inner::-webkit-scrollbar{
@@ -115,6 +122,46 @@
 
 .category-strip-inner::-webkit-scrollbar-track{
     background: transparent;
+}
+
+.strip-arrow{
+    position: absolute;
+    top: 38px;
+    z-index: 5;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--gray-light);
+    background: var(--surface);
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    transition: .2s;
+}
+
+.strip-arrow:hover{
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.strip-arrow-left{
+    left: -6px;
+}
+
+.strip-arrow-right{
+    right: -6px;
+}
+
+@media (max-width: 768px){
+    .strip-arrow{
+        width: 32px;
+        height: 32px;
+        top: 30px;
+    }
 }
 
 .category-chip{

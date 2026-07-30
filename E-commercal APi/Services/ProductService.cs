@@ -30,13 +30,6 @@ namespace E_commercal_APi.Services
             Qty = p.InventoryRecords?.Sum(i => i.Stock) ?? 0,
             Status = p.Status,
             CreatedAt = p.CreatedAt.ToString("dd MMM yyyy"),
-            Colors = p.Colors?.Select(c => new ProductColorDto
-            {
-                Id = c.Id,
-                Name = c.Name,
-                HexCode = c.HexCode,
-                ImageUrl = c.ImageUrl
-            }).OrderBy(c => c.Id).ToList() ?? new List<ProductColorDto>(),
         };
 
         public async Task<(List<ProductDto> Products, int TotalCount)> GetAllAsync(string? search = null, int page = 1, int pageSize = 12)
@@ -44,7 +37,6 @@ namespace E_commercal_APi.Services
             var query = _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
-                .Include(p => p.Colors)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
@@ -73,7 +65,6 @@ namespace E_commercal_APi.Services
             var product = await _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
-                .Include(p => p.Colors)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             return product == null ? null : ToDto(product);
@@ -128,64 +119,34 @@ namespace E_commercal_APi.Services
 
             if (galleryImages.Count > 0)
                 product.Images = galleryImages;
-            var colors = new List<ProductColor>();
-            if (dto.ColorNames != null && dto.ColorNames.Count > 0)
-            {
-                var colorFolder = Path.Combine(webRootPath, "uploads", "products", "colors");
-                Directory.CreateDirectory(colorFolder);
 
-                for (int i = 0; i < dto.ColorNames.Count; i++)
-                {
-                    var colorName = dto.ColorNames[i];
-                    if (string.IsNullOrWhiteSpace(colorName)) continue;
-
-                    string? hex = (dto.ColorHexes != null && i < dto.ColorHexes.Count) ? dto.ColorHexes[i] : null;
-                    string? colorImageUrl = null;
-
-                    if (dto.ColorImages != null && i < dto.ColorImages.Count && dto.ColorImages[i]?.Length > 0)
-                    {
-                        var file = dto.ColorImages[i];
-                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                        var filePath = Path.Combine(colorFolder, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
-
-                        colorImageUrl = $"uploads/products/colors/{fileName}";
-                    }
-
-                    colors.Add(new ProductColor
-                    {
-                        Name = colorName,
-                        HexCode = string.IsNullOrWhiteSpace(hex) ? null : hex,
-                        ImageUrl = colorImageUrl,
-                        SortOrder = i
-                    });
-                }
-            }
-
-            if (colors.Count > 0)
-                product.Colors = colors;
             _db.Products.Add(product);
             await _db.SaveChangesAsync();
 
-            // Seed an inventory record in the default warehouse so Qty shows up immediately.
+            // Seed an inventory record so Qty shows up immediately. There was
+            // never any Warehouse row in the database, so this used to find
+            // nothing and silently skip creating Inventory — meaning Stock
+            // stayed 0 forever no matter what the admin typed. Create one on
+            // first use instead of assuming it already exists.
             var defaultWarehouse = await _db.Warehouses.FirstOrDefaultAsync();
-            if (defaultWarehouse != null)
+            if (defaultWarehouse == null)
             {
-                _db.Inventory.Add(new Inventory
-                {
-                    ProductId = product.ProductId,
-                    WarehouseId = defaultWarehouse.Id,
-                    Sku = dto.Code ?? $"SKU-{product.ProductId}",
-                    Stock = dto.Qty,
-                    MinStock = 5,
-                    LastUpdated = DateTime.UtcNow,
-                });
+                defaultWarehouse = new Warehouse { Name = "Main Warehouse", Address = "N/A", Phone = "N/A", Status = "active" };
+                _db.Warehouses.Add(defaultWarehouse);
                 await _db.SaveChangesAsync();
             }
+
+            _db.Inventory.Add(new Inventory
+            {
+                ProductId = product.ProductId,
+                WarehouseId = defaultWarehouse.Id,
+                Sku = dto.Code ?? $"SKU-{product.ProductId}",
+                Barcode = "N/A",
+                Stock = dto.Qty,
+                MinStock = 5,
+                LastUpdated = DateTime.UtcNow,
+            });
+            await _db.SaveChangesAsync();
 
             var created = await GetByIdAsync(product.ProductId);
             return created!;
@@ -216,58 +177,35 @@ namespace E_commercal_APi.Services
 
             var inventory = await _db.Inventory
                 .FirstOrDefaultAsync(i => i.ProductId == id);
+
             if (inventory != null)
             {
                 inventory.Stock = dto.Qty;
                 inventory.LastUpdated = DateTime.UtcNow;
             }
-
-            // Colors are optional — only touched if the caller actually sent a color list.
-            if (dto.ColorNames != null)
+            else
             {
-                var existingColors = await _db.ProductColors.Where(c => c.ProductId == id).ToListAsync();
-                if (existingColors.Count > 0)
-                    _db.ProductColors.RemoveRange(existingColors);
-
-                if (dto.ColorNames.Count > 0)
+                // This product predates the Warehouse fix above and never got
+                // an Inventory row, so there was nothing here to update and
+                // Stock edits were silently ignored. Create it now instead.
+                var defaultWarehouse = await _db.Warehouses.FirstOrDefaultAsync();
+                if (defaultWarehouse == null)
                 {
-                    var colorFolder = Path.Combine(webRootPath, "uploads", "products", "colors");
-                    Directory.CreateDirectory(colorFolder);
-
-                    for (int i = 0; i < dto.ColorNames.Count; i++)
-                    {
-                        var colorName = dto.ColorNames[i];
-                        if (string.IsNullOrWhiteSpace(colorName)) continue;
-
-                        string? hex = (dto.ColorHexes != null && i < dto.ColorHexes.Count) ? dto.ColorHexes[i] : null;
-                        string? colorImageUrl = (dto.ColorExistingImageUrls != null && i < dto.ColorExistingImageUrls.Count && !string.IsNullOrWhiteSpace(dto.ColorExistingImageUrls[i]))
-                            ? dto.ColorExistingImageUrls[i]
-                            : null;
-
-                        if (dto.ColorImages != null && i < dto.ColorImages.Count && dto.ColorImages[i]?.Length > 0)
-                        {
-                            var file = dto.ColorImages[i];
-                            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                            var filePath = Path.Combine(colorFolder, fileName);
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
-
-                            colorImageUrl = $"uploads/products/colors/{fileName}";
-                        }
-
-                        _db.ProductColors.Add(new ProductColor
-                        {
-                            ProductId = id,
-                            Name = colorName,
-                            HexCode = string.IsNullOrWhiteSpace(hex) ? null : hex,
-                            ImageUrl = colorImageUrl,
-                            SortOrder = i
-                        });
-                    }
+                    defaultWarehouse = new Warehouse { Name = "Main Warehouse", Address = "N/A", Phone = "N/A", Status = "active" };
+                    _db.Warehouses.Add(defaultWarehouse);
+                    await _db.SaveChangesAsync();
                 }
+
+                _db.Inventory.Add(new Inventory
+                {
+                    ProductId = id,
+                    WarehouseId = defaultWarehouse.Id,
+                    Sku = product.Code ?? $"SKU-{id}",
+                    Barcode = "N/A",
+                    Stock = dto.Qty,
+                    MinStock = 5,
+                    LastUpdated = DateTime.UtcNow,
+                });
             }
 
             await _db.SaveChangesAsync();

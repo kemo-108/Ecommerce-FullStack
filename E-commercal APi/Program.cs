@@ -4,7 +4,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Globalization;
 using System.Text;
+
+// Force invariant culture (decimal separator = ".") for every thread in this
+// app, regardless of the machine's Windows/OS regional settings. Without
+// this, a server set to a locale where "." isn't the decimal separator
+// (e.g. many Arabic locales) makes ASP.NET Core's default model binder fail
+// to parse decimal fields like Product.Price whenever the value has a
+// fraction ("10.5"), so the whole request gets rejected as invalid.
+CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +41,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Enter JWT Token only"
     });
 
-   
+
 });
 
 // ================= Database =================
@@ -101,6 +111,17 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// ================= Force invariant culture per-request =================
+// Belt-and-suspenders alongside the CultureInfo.Default* lines above:
+// this guarantees every request thread parses numbers with "." as the
+// decimal separator, no matter what culture the OS/browser tries to negotiate.
+app.UseRequestLocalization(new Microsoft.AspNetCore.Builder.RequestLocalizationOptions
+{
+    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(CultureInfo.InvariantCulture),
+    SupportedCultures = new[] { CultureInfo.InvariantCulture },
+    SupportedUICultures = new[] { CultureInfo.InvariantCulture },
+});
 
 // ================= Middleware =================
 if (app.Environment.IsDevelopment())

@@ -50,7 +50,6 @@ namespace E_commercal_APi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = created.ProductId }, created);
         }
 
-        
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update(int id, [FromForm] ProductUpdateDto dto)

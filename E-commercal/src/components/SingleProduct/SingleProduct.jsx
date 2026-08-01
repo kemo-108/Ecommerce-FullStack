@@ -140,7 +140,7 @@ const SingleProduct = () => {
     : 0;
 
   return (
-    <section className="sp-page">
+    <div className="sp-page">
       <div className="container">
         <div className="sp-wrapper">
           {/* ================= Left ================= */}
@@ -412,7 +412,7 @@ const SingleProduct = () => {
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 

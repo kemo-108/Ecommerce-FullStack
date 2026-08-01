@@ -79,12 +79,12 @@ const Footer = () => {
 
             <p>
               <FaPhoneVolume />
-              (123) 456-7890
+              010 14 884 685
             </p>
 
             <p>
               <BiLogoGmail />
-              info@artcorner.com
+              artcorner@gmail.com
             </p>
           </div>
         </div>

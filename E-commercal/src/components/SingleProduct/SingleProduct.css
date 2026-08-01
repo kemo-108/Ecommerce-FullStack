@@ -3,6 +3,7 @@
 =========================================================== */
 
 .sp-page{
+    position:absolute;
     width:100%;
     background:#fff;
 }

@@ -4,6 +4,10 @@ import HeroImage from "../../image/image-Home.png";
 import HeroImage2 from "../../image/image-Home2.png";
 
 import AboutImage from "../../image/image-about.png";
+import Category1 from "../../image/category1.png";
+import Category2 from "../../image/category2.png";
+import Category3 from "../../image/category3.png";
+import Category4 from "../../image/category4.png";
 
 import { Link } from "react-router-dom";
 import {
@@ -19,6 +23,7 @@ import { getCategories } from "../../services/CategoryService";
 import Product from "../Product/Product";
 
 // Used only as a fallback image when a category from the API has no image
+const FALLBACK_IMAGES = [Category1, Category2, Category3, Category4];
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -60,6 +65,24 @@ const Home = () => {
     });
   };
 
+  const heroSlides = [HeroImage, HeroImage2];
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const prevSlide = () =>
+    setActiveSlide(
+      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length,
+    );
+
+  const nextSlide = () =>
+    setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
   const dealsProducts = products
     .filter((p) => p.oldPrice && p.oldPrice > p.price)
     .slice(0, 10);
@@ -72,8 +95,14 @@ const Home = () => {
       <section className="hero-banner">
         <div className="container">
           <div className="hero-banner-inner">
-            <img src={HeroImage} alt="Art Corner" />
-            <img src={HeroImage2} alt="Art Corner" />
+            {heroSlides.map((slide, index) => (
+              <img
+                key={index}
+                src={slide}
+                alt="Art Corner"
+                className={`hero-slide ${index === activeSlide ? "active" : ""}`}
+              />
+            ))}
 
             <div className="hero-banner-content">
               <span className="hero-tag">New Season</span>
@@ -83,6 +112,35 @@ const Home = () => {
                 Shop Now <FiChevronRight />
               </Link>
             </div>
+
+            <div className="hero-dots">
+              {heroSlides.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className={`hero-dot ${index === activeSlide ? "active" : ""}`}
+                  onClick={() => setActiveSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className="hero-arrow hero-arrow-left"
+              onClick={prevSlide}
+              aria-label="Previous slide"
+            >
+              <FiChevronLeft />
+            </button>
+
+            <button
+              type="button"
+              className="hero-arrow hero-arrow-right"
+              onClick={nextSlide}
+              aria-label="Next slide"
+            >
+              <FiChevronRight />
+            </button>
           </div>
         </div>
       </section>

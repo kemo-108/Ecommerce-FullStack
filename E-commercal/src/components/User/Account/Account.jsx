@@ -7,8 +7,10 @@ const Account = () => {
     <section className="account-page">
       <div className="account-container">
         <div className="account-header">
-          <Link to="/">Home</Link>
-          <span>/ My Account</span>
+          <Link to="/" className="acc-home">
+            Home
+          </Link>
+          <span> &gt; My Account</span>
 
           <h1>My Account</h1>
 

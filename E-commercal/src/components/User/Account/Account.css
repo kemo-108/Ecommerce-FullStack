@@ -13,10 +13,14 @@
 .account-header {
   margin-bottom: 40px;
 }
-
+.acc-home{
+  color: var(--primary);
+  font-size: 25px;
+  font-weight: 1200;
+}
 .account-header span {
   color: #888;
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .account-header h1 {

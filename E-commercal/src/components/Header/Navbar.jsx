@@ -82,11 +82,11 @@ const Header = () => {
       <div className="header-topbar">
         <div className="container topbar-inner">
           <span className="topbar-item">
-            <FiTruck /> Free shipping on orders over $100
+            <FiTruck /> Free shipping on orders over 3000 EGP
           </span>
 
-          <a href="tel:+11234567890" className="topbar-item">
-            <FiPhone /> (123) 456-7890
+          <a href="tel:+201014884685" className="topbar-item">
+            <FiPhone /> 010 14 884 685
           </a>
         </div>
       </div>

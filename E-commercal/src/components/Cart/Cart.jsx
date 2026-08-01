@@ -70,7 +70,7 @@ const Cart = () => {
     (total, item) => total + (item.price || 0) * (item.qty || 1),
     0,
   );
-  const delivery = items.length > 0 ? 50 : 0;
+  const delivery = items.length > 0 ? 100 : 0;
 
   // ---------------- Coupon ----------------
   const COUPON_STORAGE_KEY = "cartCouponCode";

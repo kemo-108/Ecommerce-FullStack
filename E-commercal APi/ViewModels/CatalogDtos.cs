@@ -37,21 +37,27 @@ namespace E_commercal_APi.ViewModels
         public List<IFormFile>? ColorImages { get; set; }
     }
 
-    public class ProductUpdateDto
-    {
-        [Required] public string ProductName { get; set; }
-        public string Category { get; set; }
-        public string Brand { get; set; }
-        [Required] public decimal Price { get; set; }
-        public decimal Discount { get; set; }
-        [Required] public int Qty { get; set; }
-        public string ImageUrl { get; set; }
-        public string Description { get; set; }
-        public List<string>? ColorNames { get; set; }
-        public List<string>? ColorHexes { get; set; }
-        public List<IFormFile>? ColorImages { get; set; }
-        public List<string>? ColorExistingImageUrls { get; set; }
-    }
+    
+        public class ProductUpdateDto
+        {
+            [Required] public string ProductName { get; set; }
+            public string? Category { get; set; }
+            public int? CategoryId { get; set; }
+            public string? Brand { get; set; }
+            public string? Code { get; set; }
+            public string? Sku { get; set; }
+            [Required] public decimal Price { get; set; }
+            public decimal? OldPrice { get; set; }
+            public decimal Discount { get; set; }
+            public int Qty { get; set; }
+            public string? ImageUrl { get; set; }
+            public string? Description { get; set; }
+            public List<string>? ColorNames { get; set; }
+            public List<string>? ColorHexes { get; set; }
+            public List<IFormFile>? ColorImages { get; set; }
+            public List<string>? ColorExistingImageUrls { get; set; }
+        }
+   
 
     public class CategoryDto
     {

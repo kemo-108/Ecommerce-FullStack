@@ -30,6 +30,13 @@ namespace E_commercal_APi.Services
             Qty = p.InventoryRecords?.Sum(i => i.Stock) ?? 0,
             Status = p.Status,
             CreatedAt = p.CreatedAt.ToString("dd MMM yyyy"),
+            Colors = p.Colors?.Select(c => new ProductColorDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                HexCode = c.HexCode,
+                ImageUrl = c.ImageUrl
+            }).OrderBy(c => c.Id).ToList() ?? new List<ProductColorDto>(),
         };
 
         public async Task<(List<ProductDto> Products, int TotalCount)> GetAllAsync(string? search = null, int page = 1, int pageSize = 12)
@@ -37,6 +44,7 @@ namespace E_commercal_APi.Services
             var query = _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
+                .Include(p => p.Colors)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
@@ -65,6 +73,7 @@ namespace E_commercal_APi.Services
             var product = await _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
+                .Include(p => p.Colors)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             return product == null ? null : ToDto(product);
@@ -121,6 +130,46 @@ namespace E_commercal_APi.Services
                 product.Images = galleryImages;
 
             _db.Products.Add(product);
+            var colors = new List<ProductColor>();
+            if (dto.ColorNames != null && dto.ColorNames.Count > 0)
+            {
+                var colorFolder = Path.Combine(webRootPath, "uploads", "products", "colors");
+                Directory.CreateDirectory(colorFolder);
+
+                for (int i = 0; i < dto.ColorNames.Count; i++)
+                {
+                    var colorName = dto.ColorNames[i];
+                    if (string.IsNullOrWhiteSpace(colorName)) continue;
+
+                    string? hex = (dto.ColorHexes != null && i < dto.ColorHexes.Count) ? dto.ColorHexes[i] : null;
+                    string? colorImageUrl = null;
+
+                    if (dto.ColorImages != null && i < dto.ColorImages.Count && dto.ColorImages[i]?.Length > 0)
+                    {
+                        var file = dto.ColorImages[i];
+                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                        var filePath = Path.Combine(colorFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        colorImageUrl = $"uploads/products/colors/{fileName}";
+                    }
+
+                    colors.Add(new ProductColor
+                    {
+                        Name = colorName,
+                        HexCode = string.IsNullOrWhiteSpace(hex) ? null : hex,
+                        ImageUrl = colorImageUrl,
+                        SortOrder = i
+                    });
+                }
+            }
+
+            if (colors.Count > 0)
+                product.Colors = colors;
             await _db.SaveChangesAsync();
 
             // Seed an inventory record so Qty shows up immediately. There was
@@ -168,11 +217,9 @@ namespace E_commercal_APi.Services
             if (!string.IsNullOrWhiteSpace(dto.ImageUrl))
                 product.ImageUrl = dto.ImageUrl;
 
-            if (!string.IsNullOrWhiteSpace(dto.Category))
+            if (dto.CategoryId.HasValue)
             {
-                var category = await _db.Categories
-                    .FirstOrDefaultAsync(c => c.Name == dto.Category);
-                if (category != null) product.CategoryId = category.Id;
+                product.CategoryId = dto.CategoryId.Value;
             }
 
             var inventory = await _db.Inventory
@@ -207,7 +254,52 @@ namespace E_commercal_APi.Services
                     LastUpdated = DateTime.UtcNow,
                 });
             }
+            if (dto.ColorNames != null)
+            {
+                var existingColors = await _db.ProductColors.Where(c => c.ProductId == id).ToListAsync();
+                if (existingColors.Count > 0)
+                    _db.ProductColors.RemoveRange(existingColors);
 
+                if (dto.ColorNames.Count > 0)
+                {
+                    var colorFolder = Path.Combine(webRootPath, "uploads", "products", "colors");
+                    Directory.CreateDirectory(colorFolder);
+
+                    for (int i = 0; i < dto.ColorNames.Count; i++)
+                    {
+                        var colorName = dto.ColorNames[i];
+                        if (string.IsNullOrWhiteSpace(colorName)) continue;
+
+                        string? hex = (dto.ColorHexes != null && i < dto.ColorHexes.Count) ? dto.ColorHexes[i] : null;
+                        string? colorImageUrl = (dto.ColorExistingImageUrls != null && i < dto.ColorExistingImageUrls.Count && !string.IsNullOrWhiteSpace(dto.ColorExistingImageUrls[i]))
+                            ? dto.ColorExistingImageUrls[i]
+                            : null;
+
+                        if (dto.ColorImages != null && i < dto.ColorImages.Count && dto.ColorImages[i]?.Length > 0)
+                        {
+                            var file = dto.ColorImages[i];
+                            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                            var filePath = Path.Combine(colorFolder, fileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                            colorImageUrl = $"uploads/products/colors/{fileName}";
+                        }
+
+                        _db.ProductColors.Add(new ProductColor
+                        {
+                            ProductId = id,
+                            Name = colorName,
+                            HexCode = string.IsNullOrWhiteSpace(hex) ? null : hex,
+                            ImageUrl = colorImageUrl,
+                            SortOrder = i
+                        });
+                    }
+                }
+            }
             await _db.SaveChangesAsync();
 
             var updated = await GetByIdAsync(id);

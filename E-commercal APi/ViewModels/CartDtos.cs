@@ -8,6 +8,8 @@ namespace E_commercal_APi.ViewModels
         public string ImageUrl { get; set; }
         public decimal Price { get; set; }
         public int Qty { get; set; }
+        public string? ColorName { get; set; }
+        public string? ColorHexCode { get; set; }
     }
 
     public class CartItemCreateDto
@@ -17,6 +19,8 @@ namespace E_commercal_APi.ViewModels
         public string ImageUrl { get; set; }
         public decimal Price { get; set; }
         public int Qty { get; set; } = 1;
+        public string? ColorName { get; set; }
+        public string? ColorHexCode { get; set; }
     }
 
     public class CartItemUpdateDto

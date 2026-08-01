@@ -85,13 +85,15 @@ const SingleProduct = () => {
     if (!inStock || addingToCart) return;
     setAddingToCart(true);
     try {
-      await AddToCart({
-        productId: product.productId,
-        productName: product.productName,
-        imageUrl: product.imageUrl,
-        price: product.price,
-        Qty: quantity,
-      });
+     await AddToCart({
+  productId: product.productId,
+  productName: product.productName,
+  imageUrl: product.imageUrl,
+  price: product.price,
+  Qty: quantity,
+  ColorName: selectedColor?.name || null,
+  ColorHexCode: selectedColor?.hexCode || null,
+});
       toast.success(` ${product.productName} added to cart`);
     } catch (error) {
       console.error(error);

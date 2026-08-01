@@ -22,6 +22,8 @@ namespace E_commercal_APi.Services
             ImageUrl = c.Product?.ImageUrl,
             Price = c.Product?.Price ?? 0,
             Qty = c.Qty,
+            ColorName = c.ColorName,
+            ColorHexCode = c.ColorHexCode,
         };
 
         public async Task<List<CartItemDto>> GetCartAsync(int userId)
@@ -38,7 +40,9 @@ namespace E_commercal_APi.Services
         {
             var existing = await _db.CartItems
                 .Include(c => c.Product)
-                .FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == dto.ProductId);
+                .FirstOrDefaultAsync(c => c.UserId == userId
+                    && c.ProductId == dto.ProductId
+                    && c.ColorName == dto.ColorName);
 
             if (existing != null)
             {
@@ -52,6 +56,8 @@ namespace E_commercal_APi.Services
                 UserId = userId,
                 ProductId = dto.ProductId,
                 Qty = dto.Qty,
+                ColorName = dto.ColorName,
+                ColorHexCode = dto.ColorHexCode,
                 CreatedAt = DateTime.UtcNow,
             };
 

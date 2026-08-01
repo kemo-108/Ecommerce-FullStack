@@ -39,6 +39,8 @@ namespace E_commercal_APi.Services
                 ImageUrl = i.ImageUrl,
                 Price = i.Price,
                 Quantity = i.Quantity,
+                ColorName = i.ColorName,
+                ColorHexCode = i.ColorHexCode,
             }).ToList() ?? new(),
         };
 
@@ -119,6 +121,8 @@ namespace E_commercal_APi.Services
                     ImageUrl = i.ImageUrl,
                     Price = i.Price,
                     Quantity = i.Quantity,
+                    ColorName = i.ColorName,
+                    ColorHexCode = i.ColorHexCode,
                 }).ToList(),
             };
 
@@ -222,6 +226,8 @@ namespace E_commercal_APi.Services
                     ProductName = i.ProductName,
                     Price = i.Price,
                     Quantity = i.Quantity,
+                    ColorName = i.ColorName,
+                    ColorHexCode = i.ColorHexCode,
                 }).ToList(),
             };
 

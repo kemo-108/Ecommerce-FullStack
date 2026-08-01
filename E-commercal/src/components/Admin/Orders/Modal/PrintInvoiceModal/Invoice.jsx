@@ -107,7 +107,12 @@ const Invoice = ({ order }) => {
               <tr key={item.productId ?? index}>
                 <td>{index + 1}</td>
 
-                <td className="product-name">{item.productName}</td>
+                <td className="product-name">
+  {item.productName}
+  {item.colorName && (
+    <span className="invoice-item-color"> — {item.colorName}</span>
+  )}
+</td>
 
                 <td>{item.quantity}</td>
 

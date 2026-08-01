@@ -31,6 +31,10 @@ namespace E_commercal_APi.Models
         // snapshot السعر وقت الطلب
         [Required, Column(TypeName = "decimal(10,2)")]
         public decimal Price { get; set; }
+        [MaxLength(50)]
+        public string? ColorName { get; set; }
 
+        [MaxLength(20)]
+        public string? ColorHexCode { get; set; }
     }
 }

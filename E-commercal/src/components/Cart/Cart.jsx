@@ -208,12 +208,23 @@ const Cart = () => {
                             </button>
                           </td>
                           <td className="product-cell">
-                            <img
-                              src={`https://localhost:7069/${item.imageUrl}`}
-                              alt={item.productName}
-                            />
+                          <img
+                            src={`https://localhost:7069/${item.imageUrl}`}
+                            alt={item.productName}
+                          />
+                          <div className="product-cell-info">
                             <span>{item.productName}</span>
-                          </td>
+                            {item.colorName && (
+                              <span className="cart-item-color">
+                                <span
+                                  className="cart-color-dot"
+                                  style={{ backgroundColor: item.colorHexCode || "#ccc" }}
+                                />
+                                {item.colorName}
+                              </span>
+                            )}
+                          </div>
+                        </td>
                           <td> EGP {Number(item.price || 0).toFixed(2)}</td>
                           <td>
                             <div className="qty-control">

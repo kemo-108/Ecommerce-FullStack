@@ -222,7 +222,11 @@
 .contact-row p {
   color: #64748b;
 }
-
+.invoice-item-color {
+    color: #666;
+    font-size: 12px;
+    font-weight: normal;
+}
 /* ===========================
    Responsive
 =========================== */

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_commercal_APi.Models
 {
-    [Index(nameof(UserId), nameof(ProductId), IsUnique = true)]
+    [Index(nameof(UserId), nameof(ProductId), nameof(ColorName), IsUnique = true)]
 
     public class CartItem
     {
@@ -23,7 +23,11 @@ namespace E_commercal_APi.Models
 
         [Range(1, int.MaxValue)]
         public int Qty { get; set; } = 1;
+        [MaxLength(50)]
+        public string? ColorName { get; set; }
 
+        [MaxLength(20)]
+        public string? ColorHexCode { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     }

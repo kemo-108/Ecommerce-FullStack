@@ -217,7 +217,7 @@ const Home = () => {
             <FiTruck />
             <div>
               <h4>Free Shipping</h4>
-              <p>On orders over $100</p>
+              <p>On orders over 3000 EGP</p>
             </div>
           </div>
 
@@ -233,7 +233,7 @@ const Home = () => {
             <FiRefreshCw />
             <div>
               <h4>Easy Returns</h4>
-              <p>30 day return policy</p>
+              <p>15 day return policy</p>
             </div>
           </div>
 

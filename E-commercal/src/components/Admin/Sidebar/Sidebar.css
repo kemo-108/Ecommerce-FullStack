@@ -14,13 +14,17 @@
 }
 
 .sidebar-logo {
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
 
-.sidebar-logo h2 {
-  font-size: 28px;
+.sidebar-logo .sidebar-home-link {
+  font-size: 20px;
   font-weight: 700;
   color: #ff4d8d;
+}
+.sidebar-logo span {
+  font-size: 18px;
+  color: #666;
 }
 .sidebar-menu {
   display: flex;

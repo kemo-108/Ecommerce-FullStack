@@ -12,13 +12,16 @@ import {
   FaWarehouse,
   FaUndoAlt,
 } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
     <aside className="admin-sidebar">
       <div className="sidebar-logo">
-        <h2>Admin</h2>
+        <Link to="/" className="sidebar-home-link">
+          Home
+        </Link>
+        <span>&gt; Admin</span>
       </div>
 
       <NavLink

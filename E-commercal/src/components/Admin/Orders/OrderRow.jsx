@@ -70,37 +70,37 @@ const OrderRow = ({
 
       <td>
         <div className="order-actions">
-          <button
-            className="action-btn view-btn"
-            onClick={handleView}
-            title="View"
-          >
-            <FiEye />
-          </button>
-          <button
-            className="action-btn print-btn"
-            onClick={handlePrint}
-            title="Print Invoice"
-          >
-            <FiPrinter />
-          </button>
+  <button
+    className="order-action-btn order-view-btn"
+    onClick={handleView}
+    title="View"
+  >
+    <FiEye />
+  </button>
+  <button
+    className="order-action-btn order-print-btn"
+    onClick={handlePrint}
+    title="Print Invoice"
+  >
+    <FiPrinter />
+  </button>
 
-          <button
-            className="action-btn edit-btn"
-            onClick={handleStatus}
-            title="Update Status"
-          >
-            <FiEdit2 />
-          </button>
+  <button
+    className="order-action-btn order-edit-btn"
+    onClick={handleStatus}
+    title="Update Status"
+  >
+    <FiEdit2 />
+  </button>
 
-          <button
-            className="action-btn delete-btn"
-            onClick={handleDelete}
-            title="Delete"
-          >
-            <FiTrash2 />
-          </button>
-        </div>
+  <button
+    className="order-action-btn order-delete-btn"
+    onClick={handleDelete}
+    title="Delete"
+  >
+    <FiTrash2 />
+  </button>
+</div>
       </td>
     </tr>
   );

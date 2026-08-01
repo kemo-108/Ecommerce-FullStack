@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  min-width: 250px;
+  
 }
 
 .order-customer img,
@@ -120,8 +120,7 @@
   gap: 8px;
   flex-wrap: nowrap;
 }
-
-.action-btn {
+.order-action-btn {
   width: 36px;
   height: 36px;
   min-width: 36px;
@@ -137,26 +136,34 @@
   font-size: 17px;
 }
 
-.view-btn {
+.order-view-btn {
   color: #3b82f6;
 }
 
-.view-btn:hover {
+.order-view-btn:hover {
   background: rgba(59,130,246,.12);
 }
 
-.edit-btn {
+.order-print-btn {
+  color: #6b7280;
+}
+
+.order-print-btn:hover {
+  background: rgba(107,114,128,.12);
+}
+
+.order-edit-btn {
   color: #f59e0b;
 }
 
-.edit-btn:hover {
+.order-edit-btn:hover {
   background: rgba(245,158,11,.12);
 }
 
-.delete-btn {
+.order-delete-btn {
   color: #ef4444;
 }
 
-.delete-btn:hover {
+.order-delete-btn:hover {
   background: rgba(239,68,68,.12);
 }

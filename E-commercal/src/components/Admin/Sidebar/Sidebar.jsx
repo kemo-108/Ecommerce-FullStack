@@ -21,7 +21,7 @@ const Sidebar = () => {
         <Link to="/" className="sidebar-home-link">
           Home
         </Link>
-        <span>&gt; Admin</span>
+        <span> &gt; Admin</span>
       </div>
 
       <NavLink

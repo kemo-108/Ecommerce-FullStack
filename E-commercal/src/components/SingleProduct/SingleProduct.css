@@ -216,6 +216,13 @@
     margin-left:8px;
 }
 
+.sp-low-stock{
+    color:#e53935;
+    font-size:13.5px;
+    font-weight:700;
+    margin-top:10px;
+}
+
 .sp-price-wrapper{
     display:flex;
     align-items:center;

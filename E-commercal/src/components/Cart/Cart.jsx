@@ -53,6 +53,11 @@ const Cart = () => {
     const newQty = (item.qty || 1) + delta;
     if (newQty < 1) return;
 
+    if (delta > 0 && item.stock != null && newQty > item.stock) {
+      toast.error(`Only ${item.stock} unit(s) available in stock.`);
+      return;
+    }
+
     setItems((prev) =>
       prev.map((i) => (i.id === item.id ? { ...i, qty: newQty } : i)),
     );
@@ -61,7 +66,7 @@ const Cart = () => {
       await UpdatCart(item.id, { ...item, qty: newQty });
     } catch (error) {
       console.error(error);
-      toast.error("Could not update quantity");
+      toast.error(error.response?.data?.message || "Could not update quantity");
       fetchCart();
     }
   };
@@ -208,23 +213,26 @@ const Cart = () => {
                             </button>
                           </td>
                           <td className="product-cell">
-                          <img
-                            src={`https://localhost:7069/${item.imageUrl}`}
-                            alt={item.productName}
-                          />
-                          <div className="product-cell-info">
-                            <span>{item.productName}</span>
-                            {item.colorName && (
-                              <span className="cart-item-color">
-                                <span
-                                  className="cart-color-dot"
-                                  style={{ backgroundColor: item.colorHexCode || "#ccc" }}
-                                />
-                                {item.colorName}
-                              </span>
-                            )}
-                          </div>
-                        </td>
+                            <img
+                              src={`https://localhost:7069/${item.imageUrl}`}
+                              alt={item.productName}
+                            />
+                            <div className="product-cell-info">
+                              <span>{item.productName}</span>
+                              {item.colorName && (
+                                <span className="cart-item-color">
+                                  <span
+                                    className="cart-color-dot"
+                                    style={{
+                                      backgroundColor:
+                                        item.colorHexCode || "#ccc",
+                                    }}
+                                  />
+                                  {item.colorName}
+                                </span>
+                              )}
+                            </div>
+                          </td>
                           <td> EGP {Number(item.price || 0).toFixed(2)}</td>
                           <td>
                             <div className="qty-control">
@@ -238,6 +246,10 @@ const Cart = () => {
                               <button
                                 type="button"
                                 onClick={() => handleQuantityChange(item, 1)}
+                                disabled={
+                                  item.stock != null &&
+                                  (item.qty || 1) >= item.stock
+                                }
                               >
                                 +
                               </button>

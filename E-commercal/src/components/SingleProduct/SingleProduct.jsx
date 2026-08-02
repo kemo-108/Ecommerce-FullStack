@@ -70,13 +70,17 @@ const SingleProduct = () => {
       ? `https://localhost:7069/${product.imageUrl}`
       : "https://placehold.co/700x700?text=No+Image";
 
-  const inStock = product ? (product.stock ?? 1) > 0 : false;
+  const LOW_STOCK_THRESHOLD = 10;
+
+  const inStock = product ? (product.qty ?? 0) > 0 : false;
+  const isLowStock =
+    inStock && product?.qty != null && product.qty <= LOW_STOCK_THRESHOLD;
 
   const handleQuantityChange = (delta) => {
     setQuantity((prev) => {
       const next = prev + delta;
       if (next < 1) return 1;
-      if (product?.stock && next > product.stock) return product.stock;
+      if (product?.qty && next > product.qty) return product.qty;
       return next;
     });
   };
@@ -85,15 +89,15 @@ const SingleProduct = () => {
     if (!inStock || addingToCart) return;
     setAddingToCart(true);
     try {
-     await AddToCart({
-  productId: product.productId,
-  productName: product.productName,
-  imageUrl: product.imageUrl,
-  price: product.price,
-  Qty: quantity,
-  ColorName: selectedColor?.name || null,
-  ColorHexCode: selectedColor?.hexCode || null,
-});
+      await AddToCart({
+        productId: product.productId,
+        productName: product.productName,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        Qty: quantity,
+        ColorName: selectedColor?.name || null,
+        ColorHexCode: selectedColor?.hexCode || null,
+      });
       toast.success(` ${product.productName} added to cart`);
     } catch (error) {
       console.error(error);
@@ -249,6 +253,12 @@ const SingleProduct = () => {
                   <FiPlus />
                 </button>
               </div>
+
+              {isLowStock && (
+                <p className="sp-low-stock">
+                  Only {product.qty} left in stock!
+                </p>
+              )}
             </div>
 
             {/* ================= Buttons ================= */}
@@ -374,7 +384,7 @@ const SingleProduct = () => {
               <li>
                 <strong>Stock:</strong>{" "}
                 {inStock
-                  ? ` ${product.stock ?? "Available"} units`
+                  ? ` ${product.qty ?? "Available"} units`
                   : "Out of stock"}
               </li>
             </ul>

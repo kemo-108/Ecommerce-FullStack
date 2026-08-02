@@ -58,7 +58,7 @@ const SingleProduct = () => {
       .then((all) => {
         const filtered = (all || [])
           .filter((p) => String(p.productId) !== String(productId))
-          .slice(0, 4);
+          .slice(0, 12);
         setRelatedProducts(filtered);
       })
       .catch((err) => console.error(err));
@@ -196,7 +196,7 @@ const SingleProduct = () => {
             <div className={`sp-stock  ${inStock ? "" : "sp-out-of-stock"}`}>
               {inStock ? "In Stock" : "Out of Stock"}
             </div>
-            {product.colors && product.colors.length > 0 && (
+            {inStock && product.colors && product.colors.length > 0 && (
               <div className="sp-color-section">
                 <h4>Color{selectedColor ? `: ${selectedColor.name}` : ""}</h4>
 
@@ -263,24 +263,22 @@ const SingleProduct = () => {
 
             {/* ================= Buttons ================= */}
 
-            <div className="sp-action-buttons">
-              <button
-                className="sp-cart-btn"
-                onClick={handleAddToCart}
-                disabled={!inStock || addingToCart}
-              >
-                <FiShoppingCart />
-                {addingToCart ? "Adding..." : "Add To Cart"}
-              </button>
+            {inStock && (
+              <div className="sp-action-buttons">
+                <button
+                  className="sp-cart-btn"
+                  onClick={handleAddToCart}
+                  disabled={addingToCart}
+                >
+                  <FiShoppingCart />
+                  {addingToCart ? "Adding..." : "Add To Cart"}
+                </button>
 
-              <button
-                className="sp-buy-btn"
-                onClick={handleBuyNow}
-                disabled={!inStock}
-              >
-                Buy Now
-              </button>
-            </div>
+                <button className="sp-buy-btn" onClick={handleBuyNow}>
+                  Buy Now
+                </button>
+              </div>
+            )}
 
             <button
               className="sp-wishlist-btn"

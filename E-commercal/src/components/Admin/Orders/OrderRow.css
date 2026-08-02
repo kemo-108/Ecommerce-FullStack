@@ -1,27 +1,26 @@
-.order-row {
+.admin-order-row {
   transition: 0.25s;
 }
 
-.order-row:hover {
+.admin-order-row:hover {
   background: #fafafa;
 }
 
-.order-row td {
-  padding: 22px 1px;
+.admin-order-row td {
+  padding: 22px 1px 22px 16px;
   vertical-align: middle;
   white-space: nowrap;
   border-bottom: 1px solid #f3f4f6;
 }
 
-.order-customer {
+.admin-order-customer {
   display: flex;
   align-items: center;
   gap: 14px;
-  
 }
 
-.order-customer img,
-.customer-avatar {
+.admin-order-customer img,
+.customer-avatar  {
   width: 46px;
   height: 46px;
   min-width: 46px;
@@ -29,7 +28,7 @@
   border-radius: 50%;
 }
 
-.order-customer img {
+.admin-order-customer img  {
   object-fit: cover;
 }
 
@@ -43,26 +42,26 @@
   font-weight: 700;
 }
 
-.order-customer h4 {
+.admin-order-customer h4  {
   font-size: 15px;
   font-weight: 600;
   color: #222;
   margin-bottom: 3px;
 }
 
-.order-customer span {
+.admin-order-customer span {
   display: block;
   font-size: 13px;
   color: #888;
 }
 
-.order-total {
+.admin-order-total {
   color: #ff4d8d;
   font-size: 15px;
   font-weight: 700;
 }
 
-.order-date {
+.admin-order-date {
   color: #777;
   font-size: 14px;
 }
@@ -114,16 +113,13 @@
   color: #dc2626;
 }
 
-.order-actions {
+.admin-order-actions  {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
 }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 .order-action-btn {
   width: 36px;
   height: 36px;
@@ -140,11 +136,7 @@
   font-size: 17px;
 }
 
-<<<<<<< Updated upstream
 .order-view-btn {
-=======
-.order-view-btn{
->>>>>>> Stashed changes
   color: #3b82f6;
 }
 
@@ -152,7 +144,6 @@
   background: rgba(59,130,246,.12);
 }
 
-<<<<<<< Updated upstream
 .order-print-btn {
   color: #6b7280;
 }
@@ -161,8 +152,6 @@
   background: rgba(107,114,128,.12);
 }
 
-=======
->>>>>>> Stashed changes
 .order-edit-btn {
   color: #f59e0b;
 }

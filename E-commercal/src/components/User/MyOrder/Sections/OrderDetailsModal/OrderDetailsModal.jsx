@@ -27,23 +27,32 @@ const OrderDetailsModal = ({ order, onClose }) => {
 
         <div className="modal-items">
           {order.items?.map((item, index) => (
-            <div className="modal-product" key={index}>
-              <img
-                src={
-                  item.imageUrl
-                    ? `https://localhost:7069/${item.imageUrl}`
-                    : ""
-                }
-                alt={item.productName}
-              />
-              <div>
-                <h3>{item.productName}</h3>
-                <p>
-                  Qty {item.quantity} × EGP {Number(item.price).toFixed(2)}
-                </p>
-              </div>
-            </div>
-          ))}
+  <div className="modal-product" key={index}>
+    <img
+      src={
+        item.imageUrl
+          ? `https://localhost:7069/${item.imageUrl}`
+          : ""
+      }
+      alt={item.productName}
+    />
+    <div>
+      <h3>{item.productName}</h3>
+      <p>
+        Qty {item.quantity} × EGP {Number(item.price).toFixed(2)}
+      </p>
+      {item.colorName && (
+        <p className="modal-item-color">
+          <span
+            className="modal-color-dot"
+            style={{ backgroundColor: item.colorHexCode || "#ccc" }}
+          />
+          {item.colorName}
+        </p>
+      )}
+    </div>
+  </div>
+))}
         </div>
 
         <div className="modal-grid">

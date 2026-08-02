@@ -19,7 +19,22 @@ max-height:90vh;
 overflow:auto;
 animation:popup .25s ease;
 }
+.modal-item-color {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
 
+.modal-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #ddd;
+}
 @keyframes popup{
 
 from{

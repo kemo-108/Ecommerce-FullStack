@@ -70,6 +70,7 @@ const OrderRow = ({
 
       <td>
         <div className="order-actions">
+<<<<<<< Updated upstream
   <button
     className="order-action-btn order-view-btn"
     onClick={handleView}
@@ -98,6 +99,18 @@ const OrderRow = ({
     onClick={handleDelete}
     title="Delete"
   >
+=======
+  <button className="order-action-btn order-view-btn" onClick={handleView} title="View">
+    <FiEye />
+  </button>
+  <button className="order-action-btn order-print-btn" onClick={handlePrint} title="Print Invoice">
+    <FiPrinter />
+  </button>
+  <button className="order-action-btn order-edit-btn" onClick={handleStatus} title="Update Status">
+    <FiEdit2 />
+  </button>
+  <button className="order-action-btn order-delete-btn" onClick={handleDelete} title="Delete">
+>>>>>>> Stashed changes
     <FiTrash2 />
   </button>
 </div>

@@ -120,6 +120,10 @@
   gap: 8px;
   flex-wrap: nowrap;
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 .order-action-btn {
   width: 36px;
   height: 36px;
@@ -136,7 +140,11 @@
   font-size: 17px;
 }
 
+<<<<<<< Updated upstream
 .order-view-btn {
+=======
+.order-view-btn{
+>>>>>>> Stashed changes
   color: #3b82f6;
 }
 
@@ -144,6 +152,7 @@
   background: rgba(59,130,246,.12);
 }
 
+<<<<<<< Updated upstream
 .order-print-btn {
   color: #6b7280;
 }
@@ -152,6 +161,8 @@
   background: rgba(107,114,128,.12);
 }
 
+=======
+>>>>>>> Stashed changes
 .order-edit-btn {
   color: #f59e0b;
 }

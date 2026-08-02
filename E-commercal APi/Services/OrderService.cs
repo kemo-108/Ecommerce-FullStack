@@ -137,8 +137,8 @@ namespace E_commercal_APi.Services
             var order = new Order
             {
                 UserId = userId,
-                CustomerName = dto.CustomerName,
-                CustomerEmail = dto.CustomerEmail,
+                CustomerName = user?.Name ?? dto.CustomerName,
+                CustomerEmail = user?.Email ?? dto.CustomerEmail,
                 CustomerImage = user?.Avatar ?? "",
                 Subtotal = dto.Subtotal,
                 Shipping = dto.Shipping,

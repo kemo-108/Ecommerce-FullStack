@@ -80,7 +80,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.CartItem", b =>
@@ -119,7 +119,7 @@ namespace E_commercal_APi.Migrations
                         .IsUnique()
                         .HasFilter("[ColorName] IS NOT NULL");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Category", b =>
@@ -158,7 +158,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.ContactMessage", b =>
@@ -194,7 +194,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactMessages");
+                    b.ToTable("ContactMessages", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Coupon", b =>
@@ -245,7 +245,7 @@ namespace E_commercal_APi.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Coupons");
+                    b.ToTable("Coupons", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.CouponRedemption", b =>
@@ -274,7 +274,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CouponRedemptions");
+                    b.ToTable("CouponRedemptions", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Inventory", b =>
@@ -320,7 +320,7 @@ namespace E_commercal_APi.Migrations
                     b.HasIndex("ProductId", "WarehouseId")
                         .IsUnique();
 
-                    b.ToTable("Inventory");
+                    b.ToTable("Inventory", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Notification", b =>
@@ -356,7 +356,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Order", b =>
@@ -442,7 +442,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.OrderItem", b =>
@@ -488,7 +488,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.PasswordReset", b =>
@@ -520,7 +520,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PasswordResets");
+                    b.ToTable("PasswordResets", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Payment", b =>
@@ -560,7 +560,7 @@ namespace E_commercal_APi.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Product", b =>
@@ -633,7 +633,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.ProductColor", b =>
@@ -693,7 +693,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.RefreshToken", b =>
@@ -725,7 +725,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Refund", b =>
@@ -767,7 +767,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Refunds");
+                    b.ToTable("Refunds", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Return", b =>
@@ -809,7 +809,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Returns");
+                    b.ToTable("Returns", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.ReturnItem", b =>
@@ -835,7 +835,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("ReturnId");
 
-                    b.ToTable("ReturnItems");
+                    b.ToTable("ReturnItems", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Review", b =>
@@ -879,7 +879,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.StockMovement", b =>
@@ -918,7 +918,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasIndex("InventoryId");
 
-                    b.ToTable("StockMovements");
+                    b.ToTable("StockMovements", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.StoreSetting", b =>
@@ -947,7 +947,7 @@ namespace E_commercal_APi.Migrations
                     b.HasIndex("Key")
                         .IsUnique();
 
-                    b.ToTable("StoreSettings");
+                    b.ToTable("StoreSettings", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Supplier", b =>
@@ -983,7 +983,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.User", b =>
@@ -1039,7 +1039,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Warehouse", b =>
@@ -1072,7 +1072,7 @@ namespace E_commercal_APi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Warehouses");
+                    b.ToTable("Warehouses", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Wishlist", b =>
@@ -1099,7 +1099,7 @@ namespace E_commercal_APi.Migrations
                     b.HasIndex("UserId", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlists", (string)null);
                 });
 
             modelBuilder.Entity("E_commercal_APi.Models.Address", b =>

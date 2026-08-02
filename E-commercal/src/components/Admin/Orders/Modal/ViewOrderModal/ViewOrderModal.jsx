@@ -86,6 +86,36 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
             <span>Delivered</span>
           </div>
         </div>
+        {/* Products */}
+<div className="order-items-card">
+  <h3>Items Ordered</h3>
+
+  <table className="order-items-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {(order.items || []).map((item, index) => (
+        <tr key={item.productId ?? index}>
+          <td>
+            {item.productName}
+            {item.colorName && (
+              <span className="order-item-color"> — {item.colorName}</span>
+            )}
+          </td>
+          <td>{item.quantity}</td>
+          <td>${Number(item.price).toFixed(2)}</td>
+          <td>${(Number(item.price) * Number(item.quantity)).toFixed(2)}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
         {/* Order Details */}
         <div className="order-details-grid">
           <div className="detail-card">

@@ -59,8 +59,15 @@ namespace E_commercal_APi.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> AdminCreate(AdminCreateOrderDto dto)
         {
-            var order = await _orderService.AdminCreateOrderAsync(dto);
-            return Ok(order);
+            try
+            {
+                var order = await _orderService.AdminCreateOrderAsync(dto);
+                return Ok(order);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPatch("{id:int}/status")]

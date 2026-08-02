@@ -14,6 +14,9 @@ namespace E_commercal_APi.Services
             _db = db;
         }
 
+        private static int AvailableStock(Product? p) =>
+            p?.InventoryRecords?.Sum(i => i.Stock) ?? 0;
+
         private static CartItemDto ToDto(CartItem c) => new()
         {
             Id = c.Id,
@@ -22,14 +25,14 @@ namespace E_commercal_APi.Services
             ImageUrl = c.Product?.ImageUrl,
             Price = c.Product?.Price ?? 0,
             Qty = c.Qty,
-            ColorName = c.ColorName,
-            ColorHexCode = c.ColorHexCode,
+            Stock = AvailableStock(c.Product),
         };
 
         public async Task<List<CartItemDto>> GetCartAsync(int userId)
         {
             var items = await _db.CartItems
                 .Include(c => c.Product)
+                    .ThenInclude(p => p.InventoryRecords)
                 .Where(c => c.UserId == userId)
                 .ToListAsync();
 
@@ -38,15 +41,26 @@ namespace E_commercal_APi.Services
 
         public async Task<CartItemDto> AddToCartAsync(int userId, CartItemCreateDto dto)
         {
+            var product = await _db.Products
+                .Include(p => p.InventoryRecords)
+                .FirstOrDefaultAsync(p => p.ProductId == dto.ProductId)
+                ?? throw new KeyNotFoundException("Product not found.");
+
+            var availableStock = AvailableStock(product);
+
             var existing = await _db.CartItems
-                .Include(c => c.Product)
-                .FirstOrDefaultAsync(c => c.UserId == userId
-                    && c.ProductId == dto.ProductId
-                    && c.ColorName == dto.ColorName);
+                .FirstOrDefaultAsync(c => c.UserId == userId && c.ProductId == dto.ProductId);
+
+            var requestedQty = (existing?.Qty ?? 0) + dto.Qty;
+
+            if (requestedQty > availableStock)
+                throw new InvalidOperationException(
+                    $"Only {availableStock} unit(s) of this product are in stock.");
 
             if (existing != null)
             {
-                existing.Qty += dto.Qty;
+                existing.Qty = requestedQty;
+                existing.Product = product;
                 await _db.SaveChangesAsync();
                 return ToDto(existing);
             }
@@ -56,15 +70,13 @@ namespace E_commercal_APi.Services
                 UserId = userId,
                 ProductId = dto.ProductId,
                 Qty = dto.Qty,
-                ColorName = dto.ColorName,
-                ColorHexCode = dto.ColorHexCode,
                 CreatedAt = DateTime.UtcNow,
+                Product = product,
             };
 
             _db.CartItems.Add(item);
             await _db.SaveChangesAsync();
 
-            await _db.Entry(item).Reference(c => c.Product).LoadAsync();
             return ToDto(item);
         }
 
@@ -72,10 +84,18 @@ namespace E_commercal_APi.Services
         {
             var item = await _db.CartItems
                 .Include(c => c.Product)
+                    .ThenInclude(p => p.InventoryRecords)
                 .FirstOrDefaultAsync(c => c.Id == cartItemId && c.UserId == userId)
                 ?? throw new KeyNotFoundException("Cart item not found.");
 
-            item.Qty = Math.Max(1, dto.Qty);
+            var availableStock = AvailableStock(item.Product);
+            var newQty = Math.Max(1, dto.Qty);
+
+            if (newQty > availableStock)
+                throw new InvalidOperationException(
+                    $"Only {availableStock} unit(s) of this product are in stock.");
+
+            item.Qty = newQty;
             await _db.SaveChangesAsync();
 
             return ToDto(item);
@@ -96,8 +116,7 @@ namespace E_commercal_APi.Services
             catch (DbUpdateConcurrencyException)
             {
                 // الصف اتحذف بالفعل من طلب تاني (double click) قبل ما إحنا
-                // نوصل للـ SaveChanges بتاعتنا. النتيجة اللي إحنا عايزينها
-                // (العنصر يتشال) أصلاً حصلت، فمنعتبرهاش مشكلة.
+                // نوصل للـ SaveChanges بتاعتنا.
             }
         }
     }

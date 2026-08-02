@@ -30,8 +30,19 @@ namespace E_commercal_APi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCart(CartItemCreateDto dto)
         {
-            var item = await _cartService.AddToCartAsync(UserId, dto);
-            return Ok(item);
+            try
+            {
+                var item = await _cartService.AddToCartAsync(UserId, dto);
+                return Ok(item);
+            }   
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
@@ -45,6 +56,10 @@ namespace E_commercal_APi.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 

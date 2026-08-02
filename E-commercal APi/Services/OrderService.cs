@@ -44,9 +44,49 @@ namespace E_commercal_APi.Services
             }).ToList() ?? new(),
         };
 
+        // بيخصم الكمية من مخزن (أو أكتر) للمنتج، بيبدأ بالمخزن اللي فيه أكبر رصيد
+        private async Task DeductStockAsync(int productId, int quantity)
+        {
+            var records = await _db.Inventory
+                .Where(i => i.ProductId == productId && i.Stock > 0)
+                .OrderByDescending(i => i.Stock)
+                .ToListAsync();
+
+            var remaining = quantity;
+            foreach (var record in records)
+            {
+                if (remaining <= 0) break;
+
+                var deduct = Math.Min(record.Stock, remaining);
+                record.Stock -= deduct;
+                record.LastUpdated = DateTime.UtcNow;
+                remaining -= deduct;
+            }
+        }
+
+        // بيتحقق إن كل سطر في الأوردر لسه متوفر بنفس الكمية المطلوبة
+        private async Task EnsureStockAvailableAsync(IEnumerable<(int ProductId, string ProductName, int Quantity)> lines)
+        {
+            foreach (var line in lines)
+            {
+                var available = await _db.Inventory
+                    .Where(i => i.ProductId == line.ProductId)
+                    .SumAsync(i => (int?)i.Stock) ?? 0;
+
+                if (line.Quantity > available)
+                    throw new InvalidOperationException(
+                        $"'{line.ProductName}' only has {available} unit(s) left in stock.");
+            }
+        }
+
         public async Task<OrderDto> PlaceOrderAsync(int userId, PlaceOrderDto dto)
         {
             var user = await _db.Users.FindAsync(userId);
+
+            // تحقّق إن كل منتج لسه فيه رصيد كافي قبل ما نبدأ ننشئ الأوردر —
+            // ممكن الكمية تتغير بين وقت ما العميل حط المنتج في السلة ولحظة الدفع.
+            await EnsureStockAvailableAsync(
+                dto.Items.Select(i => (i.ProductId, i.ProductName, i.Quantity)));
 
             // Re-check the coupon here instead of trusting a discount amount
             // sent from the client — codes can expire, hit their usage limit,
@@ -137,6 +177,12 @@ namespace E_commercal_APi.Services
             var cartItems = _db.CartItems.Where(c => c.UserId == userId);
             _db.CartItems.RemoveRange(cartItems);
 
+            // خصم الكمية المباعة من المخزون الفعلي.
+            foreach (var line in dto.Items)
+            {
+                await DeductStockAsync(line.ProductId, line.Quantity);
+            }
+
             await _db.SaveChangesAsync();
 
             if (coupon != null)
@@ -188,6 +234,11 @@ namespace E_commercal_APi.Services
 
         public async Task<OrderDto> AdminCreateOrderAsync(AdminCreateOrderDto dto)
         {
+            // نفس التحقق من المخزون اللي بيحصل في أوردر العميل العادي —
+            // أوردر الأدمن اليدوي المفروض برضو يخصم من نفس المخزون الحقيقي.
+            await EnsureStockAvailableAsync(
+                dto.Items.Select(i => (i.ProductId, i.ProductName, i.Quantity)));
+
             // Walk-in / manual order created by an admin. We look up (or reuse)
             // a guest user record by email so the order still has a valid UserId.
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.CustomerEmail);
@@ -232,6 +283,12 @@ namespace E_commercal_APi.Services
             };
 
             _db.Orders.Add(order);
+
+            foreach (var line in dto.Items)
+            {
+                await DeductStockAsync(line.ProductId, line.Quantity);
+            }
+
             await _db.SaveChangesAsync();
 
             return ToDto(order);

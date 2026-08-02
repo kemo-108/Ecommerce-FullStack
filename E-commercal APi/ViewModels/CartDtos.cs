@@ -8,10 +8,8 @@ namespace E_commercal_APi.ViewModels
         public string ImageUrl { get; set; }
         public decimal Price { get; set; }
         public int Qty { get; set; }
-        public string? ColorName { get; set; }
-        public string? ColorHexCode { get; set; }
+        public int Stock { get; set; }   // جديد
     }
-
     public class CartItemCreateDto
     {
         public int ProductId { get; set; }

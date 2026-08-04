@@ -19,11 +19,11 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] int? page, [FromQuery] int? pageSize)
+        public async Task<IActionResult> GetAll([FromQuery] string? search, [FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] int? categoryId)
         {
-            // No search/pagination requested (Home, OurProduct, NowItems, Admin Products, SingleProduct
+            // No search/pagination/category requested (Home, OurProduct, NowItems, Admin Products, SingleProduct
             // all call this with no params and expect a plain array) -> keep the old behavior.
-            bool wantsPagination = search != null || page != null || pageSize != null;
+            bool wantsPagination = search != null || page != null || pageSize != null || categoryId != null;
 
             if (!wantsPagination)
             {
@@ -31,7 +31,7 @@ namespace E_commercal_APi.Controllers
                 return Ok(allProducts);
             }
 
-            var (products, totalCount) = await _productService.GetAllAsync(search, page ?? 1, pageSize ?? 12);
+            var (products, totalCount) = await _productService.GetAllAsync(search, page ?? 1, pageSize ?? 12, categoryId);
             return Ok(new { products, totalProducts = totalCount });
         }
 

@@ -39,13 +39,18 @@ namespace E_commercal_APi.Services
             }).OrderBy(c => c.Id).ToList() ?? new List<ProductColorDto>(),
         };
 
-        public async Task<(List<ProductDto> Products, int TotalCount)> GetAllAsync(string? search = null, int page = 1, int pageSize = 12)
+        public async Task<(List<ProductDto> Products, int TotalCount)> GetAllAsync(string? search = null, int page = 1, int pageSize = 12, int? categoryId = null)
         {
             var query = _db.Products
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
                 .Include(p => p.Colors)
                 .AsQueryable();
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
 
             if (!string.IsNullOrWhiteSpace(search))
             {

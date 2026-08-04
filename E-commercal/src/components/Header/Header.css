@@ -32,20 +32,43 @@
     color: rgba(255, 255, 255, 0.85);
 }
 
-.topbar-inner {
+.topbar-marquee {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    font-size: 20px;
+}
+
+.topbar-track {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 8px 50px;
-    font-size: 13px;
+    gap: 60px;
+    white-space: nowrap;
+    padding: 8px 60px 8px 0;
+    animation: topbar-scroll 22s linear infinite;
+}
+
+.header-topbar:hover .topbar-track {
+    animation-play-state: paused;
+}
+
+@keyframes topbar-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 .topbar-item {
+
     display: flex;
     align-items: center;
     gap: 6px;
     color: inherit;
     text-decoration: none;
+    flex-shrink: 0;
 }
 
 /* ================= MAIN HEADER ROW ================= */
@@ -359,7 +382,7 @@
 
 @media (max-width:1200px){
 
-    .topbar-inner{
+    .topbar-track{
         padding: 8px 30px;
     }
 
@@ -388,7 +411,7 @@
         --header-height: 156px;
     }
 
-    .topbar-inner{
+    .topbar-track{
         padding: 8px 20px;
     }
 

@@ -3,7 +3,7 @@ import "./CheckOut.css";
 import { GetCart } from "../../services/CartService";
 import { PlaceOrder } from "../../services/OrderService";
 import { applyCoupon } from "../../services/CouponsService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const COUPON_STORAGE_KEY = "cartCouponCode";
@@ -113,15 +113,15 @@ const CheckOut = () => {
         phone: form.phone,
         address: ` ${form.street},  ${form.city},  ${form.postalCode},  ${form.country}`,
         paymentMethod,
-       items: cartItems.map((item) => ({
-        productId: item.productId,
-        productName: item.productName,
-        imageUrl: item.imageUrl,
-        price: item.price,
-        quantity: item.qty,
-        colorName: item.colorName,
-        colorHexCode: item.colorHexCode,
-      })),
+        items: cartItems.map((item) => ({
+          productId: item.productId,
+          productName: item.productName,
+          imageUrl: item.imageUrl,
+          price: item.price,
+          quantity: item.qty,
+          colorName: item.colorName,
+          colorHexCode: item.colorHexCode,
+        })),
         subtotal,
         shipping: delivery,
         total,
@@ -146,7 +146,10 @@ const CheckOut = () => {
     <div className="checkout">
       <div className="checkout-header">
         <h1>CHECKOUT</h1>
-        <span>HOME / CHECKOUT</span>
+        <Link to="/" style={{ color: "var(--primary)" }}>
+          HOME
+        </Link>
+        <span style={{ fontSize: "15px" }}> &gt; CHECKOUT</span>
       </div>
 
       <div className="checkout-container">

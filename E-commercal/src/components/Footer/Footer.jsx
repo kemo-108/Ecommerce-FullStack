@@ -57,7 +57,7 @@ const Footer = () => {
           <Link to="/shop">Shop</Link>
           <Link to="/category">Categories</Link>
           <Link to="/cart">Cart</Link>
-          <Link to="/contact">Contact Us</Link>
+          <Link to="/contact">Contact Us & MAPS</Link>
         </div>
 
         <div className="box">

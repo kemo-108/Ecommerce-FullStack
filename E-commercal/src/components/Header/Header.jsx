@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../image/image.png";
-import Navber from "./Navbar";
+import Navbar from "./Navbar";
 import {
   FiSearch,
   FiHeart,
@@ -9,6 +9,7 @@ import {
   FiPhone,
   FiTruck,
   FiShield,
+  FiRefreshCw,
 } from "react-icons/fi";
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,6 +22,7 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const isAdmin = IsAuthenticated() && GetCurrentUser()?.role === "admin";
 
   const handleSearchSubmit = (e) => {
@@ -30,7 +32,10 @@ const Header = () => {
   };
 
   const refreshCartCount = () => {
-    if (!IsAuthenticated()) return setCartCount(0);
+    if (!IsAuthenticated()) {
+      setTimeout(() => setCartCount(0), 0);
+      return;
+    }
     GetCart()
       .then((data) =>
         setCartCount(
@@ -43,7 +48,10 @@ const Header = () => {
   };
 
   const refreshWishlistCount = () => {
-    if (!IsAuthenticated()) return setWishlistCount(0);
+    if (!IsAuthenticated()) {
+      setTimeout(() => setWishlistCount(0), 0);
+      return;
+    }
     GetWishlist()
       .then((data) => setWishlistCount(Array.isArray(data) ? data.length : 0))
       .catch(() => setWishlistCount(0));
@@ -62,18 +70,40 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="header">
+    <div className={`header  ${scrolled ? "active" : ""}`}>
       {/* ================= Top utility bar ================= */}
       <div className="header-topbar">
-        <div className="container topbar-inner">
-          <span className="topbar-item">
-            <FiTruck /> Free shipping on orders over $100
-          </span>
+        <div className="topbar-marquee">
+          <div className="topbar-track">
+            <span className="topbar-item">
+              <FiTruck /> Free shipping on orders over 3000 EGP
+            </span>
+            <span className="topbar-item">
+              <FiRefreshCw /> Easy Returns 15 day return policy
+            </span>
+            <a href="tel:+201014884658" className="topbar-item">
+              <FiPhone /> 010 14 884 658
+            </a>
 
-          <a href="tel:+11234567890" className="topbar-item">
-            <FiPhone /> (123) 456-7890
-          </a>
+            {/* نفس العناصر تاني عشان الحركة تلف من غير قطع */}
+            <span className="topbar-item">
+              <FiTruck /> Free shipping on orders over 3000 EGP
+            </span>
+            <span className="topbar-item">
+              <FiRefreshCw /> Easy Returns 15 day return policy
+            </span>
+            <a href="tel:+201014884658" className="topbar-item">
+              <FiPhone /> 010 14 884 658
+            </a>
+          </div>
         </div>
       </div>
 
@@ -132,7 +162,7 @@ const Header = () => {
       </div>
 
       {/* ================= Category / nav bar ================= */}
-      <Navber />
+      <Navbar />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Home.css";
 import HeroImage from "../../image/image-Home.png";
 import HeroImage2 from "../../image/image-Home2.png";
+import HeroImage3 from "../../image/image-Home3.png";
 
 import AboutImage from "../../image/image-about.png";
 import Category1 from "../../image/category1.png";
@@ -65,7 +66,7 @@ const Home = () => {
     });
   };
 
-  const heroSlides = [HeroImage, HeroImage2];
+  const heroSlides = [HeroImage, HeroImage2, HeroImage3];
   const [activeSlide, setActiveSlide] = useState(0);
 
   const prevSlide = () =>
@@ -103,15 +104,6 @@ const Home = () => {
                 className={`hero-slide ${index === activeSlide ? "active" : ""}`}
               />
             ))}
-
-            <div className="hero-banner-content">
-              <span className="hero-tag">New Season</span>
-              <h1>Everything for school, office &amp; art — in one place</h1>
-              <p>Top brands, best prices, fast delivery all over Egypt.</p>
-              <Link to="/shop" className="btn-primary">
-                Shop Now <FiChevronRight />
-              </Link>
-            </div>
 
             <div className="hero-dots">
               {heroSlides.map((_, index) => (
@@ -211,41 +203,6 @@ const Home = () => {
       </section>
 
       {/* ================= Trust badges ================= */}
-      <section className="trust-bar">
-        <div className="container trust-grid">
-          <div className="trust-item">
-            <FiTruck />
-            <div>
-              <h4>Free Shipping</h4>
-              <p>On orders over 3000 EGP</p>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <FiShield />
-            <div>
-              <h4>Secure Payment</h4>
-              <p>100% protected checkout</p>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <FiRefreshCw />
-            <div>
-              <h4>Easy Returns</h4>
-              <p>15 day return policy</p>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <FiHeadphones />
-            <div>
-              <h4>Support</h4>
-              <p>We're here to help</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ================= Deals grid ================= */}
       <section className="home-section">

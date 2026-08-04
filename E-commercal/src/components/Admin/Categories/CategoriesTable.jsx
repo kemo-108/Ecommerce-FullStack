@@ -47,7 +47,6 @@ const CategoriesTable = ({
             <th>Actions</th>
           </tr>
         </thead>
-
         <tbody>
           {categories.map((category) => (
             <CategoryRow

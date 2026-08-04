@@ -28,7 +28,7 @@ const Header = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const query = searchTerm.trim();
-    navigate(query ? `/shop?search= ${encodeURIComponent(query)}` : "/shop");
+    navigate(query ? `/shop?search=${encodeURIComponent(query)}` : "/shop");
   };
 
   const refreshCartCount = () => {

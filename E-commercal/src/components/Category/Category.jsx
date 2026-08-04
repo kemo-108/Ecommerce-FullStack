@@ -27,7 +27,7 @@ const Category = () => {
           <div className="category-grid">
             {categories.map((cat, index) => (
               <Link
-                to={`/shop?search= ${encodeURIComponent(cat.name)}`}
+                to={`/shop?categoryId=${encodeURIComponent(cat.id)}`}
                 className="category-tile"
                 key={cat.id || cat.name}
               >

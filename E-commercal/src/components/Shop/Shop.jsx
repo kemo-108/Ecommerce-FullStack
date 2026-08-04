@@ -6,8 +6,12 @@ import { useSearchParams } from "react-router-dom";
 import Product from "../Product/Product";
 import { getCategories } from "../../services/CategoryService";
 const Shop = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
+  // The URL is the single source of truth for which category is selected,
+  // so links coming from Home/Category/Header always land on the right filter.
+  const categoryIdParam = searchParams.get("categoryId");
+  const selectedCategoryId = categoryIdParam ? Number(categoryIdParam) : null;
 
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
@@ -15,7 +19,6 @@ const Shop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [sortOption, setSortOption] = useState("default");
 
   const pageSize = 12;
@@ -39,6 +42,7 @@ const Shop = () => {
           page,
           pageSize,
           search: searchQuery || undefined,
+          categoryId: selectedCategoryId || undefined,
         },
       })
       .then((response) => {
@@ -58,21 +62,29 @@ const Shop = () => {
         setProducts([]);
       })
       .finally(() => setLoading(false));
-  }, [page, searchQuery]);
+  }, [page, searchQuery, selectedCategoryId]);
 
-  const filteredProducts = products
-    .filter((p) => !selectedCategoryId || p.categoryId === selectedCategoryId)
-    .sort((a, b) => {
-      if (sortOption === "price-asc") return a.price - b.price;
-      if (sortOption === "price-desc") return b.price - a.price;
-      return 0;
-    });
+  // Filtering now happens on the server (search + categoryId), so the
+  // fetched page is already correct - just apply sorting for display.
+  const filteredProducts = [...products].sort((a, b) => {
+    if (sortOption === "price-asc") return a.price - b.price;
+    if (sortOption === "price-desc") return b.price - a.price;
+    return 0;
+  });
 
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
-  const pagedProducts = filteredProducts.slice(
-    (page - 1) * pageSize,
-    page * pageSize,
-  );
+  const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
+  const pagedProducts = filteredProducts;
+
+  const selectCategory = (categoryId) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("search");
+    if (categoryId) {
+      next.set("categoryId", String(categoryId));
+    } else {
+      next.delete("categoryId");
+    }
+    setSearchParams(next);
+  };
 
   return (
     <div className="shop">
@@ -84,7 +96,7 @@ const Shop = () => {
               <li>
                 <button
                   className={!selectedCategoryId ? "active" : ""}
-                  onClick={() => setSelectedCategoryId(null)}
+                  onClick={() => selectCategory(null)}
                 >
                   All Products
                 </button>
@@ -93,7 +105,7 @@ const Shop = () => {
                 <li key={cat.id}>
                   <button
                     className={selectedCategoryId === cat.id ? "active" : ""}
-                    onClick={() => setSelectedCategoryId(cat.id)}
+                    onClick={() => selectCategory(cat.id)}
                   >
                     {cat.name}
                   </button>
@@ -117,14 +129,14 @@ const Shop = () => {
               </p>
             )}
 
-            {!loading && !error && filteredProducts.length === 0 && (
+            {!loading && !error && totalProducts === 0 && (
               <p className="shop-status">No products found.</p>
             )}
 
-            {!loading && !error && filteredProducts.length > 0 && (
+            {!loading && !error && totalProducts > 0 && (
               <>
                 <div className="shop-toolbar">
-                  <span>{filteredProducts.length} products</span>
+                  <span>{totalProducts} products</span>
                   <select
                     className="sort-select"
                     value={sortOption}

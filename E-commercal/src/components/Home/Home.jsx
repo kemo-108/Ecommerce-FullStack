@@ -158,7 +158,7 @@ const Home = () => {
           >
             {categories.map((cat, index) => (
               <Link
-                to={`/shop?search=${encodeURIComponent(cat.name)}`}
+                to={`/shop?categoryId=${encodeURIComponent(cat.id)}`}
                 className="category-chip"
                 key={cat.id || cat.name}
               >

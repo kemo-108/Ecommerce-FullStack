@@ -17,7 +17,7 @@ const RecentOrders = () => {
         <h3>Recent Orders</h3>
       </div>
 
-      <div className="orders-table">
+      <div className="orders-table-recent">
         <table>
           <thead>
             <tr>

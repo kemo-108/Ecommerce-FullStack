@@ -132,7 +132,7 @@
 }
 
 @media (max-width:576px){
- .hero-arrow{
+     .hero-arrow{
         width:58px;
         height:58px;
         font-size:55px;
@@ -154,6 +154,7 @@
 .hero-arrow-right{
     right: 18px;
 }
+
 
 .btn-primary{
     background: var(--primary);
@@ -563,9 +564,9 @@
         height: 240px;
     }
     .hero-arrow{
-        width: 34px;
-        height: 34px;
-        font-size: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 100px;
     }
     .hero-arrow-left{ left: 10px; }
     .hero-arrow-right{ right: 10px; }

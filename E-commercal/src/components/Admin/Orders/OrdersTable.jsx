@@ -18,7 +18,7 @@ const OrdersTable = ({
   const currentOrders = orders.slice(indexOfFirst, indexOfLast);
 
   return (
-    <div className="orders-table">
+    <div className="orders-tables">
       <table>
         <thead>
           <tr>

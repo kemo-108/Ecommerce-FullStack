@@ -1,5 +1,5 @@
 .orders-table {
-  min-height: 900px;
+  min-height: 1000px;
   background: #fff;
   border-radius: 18px;
   overflow-x: auto;
@@ -7,43 +7,43 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
 }
 
-.orders-table table {
+.orders-tables table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
 }
 
-.orders-table th:nth-child(1),
-.orders-table td:nth-child(1) { width: 8%; }
+.orders-tables th:nth-child(1),
+.orders-tables td:nth-child(1) { width: 8%; }
 
-.orders-table th:nth-child(2),
-.orders-table td:nth-child(2) { width: 26%; }
+.orders-tables th:nth-child(2),
+.orders-tables td:nth-child(2) { width: 26%; }
 
-.orders-table th:nth-child(3),
-.orders-table td:nth-child(3) { width: 10%; }
+.orders-tables th:nth-child(3),
+.orders-tables td:nth-child(3) { width: 10%; }
 
-.orders-table th:nth-child(4),
-.orders-table td:nth-child(4) { width: 13%; }
+.orders-tables th:nth-child(4),
+.orders-tables td:nth-child(4) { width: 13%; }
 
-.orders-table th:nth-child(5),  
-.orders-table td:nth-child(5) { width: 13%; }
+.orders-tables th:nth-child(5),  
+.orders-tables td:nth-child(5) { width: 13%; }
 
-.orders-table th:nth-child(6),
-.orders-table td:nth-child(6) { width: 14%; }
+.orders-tables th:nth-child(6),
+.orders-tables td:nth-child(6) { width: 14%; }
 
-.orders-table th:nth-child(7),
-.orders-table td:nth-child(7) { width: 16%; }
-.orders-table thead {
+.orders-tables th:nth-child(7),
+.orders-tables td:nth-child(7) { width: 16%; }
+.orders-tables thead {
   background: #fafafa;
 }
 
-.orders-table thead tr {
+.orders-tables thead tr {
 
   border-bottom: 1px solid #ececec;
 }
 
 
-.orders-table th {
+.orders-tables th {
   padding: 18px;
   text-align: left;
   font-size: 14px;
@@ -53,21 +53,21 @@
   display: table-cell;
 }
 
-.orders-table td {
+.orders-tables td {
   padding: 18px;
   vertical-align: middle;
   border-bottom: 1px solid #f3f3f3;
 }
 
-.orders-table tbody tr {
+.orders-tables tbody tr {
   transition: 0.25s ease;
 }
 
-.orders-table tbody tr:hover {
+.orders-tables tbody tr:hover {
   background: #fafafa;
 }
 
-.orders-table tbody tr:last-child td {
+.orders-tables tbody tr:last-child td {
   border-bottom: none;
 }
 

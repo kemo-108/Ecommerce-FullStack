@@ -12,9 +12,29 @@ import {
   FaWarehouse,
   FaUndoAlt,
 } from "react-icons/fa";
-import { Link, NavLink } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import {
+  GetCurrentUser,
+  Logout,
+  ClearSession,
+} from "../../../services/AuthService";
+import { toast } from "react-toastify";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await Logout();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      ClearSession();
+      toast.success("Logged out successfully");
+      navigate("/login");
+    }
+  };
   return (
     <aside className="admin-sidebar">
       <div className="sidebar-logo">
@@ -123,8 +143,8 @@ const Sidebar = () => {
         <span>Settings</span>
       </NavLink>
 
-      <button className="logout-btn">
-        <FaSignOutAlt />
+      <button className="logout-btn" onClick={handleLogout}>
+        <FiLogOut />
         <span>Logout</span>
       </button>
     </aside>

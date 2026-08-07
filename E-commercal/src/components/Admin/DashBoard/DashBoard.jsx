@@ -8,14 +8,18 @@ import TopProducts from "./Sections/TopProducts/TopProducts";
 import LowStock from "./Sections/LowStock/LowStock";
 import RecentCustomers from "./Sections/RecentCustomers/RecentCustomers";
 import QuickActions from "./Sections/QuickActions/QuickActions";
-
+import DebtsOverview from "./Sections/DebtsOverview/DebtsOverview";
+import IncomingOrders from "./Sections/IncomeExpenses/IncomeExpenses";
+import ProfitCard from "./Sections/ProfitCard/ProfitCard";
 const Dashboard = () => {
   return (
     <div className="dashboard">
       <Topbar />
 
       <StatsCards />
-
+      <IncomingOrders />
+      <ProfitCard />
+      <DebtsOverview />
       <div className="dashboard-grid">
         <div className="sales-chart-area">
           <SalesChart />

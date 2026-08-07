@@ -6,7 +6,7 @@ namespace E_commercal_APi.Services
     {
         Task<OrderDto> PlaceOrderAsync(int userId, PlaceOrderDto dto);
         Task<List<OrderDto>> GetMyOrdersAsync(int userId);
-        Task<OrderDto?> GetByIdAsync(int orderId);
+        Task<OrderDto?> GetByIdAsync(int orderId, int requestingUserId, bool isAdmin);
         Task<List<OrderDto>> GetAllAsync();
         Task<OrderDto> AdminCreateOrderAsync(AdminCreateOrderDto dto);
         Task UpdateStatusAsync(int orderId, string status);

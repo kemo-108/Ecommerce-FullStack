@@ -211,14 +211,20 @@ namespace E_commercal_APi.Services
             return orders.Select(ToDto).ToList();
         }
 
-        public async Task<OrderDto?> GetByIdAsync(int orderId)
+        public async Task<OrderDto?> GetByIdAsync(int orderId, int requestingUserId, bool isAdmin)
         {
             var order = await _db.Orders
-    .Include(o => o.Items)
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
-    .FirstOrDefaultAsync(o => o.OrderId == orderId);
+            if (order == null) return null;
 
-            return order == null ? null : ToDto(order);
+            // A logged-in customer could otherwise view ANY order (name, address,
+            // items, total) just by incrementing the id in the URL. Only the
+            // order's owner or an admin may see it.
+            if (!isAdmin && order.UserId != requestingUserId) return null;
+
+            return ToDto(order);
         }
 
         public async Task<List<OrderDto>> GetAllAsync()
@@ -300,6 +306,20 @@ namespace E_commercal_APi.Services
                 ?? throw new KeyNotFoundException("Order not found.");
 
             order.Status = status;
+
+            // Nothing in the app ever flips PaymentStatus on its own, so without this
+            // every order stays "pending" forever and customers always show $0 spent.
+            // Delivery is the signal we actually have (covers Cash On Delivery, which
+            // is the only payment method wired up), so treat it as payment received.
+            if (string.Equals(status, "delivered", StringComparison.OrdinalIgnoreCase))
+            {
+                order.PaymentStatus = "paid";
+            }
+            else if (string.Equals(status, "cancelled", StringComparison.OrdinalIgnoreCase))
+            {
+                order.PaymentStatus = "failed";
+            }
+
             await _db.SaveChangesAsync();
         }
 

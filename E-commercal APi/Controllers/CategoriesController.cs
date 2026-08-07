@@ -1,11 +1,16 @@
 ﻿using E_commercal_APi.Services;
 using E_commercal_APi.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_commercal_APi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    // Browsing categories is public, but creating/editing/deleting them is an
+    // admin action. This used to have no [Authorize] at all, so anyone could
+    // POST/PUT/DELETE categories without even logging in.
+    [Authorize(Roles = "admin")]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -16,6 +21,7 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllCategories()
         {
             var categories = await _categoryService.GetAllAsync();
@@ -23,6 +29,7 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCategoryById(int id)
         {
             var category = await _categoryService.GetByIdAsync(id);

@@ -34,11 +34,18 @@ namespace E_commercal_APi.Services
                 .Where(u => u.Role == "customer")
                 .ToListAsync();
 
-            // One grouped query for order stats instead of querying per-customer (N+1).
+            // Total Orders = every order the customer placed that wasn't cancelled
+            // (so it shows up as soon as they check out, not only once an admin
+            // marks it paid). Total Spent = money actually collected (paid orders).
             var orderStats = await _db.Orders
-                .Where(o => o.PaymentStatus == "paid")
+                .Where(o => o.Status != "cancelled")
                 .GroupBy(o => o.UserId)
-                .Select(g => new { UserId = g.Key, Count = g.Count(), Total = g.Sum(o => o.Total) })
+                .Select(g => new
+                {
+                    UserId = g.Key,
+                    Count = g.Count(),
+                    Total = g.Where(o => o.PaymentStatus == "paid").Sum(o => (decimal?)o.Total) ?? 0m
+                })
                 .ToListAsync();
 
             var statsByUser = orderStats.ToDictionary(s => s.UserId, s => s);
@@ -70,9 +77,13 @@ namespace E_commercal_APi.Services
             if (u == null) return null;
 
             var stats = await _db.Orders
-                .Where(o => o.UserId == id && o.PaymentStatus == "paid")
+                .Where(o => o.UserId == id && o.Status != "cancelled")
                 .GroupBy(o => o.UserId)
-                .Select(g => new { Count = g.Count(), Total = g.Sum(o => o.Total) })
+                .Select(g => new
+                {
+                    Count = g.Count(),
+                    Total = g.Where(o => o.PaymentStatus == "paid").Sum(o => (decimal?)o.Total) ?? 0m
+                })
                 .FirstOrDefaultAsync();
 
             var totalSpent = stats?.Total ?? 0;

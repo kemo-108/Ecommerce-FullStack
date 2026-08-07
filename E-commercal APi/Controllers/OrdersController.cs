@@ -50,7 +50,8 @@ namespace E_commercal_APi.Controllers
         [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
-            var order = await _orderService.GetByIdAsync(id);
+            var isAdmin = User.IsInRole("admin");
+            var order = await _orderService.GetByIdAsync(id, UserId, isAdmin);
             return order == null ? NotFound(new { message = "Order not found." }) : Ok(order);
         }
 

@@ -14,6 +14,29 @@ namespace E_commercal_APi.Services
             _db = db;
         }
 
+        private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".webp", ".gif"
+        };
+        private const long MaxImageBytes = 5 * 1024 * 1024; // 5 MB
+
+        // Uploads previously accepted any file with no extension/size/content-type
+        // check, so an admin account (or a hijacked admin session) could drop an
+        // executable or script into wwwroot/uploads. Reject anything that isn't a
+        // small, genuinely-image file before it ever touches disk.
+        private static void ValidateImage(Microsoft.AspNetCore.Http.IFormFile file)
+        {
+            var ext = Path.GetExtension(file.FileName);
+            if (string.IsNullOrEmpty(ext) || !AllowedImageExtensions.Contains(ext))
+                throw new InvalidOperationException($"'{file.FileName}' is not an allowed image type.");
+
+            if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException($"'{file.FileName}' is not a valid image.");
+
+            if (file.Length <= 0 || file.Length > MaxImageBytes)
+                throw new InvalidOperationException($"'{file.FileName}' must be an image under 5 MB.");
+        }
+
         private static ProductDto ToDto(Product p) => new()
         {
             ProductId = p.ProductId,
@@ -97,6 +120,7 @@ namespace E_commercal_APi.Services
                 for (int i = 0; i < dto.Images.Count; i++)
                 {
                     var file = dto.Images[i];
+                    ValidateImage(file);
                     var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                     var filePath = Path.Combine(uploadsFolder, fileName);
 
@@ -152,6 +176,7 @@ namespace E_commercal_APi.Services
                     if (dto.ColorImages != null && i < dto.ColorImages.Count && dto.ColorImages[i]?.Length > 0)
                     {
                         var file = dto.ColorImages[i];
+                        ValidateImage(file);
                         var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                         var filePath = Path.Combine(colorFolder, fileName);
 
@@ -283,6 +308,7 @@ namespace E_commercal_APi.Services
                         if (dto.ColorImages != null && i < dto.ColorImages.Count && dto.ColorImages[i]?.Length > 0)
                         {
                             var file = dto.ColorImages[i];
+                            ValidateImage(file);
                             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                             var filePath = Path.Combine(colorFolder, fileName);
 

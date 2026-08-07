@@ -46,8 +46,15 @@ namespace E_commercal_APi.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromForm] ProductCreateDto dto)
         {
-            var created = await _productService.CreateAsync(dto, _env.WebRootPath);
-            return CreatedAtAction(nameof(GetById), new { id = created.ProductId }, created);
+            try
+            {
+                var created = await _productService.CreateAsync(dto, _env.WebRootPath);
+                return CreatedAtAction(nameof(GetById), new { id = created.ProductId }, created);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
@@ -62,6 +69,10 @@ namespace E_commercal_APi.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 

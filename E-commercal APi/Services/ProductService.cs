@@ -351,29 +351,30 @@ namespace E_commercal_APi.Services
                     }
                 }
             }
-            await _db.SaveChangesAsync();
+            
             if (dto.SizeNames != null)
+{
+    var existingSizes = await _db.ProductSizes.Where(s => s.ProductId == id).ToListAsync();
+    if (existingSizes.Count > 0)
+        _db.ProductSizes.RemoveRange(existingSizes);
+
+    if (dto.SizeNames.Count > 0)
+    {
+        for (int i = 0; i < dto.SizeNames.Count; i++)
+        {
+            var sizeName = dto.SizeNames[i];
+            if (string.IsNullOrWhiteSpace(sizeName)) continue;
+
+            _db.ProductSizes.Add(new ProductSize
             {
-                var existingSizes = await _db.ProductSizes.Where(s => s.ProductId == id).ToListAsync();
-                if (existingSizes.Count > 0)
-                    _db.ProductSizes.RemoveRange(existingSizes);
-
-                if (dto.SizeNames.Count > 0)
-                {
-                    for (int i = 0; i < dto.SizeNames.Count; i++)
-                    {
-                        var sizeName = dto.SizeNames[i];
-                        if (string.IsNullOrWhiteSpace(sizeName)) continue;
-
-                        _db.ProductSizes.Add(new ProductSize
-                        {
-                            ProductId = id,
-                            Name = sizeName,
-                            SortOrder = i
-                        });
-                    }
-                }
-            }
+                ProductId = id,
+                Name = sizeName,
+                SortOrder = i
+            });
+        }
+    }
+}
+            await _db.SaveChangesAsync();
             var updated = await GetByIdAsync(id);
             return updated!;
         }

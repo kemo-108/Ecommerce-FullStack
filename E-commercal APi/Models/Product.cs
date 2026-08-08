@@ -51,7 +51,7 @@ namespace E_commercal_APi.Models
         [MaxLength(100)]
         public string? Brand { get; set; }
 
-        
+        public ICollection<ProductSize>? Sizes { get; set; }
 
         [Column(TypeName = "decimal(5,2)")]
         [Range(0, 100)]

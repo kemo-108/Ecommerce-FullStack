@@ -28,6 +28,7 @@ namespace E_commercal_APi.Services
             Stock = AvailableStock(c.Product),
             ColorName = c.ColorName,
             ColorHexCode = c.ColorHexCode,
+            SizeName = c.SizeName,
         };
 
         public async Task<List<CartItemDto>> GetCartAsync(int userId)
@@ -53,6 +54,7 @@ namespace E_commercal_APi.Services
             var existing = await _db.CartItems
                 .FirstOrDefaultAsync(c => c.UserId == userId
                     && c.ProductId == dto.ProductId
+                    && c.SizeName == dto.SizeName
                     && c.ColorName == dto.ColorName);
 
             var requestedQty = (existing?.Qty ?? 0) + dto.Qty;
@@ -78,6 +80,7 @@ namespace E_commercal_APi.Services
                 ColorHexCode = dto.ColorHexCode,
                 CreatedAt = DateTime.UtcNow,
                 Product = product,
+                SizeName = dto.SizeName,
             };
 
             _db.CartItems.Add(item);

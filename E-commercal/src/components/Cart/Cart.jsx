@@ -231,6 +231,9 @@ const Cart = () => {
                                   {item.colorName}
                                 </span>
                               )}
+                                {item.sizeName && (
+                                    <span className="cart-item-color">{item.sizeName}</span>
+                                  )}
                             </div>
                           </td>
                           <td> EGP {Number(item.price || 0).toFixed(2)}</td>

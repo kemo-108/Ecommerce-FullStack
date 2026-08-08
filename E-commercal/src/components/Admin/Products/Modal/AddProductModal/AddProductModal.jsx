@@ -65,7 +65,12 @@ const removeColorRow = (index) => {
       [name]: value,
     }));
   };
+const [sizes, setSizes] = useState([]);
 
+const addSizeRow = () => setSizes((prev) => [...prev, { name: "" }]);
+const updateSizeRow = (index, value) =>
+  setSizes((prev) => prev.map((s, i) => (i === index ? { name: value } : s)));
+const removeSizeRow = (index) => setSizes((prev) => prev.filter((_, i) => i !== index));
   const handleImage = (e) => {
     const files = Array.from(e.target.files);
 
@@ -141,12 +146,16 @@ const removeColorRow = (index) => {
       for (const pair of payload.entries()) {
         console.log(pair[0], pair[1]);
       }
-colors.forEach((c) => {
-  if (!c.name.trim()) return;
-  payload.append("ColorNames", c.name);
-  payload.append("ColorHexes", c.hex || "");
-  payload.append("ColorImages", c.image || new File([], ""));
-});
+      colors.forEach((c) => {
+        if (!c.name.trim()) return;
+        payload.append("ColorNames", c.name);
+        payload.append("ColorHexes", c.hex || "");
+        payload.append("ColorImages", c.image || new File([], ""));
+      });
+      sizes.forEach((s) => {
+        if (!s.name.trim()) return;
+        payload.append("SizeNames", s.name);
+      });
       await createProduct(payload);
 
       toast.success("Product added successfully.");
@@ -388,6 +397,27 @@ colors.forEach((c) => {
 
   <button type="button" className="add-color-btn" onClick={addColorRow}>
     + Add Color
+  </button>
+</div>
+<div className="input-group">
+  <label>Sizes (optional)</label>
+
+  {sizes.map((size, index) => (
+    <div className="size-row" key={index}>
+      <input
+        type="text"
+        placeholder="Size (e.g. 80m)"
+        value={size.name}
+        onChange={(e) => updateSizeRow(index, e.target.value)}
+      />
+      <button type="button" className="remove-color-btn" onClick={() => removeSizeRow(index)}>
+        <FiX />
+      </button>
+    </div>
+  ))}
+
+  <button type="button" className="add-color-btn" onClick={addSizeRow}>
+    + Add Size
   </button>
 </div>
           </div>

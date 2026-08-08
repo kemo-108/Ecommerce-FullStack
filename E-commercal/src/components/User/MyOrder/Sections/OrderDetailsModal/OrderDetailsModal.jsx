@@ -50,6 +50,9 @@ const OrderDetailsModal = ({ order, onClose }) => {
           {item.colorName}
         </p>
       )}
+      {item.sizeName && (
+    <p className="modal-item-color">{item.sizeName}</p>
+  )}
     </div>
   </div>
 ))}

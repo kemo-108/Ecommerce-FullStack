@@ -36,5 +36,6 @@ namespace E_commercal_APi.Models
 
         [MaxLength(20)]
         public string? ColorHexCode { get; set; }
+        public string? SizeName { get; set; }
     }
 }

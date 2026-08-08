@@ -121,6 +121,7 @@ const CheckOut = () => {
           quantity: item.qty,
           colorName: item.colorName,
           colorHexCode: item.colorHexCode,
+          sizeName: item.sizeName,
         })),
         subtotal,
         shipping: delivery,

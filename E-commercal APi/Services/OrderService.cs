@@ -41,6 +41,7 @@ namespace E_commercal_APi.Services
                 Quantity = i.Quantity,
                 ColorName = i.ColorName,
                 ColorHexCode = i.ColorHexCode,
+                SizeName = i.SizeName,
             }).ToList() ?? new(),
         };
 
@@ -61,7 +62,7 @@ namespace E_commercal_APi.Services
                 record.Stock -= deduct;
                 record.LastUpdated = DateTime.UtcNow;
                 remaining -= deduct;
-            }
+            }   
         }
 
         // بيتحقق إن كل سطر في الأوردر لسه متوفر بنفس الكمية المطلوبة
@@ -163,6 +164,7 @@ namespace E_commercal_APi.Services
                     Quantity = i.Quantity,
                     ColorName = i.ColorName,
                     ColorHexCode = i.ColorHexCode,
+                    SizeName = i.SizeName,          
                 }).ToList(),
             };
 
@@ -285,6 +287,7 @@ namespace E_commercal_APi.Services
                     Quantity = i.Quantity,
                     ColorName = i.ColorName,
                     ColorHexCode = i.ColorHexCode,
+                    SizeName = i.SizeName,
                 }).ToList(),
             };
 

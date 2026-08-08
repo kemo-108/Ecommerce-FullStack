@@ -19,6 +19,7 @@ namespace E_commercal_APi.ViewModels
         public string Status { get; set; }
         public string CreatedAt { get; set; }
         public List<ProductColorDto> Colors { get; set; } = new();
+        public List<ProductSizeDto> Sizes { get; set; } = new();
     }
 
     public class ProductCreateDto
@@ -35,6 +36,7 @@ namespace E_commercal_APi.ViewModels
         public List<string>? ColorNames { get; set; }
         public List<string>? ColorHexes { get; set; }
         public List<IFormFile>? ColorImages { get; set; }
+        public List<string>? SizeNames { get; set; }
     }
 
     
@@ -56,7 +58,8 @@ namespace E_commercal_APi.ViewModels
             public List<string>? ColorHexes { get; set; }
             public List<IFormFile>? ColorImages { get; set; }
             public List<string>? ColorExistingImageUrls { get; set; }
-        }
+        public List<string>? SizeNames { get; set; }
+    }
    
 
     public class CategoryDto
@@ -86,5 +89,10 @@ namespace E_commercal_APi.ViewModels
         public string Name { get; set; }
         public string? HexCode { get; set; }
         public string? ImageUrl { get; set; }
+    }
+    public class ProductSizeDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

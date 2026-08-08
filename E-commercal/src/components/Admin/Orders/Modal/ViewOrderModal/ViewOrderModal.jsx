@@ -107,6 +107,9 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
             {item.colorName && (
               <span className="order-item-color"> — {item.colorName}</span>
             )}
+            {item.sizeName && (
+              <span className="order-item-color"> — {item.sizeName}</span>
+            )}
           </td>
           <td>{item.quantity}</td>
           <td>${Number(item.price).toFixed(2)}</td>

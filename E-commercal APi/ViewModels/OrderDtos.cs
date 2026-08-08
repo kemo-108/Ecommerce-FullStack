@@ -9,6 +9,7 @@ namespace E_commercal_APi.ViewModels
         public int Quantity { get; set; }
         public string? ColorName { get; set; }
         public string? ColorHexCode { get; set; }
+        public string? SizeName { get; set; }
     }
 
     public class PlaceOrderDto

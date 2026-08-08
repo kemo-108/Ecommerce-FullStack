@@ -11,6 +11,7 @@ namespace E_commercal_APi.ViewModels
         public int Stock { get; set; }   // جديد
         public string? ColorName { get; set; }
         public string? ColorHexCode { get; set; }
+        public string? SizeName { get; set; }
     }
     public class CartItemCreateDto
     {
@@ -21,6 +22,7 @@ namespace E_commercal_APi.ViewModels
         public int Qty { get; set; } = 1;
         public string? ColorName { get; set; }
         public string? ColorHexCode { get; set; }
+        public string? SizeName { get; set; }
     }
 
     public class CartItemUpdateDto

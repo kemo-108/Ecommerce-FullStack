@@ -60,6 +60,11 @@ namespace E_commercal_APi.Services
                 HexCode = c.HexCode,
                 ImageUrl = c.ImageUrl
             }).OrderBy(c => c.Id).ToList() ?? new List<ProductColorDto>(),
+            Sizes = p.Sizes?.Select(s => new ProductSizeDto
+            {
+                Id = s.Id,
+                Name = s.Name
+            }).OrderBy(s => s.Id).ToList() ?? new List<ProductSizeDto>(),
         };
 
         public async Task<(List<ProductDto> Products, int TotalCount)> GetAllAsync(string? search = null, int page = 1, int pageSize = 12, int? categoryId = null)
@@ -68,6 +73,7 @@ namespace E_commercal_APi.Services
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
                 .Include(p => p.Colors)
+                .Include(p => p.Sizes)
                 .AsQueryable();
 
             if (categoryId.HasValue)
@@ -102,6 +108,7 @@ namespace E_commercal_APi.Services
                 .Include(p => p.Category)
                 .Include(p => p.InventoryRecords)
                 .Include(p => p.Colors)
+                .Include(p => p.Sizes)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             return product == null ? null : ToDto(product);
@@ -157,7 +164,20 @@ namespace E_commercal_APi.Services
 
             if (galleryImages.Count > 0)
                 product.Images = galleryImages;
+            var sizes = new List<ProductSize>();
+            if (dto.SizeNames != null && dto.SizeNames.Count > 0)
+            {
+                for (int i = 0; i < dto.SizeNames.Count; i++)
+                {
+                    var sizeName = dto.SizeNames[i];
+                    if (string.IsNullOrWhiteSpace(sizeName)) continue;
 
+                    sizes.Add(new ProductSize { Name = sizeName, SortOrder = i });
+                }
+            }
+
+            if (sizes.Count > 0)
+                product.Sizes = sizes;
             _db.Products.Add(product);
             var colors = new List<ProductColor>();
             if (dto.ColorNames != null && dto.ColorNames.Count > 0)
@@ -332,7 +352,28 @@ namespace E_commercal_APi.Services
                 }
             }
             await _db.SaveChangesAsync();
+            if (dto.SizeNames != null)
+            {
+                var existingSizes = await _db.ProductSizes.Where(s => s.ProductId == id).ToListAsync();
+                if (existingSizes.Count > 0)
+                    _db.ProductSizes.RemoveRange(existingSizes);
 
+                if (dto.SizeNames.Count > 0)
+                {
+                    for (int i = 0; i < dto.SizeNames.Count; i++)
+                    {
+                        var sizeName = dto.SizeNames[i];
+                        if (string.IsNullOrWhiteSpace(sizeName)) continue;
+
+                        _db.ProductSizes.Add(new ProductSize
+                        {
+                            ProductId = id,
+                            Name = sizeName,
+                            SortOrder = i
+                        });
+                    }
+                }
+            }
             var updated = await GetByIdAsync(id);
             return updated!;
         }

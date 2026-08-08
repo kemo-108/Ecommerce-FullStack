@@ -112,6 +112,9 @@ const Invoice = ({ order }) => {
   {item.colorName && (
     <span className="invoice-item-color"> — {item.colorName}</span>
   )}
+  {item.sizeName && (
+    <span className="invoice-item-color"> — {item.sizeName}</span>
+  )}
 </td>
 
                 <td>{item.quantity}</td>

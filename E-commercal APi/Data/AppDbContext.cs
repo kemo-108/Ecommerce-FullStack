@@ -34,6 +34,7 @@ namespace E_commercal_APi.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<ProductSize> ProductSizes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

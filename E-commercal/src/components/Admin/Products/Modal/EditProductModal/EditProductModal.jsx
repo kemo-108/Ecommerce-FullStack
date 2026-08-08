@@ -29,6 +29,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
 
   const [saving, setSaving] = useState(false);
   const [colors, setColors] = useState([]);
+  const [sizes, setSizes] = useState([]);
   useEffect(() => {
     loadCategories();
   }, []);
@@ -62,6 +63,9 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
         existingImageUrl: c.imageUrl || "",
       })),
     );
+    setSizes(
+  (product.sizes || []).map((s) => ({ name: s.name }))
+);
   }, [product]);
 
   const loadCategories = async () => {
@@ -77,7 +81,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
+    setFormData((prev) => ({  
       ...prev,
       [name]: value,
     }));
@@ -128,6 +132,10 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
   const removeColorRow = (index) => {
     setColors((prev) => prev.filter((_, i) => i !== index));
   };
+  const addSizeRow = () => setSizes((prev) => [...prev, { name: "" }]);
+const updateSizeRow = (index, value) =>
+  setSizes((prev) => prev.map((s, i) => (i === index ? { name: value } : s)));
+const removeSizeRow = (index) => setSizes((prev) => prev.filter((_, i) => i !== index));
   const validateForm = () => {
     const newErrors = {};
 
@@ -182,6 +190,10 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
           c.image ? "" : c.existingImageUrl || "",
         );
       });
+      sizes.forEach((s) => {
+  if (!s.name.trim()) return;
+  payload.append("SizeNames", s.name);
+});
       await updateProduct(product.productId, payload);
 
       toast.success("Product updated successfully.");
@@ -393,6 +405,27 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
               </button>
             </div>
             {/* 👆 end new 👆 */}
+            <div className="input-group full-width">
+  <label>Sizes (optional)</label>
+
+  {sizes.map((size, index) => (
+    <div className="size-row" key={index}>
+      <input
+        type="text"
+        placeholder="Size (e.g. 80m)"
+        value={size.name}
+        onChange={(e) => updateSizeRow(index, e.target.value)}
+      />
+      <button type="button" className="remove-color-btn" onClick={() => removeSizeRow(index)}>
+        <FiX />
+      </button>
+    </div>
+  ))}
+
+  <button type="button" className="add-color-btn" onClick={addSizeRow}>
+    + Add Size
+  </button>
+</div>
             <div className="input-group full-width">
               <label>Product Image</label>
 

@@ -30,6 +30,8 @@ const SingleProduct = () => {
   const [addingToCart, setAddingToCart] = useState(false);
   const [addingToWishlist, setAddingToWishlist] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
+const [selectedSize, setSelectedSize] = useState(null);
+
 
   useEffect(() => {
     localStorage.setItem("lastViewedProduct", productId);
@@ -42,10 +44,11 @@ const SingleProduct = () => {
     setActiveTab("Description");
 
     axios
-      .get(`https://localhost:7069/api/products/ ${productId}`)
+      .get(`https://localhost:7069/api/products/${productId}`)
       .then((res) => {
         setProduct(res.data);
         setSelectedColor(res.data.colors?.[0] || null);
+        setSelectedSize(res.data.sizes?.[0] || null);
       })
       .catch((err) => {
         console.error(err);
@@ -97,6 +100,7 @@ const SingleProduct = () => {
         Qty: quantity,
         ColorName: selectedColor?.name || null,
         ColorHexCode: selectedColor?.hexCode || null,
+        SizeName: selectedSize?.name || null,
       });
       toast.success(` ${product.productName} added to cart`);
     } catch (error) {
@@ -227,6 +231,24 @@ const SingleProduct = () => {
                 </div>
               </div>
             )}
+            {product.sizes && product.sizes.length > 0 && (
+  <div className="sp-size-section">
+    <h4>Size{selectedSize ? `: ${selectedSize.name}` : ""}</h4>
+
+    <div className="sp-size-options">
+      {product.sizes.map((size) => (
+        <button
+          key={size.id}
+          type="button"
+          className={`sp-size-pill ${selectedSize?.id === size.id ? "sp-size-active" : ""}`}
+          onClick={() => setSelectedSize(size)}
+        >
+          {size.name}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
             <p className="sp-description">{product.description}</p>
 
             {/* ================= Quantity ================= */}
@@ -405,7 +427,7 @@ const SingleProduct = () => {
           <div className="sp-related-grid">
             {relatedProducts.map((related) => (
               <Link
-                to={`/single-product/ ${related.productId}`}
+                to={`/single-product/${related.productId}`}
                 className="sp-related-card"
                 key={related.productId}
               >

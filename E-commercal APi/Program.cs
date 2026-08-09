@@ -1,4 +1,5 @@
 using E_commercal_APi.Data;
+using E_commercal_APi.Models;
 using E_commercal_APi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +67,7 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IReportsService, ReportsService>();
+builder.Services.AddScoped<CloudinaryService>();
 // ================= CORS =================
 builder.Services.AddCors(options =>
 {
@@ -132,7 +134,9 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-commercial API v1");
     });
 }
-
+// ===============Cloudinary Settings===================
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();

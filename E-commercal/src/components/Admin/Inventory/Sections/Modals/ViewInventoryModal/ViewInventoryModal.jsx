@@ -41,7 +41,7 @@ const ViewInventoryModal = ({ product, onClose }) => {
             <h3>{product.name}</h3>
 
             <span
-              className={`status  ${status.toLowerCase().replace(/\s/g, "-")}`}
+              className={`status ${status.toLowerCase().replace(/\s/g, "-")}`}
             >
               {status}
             </span>

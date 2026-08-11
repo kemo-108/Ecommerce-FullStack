@@ -38,7 +38,7 @@ const CouponRow = ({
       <td>
         <div className="discount-box">
           <span
-            className={`discount-badge  ${
+            className={`discount-badge ${
               coupon.discountType === "Percentage" ? "percentage" : "fixed"
             }`}
           >
@@ -101,7 +101,7 @@ const CouponRow = ({
       {/* Status */}
 
       <td>
-        <span className={`coupon-status  ${coupon.status.toLowerCase()}`}>
+        <span className={`coupon-status ${coupon.status.toLowerCase()}`}>
           <span className="status-dot"></span>
 
           {coupon.status}

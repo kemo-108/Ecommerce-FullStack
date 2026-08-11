@@ -1,7 +1,8 @@
-const API = "https://localhost:7069/api/contact";
+import { API_BASE_URL } from "../config/api";
+const API = `${API_BASE_URL}/api/contact`;
 export const DeleteMessage = async (id) => {
     try {
-        const response = await fetch(`https://localhost:7069/api/contact/ ${id}`, {
+        const response = await fetch(`${API_BASE_URL}/api/contact/${id}`, {
             method: "DELETE"
         });
         if (!response.ok) {

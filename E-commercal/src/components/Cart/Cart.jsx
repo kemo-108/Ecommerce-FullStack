@@ -6,6 +6,7 @@ import { applyCoupon } from "../../services/CouponsService";
 import "./Cart.css";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const Cart = () => {
   const [items, setItems] = useState([]);
@@ -214,7 +215,7 @@ const Cart = () => {
                           </td>
                           <td className="product-cell">
                             <img
-                              src={`https://localhost:7069/${item.imageUrl}`}
+                              src={getImageUrl(item.imageUrl)}
                               alt={item.productName}
                             />
                             <div className="product-cell-info">

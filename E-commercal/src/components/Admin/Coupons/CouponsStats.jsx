@@ -53,7 +53,7 @@ const CouponsStats = ({ coupons }) => {
     <div className="coupons-stats">
       {stats.map((item, index) => (
         <div className="coupon-stat-card" key={index}>
-          <div className={`stat-icon  ${item.color}`}>{item.icon}</div>
+          <div className={`stat-icon ${item.color}`}>{item.icon}</div>
 
           <div className="stat-info">
             <h4>{item.title}</h4>

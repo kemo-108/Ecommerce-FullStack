@@ -55,13 +55,13 @@ const OrderRow = ({
   <td className="admin-order-total"> ${Number(order.total).toFixed(2)}</td>
 
   <td>
-    <span className={`payment-badge  ${order.paymentStatus.toLowerCase()}`}>
+    <span className={`payment-badge ${order.paymentStatus.toLowerCase()}`}>
       {order.paymentStatus}
     </span>
   </td>
 
   <td>
-    <span className={`status-badge  ${order.status.toLowerCase()}`}>
+    <span className={`status-badge ${order.status.toLowerCase()}`}>
       {order.status}
     </span>
   </td>

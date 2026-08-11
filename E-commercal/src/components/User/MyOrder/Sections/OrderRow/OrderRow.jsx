@@ -6,6 +6,7 @@ import { FiEye, FiRotateCw } from "react-icons/fi";
 import { AddToCart } from "../../../../../services/CartService";
 import { DeleteMyOrder } from "../../../../../services/OrderService";
 import { toast } from "react-toastify";
+import { getImageUrl } from "../../../../../utils/imageUrl";
 
 const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
   const [reordering, setReordering] = useState(false);
@@ -20,7 +21,7 @@ const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
         <img
           src={
             firstItem?.imageUrl
-              ? `https://localhost:7069/${Product.imageUrl}`
+              ? getImageUrl(Product.imageUrl)
               : ""
           }
           alt={firstItem?.productName}
@@ -43,7 +44,7 @@ const OrderRow = ({ order, setSelectedOrder, onOrderRemoved }) => {
 
       <div className="order-total"> EGP {Number(order.total).toFixed(2)}</div>
 
-      <div className={`order-status  ${order.status?.toLowerCase()}`}>
+      <div className={`order-status ${order.status?.toLowerCase()}`}>
         {order.status}
       </div>
 

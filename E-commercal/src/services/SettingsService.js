@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const API = "https://localhost:7069/api/settings";
+const API = `${API_BASE_URL}/api/settings`;
 
 export const GetSettings = async () => {
   const response = await axios.get(API);

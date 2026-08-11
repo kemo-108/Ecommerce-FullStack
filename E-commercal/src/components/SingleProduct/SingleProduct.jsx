@@ -16,6 +16,8 @@ import { AddToCart } from "../../services/CartService";
 import { AddToWishlist } from "../../services/WishlistService";
 import getProducts from "../../services/ProductService";
 import { toast } from "react-toastify";
+import { getImageUrl } from "../../utils/imageUrl";
+import { API_BASE_URL } from "../../config/api";
 
 const TABS = ["Description", "Specifications", "Reviews"];
 const SingleProduct = () => {
@@ -31,6 +33,7 @@ const SingleProduct = () => {
   const [addingToWishlist, setAddingToWishlist] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
 const [selectedSize, setSelectedSize] = useState(null);
+const [manualImage, setManualImage] = useState(null);
 
 
   useEffect(() => {
@@ -42,9 +45,10 @@ const [selectedSize, setSelectedSize] = useState(null);
     setNotFound(false);
     setQuantity(1);
     setActiveTab("Description");
+    setManualImage(null);
 
     axios
-      .get(`https://localhost:7069/api/products/${productId}`)
+      .get(`${API_BASE_URL}/api/products/${productId}`)
       .then((res) => {
         setProduct(res.data);
         setSelectedColor(res.data.colors?.[0] || null);
@@ -67,11 +71,19 @@ const [selectedSize, setSelectedSize] = useState(null);
       .catch((err) => console.error(err));
   }, [productId]);
 
-  const activeImage = selectedColor?.imageUrl
-    ? `https://localhost:7069/${selectedColor.imageUrl}`
-    : product?.imageUrl
-      ? `https://localhost:7069/${product.imageUrl}`
-      : "https://placehold.co/700x700?text=No+Image";
+  const rawActiveImage = manualImage || selectedColor?.imageUrl || product?.imageUrl;
+  const activeImage = getImageUrl(rawActiveImage);
+
+  // All the photos worth showing as thumbnails: the main image, every extra
+  // gallery photo, and the current color's photo (if it has one and isn't
+  // already in the list). Deduplicated so the same file doesn't show twice.
+  const galleryThumbs = product
+    ? [
+        product.imageUrl,
+        ...(product.galleryImages || []),
+        selectedColor?.imageUrl,
+      ].filter((url, index, all) => url && all.indexOf(url) === index)
+    : [];
 
   const LOW_STOCK_THRESHOLD = 10;
 
@@ -102,7 +114,7 @@ const [selectedSize, setSelectedSize] = useState(null);
         ColorHexCode: selectedColor?.hexCode || null,
         SizeName: selectedSize?.name || null,
       });
-      toast.success(` ${product.productName} added to cart`);
+      toast.success(`${product.productName} added to cart`);
     } catch (error) {
       console.error(error);
       toast.error("Could not add product to cart");
@@ -156,6 +168,23 @@ const [selectedSize, setSelectedSize] = useState(null);
           {/* ================= Left ================= */}
 
           <div className="sp-gallery">
+            {galleryThumbs.length > 1 && (
+              <div className="sp-gallery-list">
+                {galleryThumbs.map((url) => (
+                  <button
+                    key={url}
+                    type="button"
+                    className={`sp-gallery-thumb ${
+                      rawActiveImage === url ? "sp-gallery-thumb-active" : ""
+                    }`}
+                    onClick={() => setManualImage(url)}
+                  >
+                    <img src={getImageUrl(url)} alt={product.productName} />
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="sp-gallery-main">
               <img src={activeImage} alt={product.productName} />
             </div>
@@ -197,7 +226,7 @@ const [selectedSize, setSelectedSize] = useState(null);
               )}
             </div>
 
-            <div className={`sp-stock  ${inStock ? "" : "sp-out-of-stock"}`}>
+            <div className={`sp-stock ${inStock ? "" : "sp-out-of-stock"}`}>
               {inStock ? "In Stock" : "Out of Stock"}
             </div>
             {inStock && product.colors && product.colors.length > 0 && (
@@ -217,12 +246,15 @@ const [selectedSize, setSelectedSize] = useState(null);
                           ? { backgroundColor: color.hexCode || "#ccc" }
                           : undefined
                       }
-                      onClick={() => setSelectedColor(color)}
+                      onClick={() => {
+                        setSelectedColor(color);
+                        setManualImage(null);
+                      }}
                       title={color.name}
                     >
                       {color.imageUrl && (
                         <img
-                          src={`https://localhost:7069/${color.imageUrl}`}
+                          src={getImageUrl(color.imageUrl)}
                           alt={color.name}
                         />
                       )}
@@ -376,7 +408,7 @@ const [selectedSize, setSelectedSize] = useState(null);
           {TABS.map((tab) => (
             <button
               key={tab}
-              className={`sp-tab-btn  ${activeTab === tab ? "sp-tab-active" : ""}`}
+              className={`sp-tab-btn ${activeTab === tab ? "sp-tab-active" : ""}`}
               onClick={() => setActiveTab(tab)}
               type="button"
             >
@@ -404,7 +436,7 @@ const [selectedSize, setSelectedSize] = useState(null);
               <li>
                 <strong>Stock:</strong>{" "}
                 {inStock
-                  ? ` ${product.qty ?? "Available"} units`
+                  ? `${product.qty ?? "Available"} units`
                   : "Out of stock"}
               </li>
             </ul>
@@ -432,7 +464,7 @@ const [selectedSize, setSelectedSize] = useState(null);
                 key={related.productId}
               >
                 <img
-                  src={`https://localhost:7069/${related.imageUrl}`}
+                  src={getImageUrl(related.imageUrl)}
                   alt={related.productName}
                 />
 

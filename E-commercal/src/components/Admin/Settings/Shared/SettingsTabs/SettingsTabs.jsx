@@ -54,7 +54,7 @@ const SettingsTabs = ({ activeTab, setActiveTab }) => {
       {tabs.map((tab) => (
         <button
           key={tab.id}
-          className={`settings-tab  ${activeTab === tab.id ? "active" : ""}`}
+          className={`settings-tab ${activeTab === tab.id ? "active" : ""}`}
           onClick={() => setActiveTab(tab.id)}
         >
           {tab.icon}

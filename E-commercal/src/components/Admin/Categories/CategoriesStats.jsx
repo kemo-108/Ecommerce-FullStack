@@ -52,7 +52,7 @@ const CategoriesStats = ({ categories }) => {
     <div className="categories-stats">
       {stats.map((item, index) => (
         <div className="category-stat-card" key={index}>
-          <div className={`stat-icon  ${item.color}`}>{item.icon}</div>
+          <div className={`stat-icon ${item.color}`}>{item.icon}</div>
 
           <div className="stat-info">
             <h4>{item.title}</h4>

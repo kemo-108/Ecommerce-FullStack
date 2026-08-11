@@ -54,7 +54,7 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
         </div>
         {/* Timeline */}
         <div className="order-timeline">
-          <div className={`timeline-step  ${pendingActive ? "active" : ""}`}>
+          <div className={`timeline-step ${pendingActive ? "active" : ""}`}>
             <div className="timeline-icon">
               <FiClock />
             </div>
@@ -63,10 +63,10 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
           </div>
 
           <div
-            className={`timeline-line  ${processingActive ? "active" : ""}`}
+            className={`timeline-line ${processingActive ? "active" : ""}`}
           />
 
-          <div className={`timeline-step  ${processingActive ? "active" : ""}`}>
+          <div className={`timeline-step ${processingActive ? "active" : ""}`}>
             <div className="timeline-icon">
               <FiTruck />
             </div>
@@ -75,10 +75,10 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
           </div>
 
           <div
-            className={`timeline-line  ${deliveredActive ? "active" : ""}`}
+            className={`timeline-line ${deliveredActive ? "active" : ""}`}
           />
 
-          <div className={`timeline-step  ${deliveredActive ? "active" : ""}`}>
+          <div className={`timeline-step ${deliveredActive ? "active" : ""}`}>
             <div className="timeline-icon">
               <FiCheckCircle />
             </div>
@@ -124,14 +124,14 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
           <div className="detail-card">
             <span>Status</span>
 
-            <div className={`status-badge  ${status}`}>{order.status}</div>
+            <div className={`status-badge ${status}`}>{order.status}</div>
           </div>
 
           <div className="detail-card">
             <span>Payment</span>
 
             <div
-              className={`payment-badge  ${order.paymentStatus.toLowerCase()}`}
+              className={`payment-badge ${order.paymentStatus.toLowerCase()}`}
             >
               {order.paymentStatus}
             </div>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../Form/Form.css";
+import { API_BASE_URL } from "../../config/api";
 const Form = () => {
   const [name, setName] = useState("");
   const [Price, setPrice] = useState("");
@@ -10,7 +11,7 @@ const Form = () => {
       price: Number(Price),
     };
     try {
-      const response = await fetch("https://localhost:7069/api/products", {
+      const response = await fetch(`${API_BASE_URL}/api/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

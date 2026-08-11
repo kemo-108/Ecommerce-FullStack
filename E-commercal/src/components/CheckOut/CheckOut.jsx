@@ -108,10 +108,10 @@ const CheckOut = () => {
     setPlacingOrder(true);
     try {
       await PlaceOrder({
-        customerName: ` ${form.firstName}  ${form.lastName}`,
+        customerName: `${form.firstName} ${form.lastName}`,
         customerEmail: form.email,
         phone: form.phone,
-        address: ` ${form.street},  ${form.city},  ${form.postalCode},  ${form.country}`,
+        address: `${form.street}, ${form.city}, ${form.postalCode}, ${form.country}`,
         paymentMethod,
         items: cartItems.map((item) => ({
           productId: item.productId,

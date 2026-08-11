@@ -142,3 +142,58 @@
 .form-group textarea.error {
   border-color: #e53935;
 }
+
+.upload-content {
+  width: 100%;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+.upload-content svg {
+  font-size: 22px;
+}
+
+.category-image-preview {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.category-image-preview img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.category-image-preview button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: #ff4d6d;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-image-preview button:hover {
+  background: #e63b5b;
+}

@@ -221,7 +221,7 @@ const removeSizeRow = (index) => setSizes((prev) => prev.filter((_, i) => i !== 
                         ✕
                       </button>
 
-                      <img src={image.url} alt={`Preview  ${index + 1}`} />
+                      <img src={image.url} alt={`Preview ${index + 1}`} />
                     </div>
                   ))}
 

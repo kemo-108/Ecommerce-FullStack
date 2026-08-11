@@ -39,7 +39,7 @@ const RecentOrders = () => {
                 <td> ${Number(order.total).toFixed(2)}</td>
 
                 <td>
-                  <span className={`status  ${order.status?.toLowerCase()}`}>
+                  <span className={`status ${order.status?.toLowerCase()}`}>
                     {order.status}
                   </span>
                 </td>

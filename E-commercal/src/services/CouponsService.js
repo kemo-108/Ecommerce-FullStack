@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const API = "https://localhost:7069/api/coupons";
+const API = `${API_BASE_URL}/api/coupons`;
 
 export const getCoupons = async () => {
   const response = await axios.get(API);
@@ -13,12 +14,12 @@ export const createCoupon = async (coupon) => {
 };
 
 export const updateCoupon = async (id, coupon) => {
-  const response = await axios.put(` ${API}/ ${id}`, coupon);
+  const response = await axios.put(`${API}/${id}`, coupon);
   return response.data;
 };
 
 export const deleteCoupon = async (id) => {
-  const response = await axios.delete(` ${API}/ ${id}`);
+  const response = await axios.delete(`${API}/${id}`);
   return response.data;
 };
 
@@ -26,7 +27,7 @@ export const deleteCoupon = async (id) => {
 // orderTotal should be the cart subtotal (before the coupon discount) so the
 // backend can check MinOrder / compute the discount correctly.
 export const applyCoupon = async (code, orderTotal) => {
-  const response = await axios.post(` ${API}/apply`, {
+  const response = await axios.post(`${API}/apply`, {
     code,
     orderTotal,
   });

@@ -5,6 +5,7 @@ import "./Shop.css";
 import { useSearchParams } from "react-router-dom";
 import Product from "../Product/Product";
 import { getCategories } from "../../services/CategoryService";
+import { API_BASE_URL } from "../../config/api";
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
@@ -37,7 +38,7 @@ const Shop = () => {
     setLoading(true);
     setError(false);
     axios
-      .get(`https://localhost:7069/api/products`, {
+      .get(`${API_BASE_URL}/api/products`, {
         params: {
           page,
           pageSize,

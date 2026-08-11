@@ -34,7 +34,7 @@ const InventoryRow = ({ product }) => {
       <td>{product.minStock}</td>
 
       <td>
-        <span className={`status  ${status.toLowerCase().replace(/\s/g, "-")}`}>
+        <span className={`status ${status.toLowerCase().replace(/\s/g, "-")}`}>
           {status}
         </span>
       </td>

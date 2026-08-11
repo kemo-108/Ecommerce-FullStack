@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const API = "https://localhost:7069/api/orders";
+const API = `${API_BASE_URL}/api/orders`;
 
 export const PlaceOrder = async (orderData) => {
   const response = await axios.post(API, orderData);
@@ -8,12 +9,12 @@ export const PlaceOrder = async (orderData) => {
 };
 
 export const GetMyOrders = async () => {
-  const response = await axios.get(` ${API}/my-orders`);
+  const response = await axios.get(`${API}/my-orders`);
   return response.data;
 };
 
 export const GetOrderById = async (orderId) => {
-  const response = await axios.get(` ${API}/ ${orderId}`);
+  const response = await axios.get(`${API}/${orderId}`);
   return response.data;
 };
 
@@ -23,22 +24,22 @@ export const GetAllOrders = async () => {
 };
 
 export const AdminCreateOrder = async (orderData) => {
-  const response = await axios.post(` ${API}/admin`, orderData);
+  const response = await axios.post(`${API}/admin`, orderData);
   return response.data;
 };
 
 export const UpdateOrderStatus = async (orderId, status) => {
-  const response = await axios.patch(` ${API}/ ${orderId}/status`, { status });
+  const response = await axios.patch(`${API}/${orderId}/status`, { status });
   return response.data;
 };
 
 export const DeleteOrder = async (orderId) => {
-  const response = await axios.delete(` ${API}/ ${orderId}`);
+  const response = await axios.delete(`${API}/${orderId}`);
   return response.data;
 };
 
 
 export const DeleteMyOrder = async (orderId) => {
-  const response = await axios.delete(` ${API}/my-orders/ ${orderId}`);
+  const response = await axios.delete(`${API}/my-orders/${orderId}`);
   return response.data;
 };

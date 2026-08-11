@@ -1,5 +1,6 @@
 import { FiX } from "react-icons/fi";
 import "./ViewProductModal.css";
+import { getImageUrl } from "../../../../../utils/imageUrl";
 
 const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
   if (!product) return null;
@@ -41,7 +42,7 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
           <div className="view-product-content">
             <div className="view-product-image">
               <img
-                src={`https://localhost:7069/${product.imageUrl}`}
+                src={getImageUrl(product.imageUrl)}
                 alt={product.productName}
               />
             </div>
@@ -106,7 +107,7 @@ const ViewProductModal = ({ setOpenViewModal, setOpenEditModal, product }) => {
               </div>
               <div className="product-extra-card">
                 <div className="product-status">
-                  <span className={`status  ${stockClass}`}>{stockLabel}</span>
+                  <span className={`status ${stockClass}`}>{stockLabel}</span>
                 </div>
               </div>
 

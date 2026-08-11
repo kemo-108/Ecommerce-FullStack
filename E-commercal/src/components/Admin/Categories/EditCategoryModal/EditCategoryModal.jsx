@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { FiX } from "react-icons/fi";
+import { FiX, FiUpload } from "react-icons/fi";
 import "./EditCategoryModal.css";
 import { toast } from "react-toastify";
 import { updateCategory } from "../../../../services/CategoryService";
+import { getImageUrl } from "../../../../utils/imageUrl";
+
 const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) => {
   if (!category) return null;
 
@@ -11,9 +13,11 @@ const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) =>
     description: "",
     status: "Active",
     featured: false,
-    image: "",
+    image: null, // new File, if the admin picks one
   });
 
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [imageRemoved, setImageRemoved] = useState(false);
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
 
@@ -23,8 +27,10 @@ const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) =>
       description: category.description,
       status: category.status,
       featured: category.featured,
-      image: category.image,
+      image: null,
     });
+    setPreviewUrl(category.image ? getImageUrl(category.image) : "");
+    setImageRemoved(false);
   }, [category]);
 
   const closeModal = () => {
@@ -47,10 +53,6 @@ const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) =>
       newErrors.description = "Minimum 10 characters.";
     }
 
-    if (formData.image && !/^https?:\/\/.+\..+/.test(formData.image)) {
-      newErrors.image = "Invalid image url.";
-    }
-
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
@@ -70,6 +72,21 @@ const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) =>
     }));
   };
 
+  const handleImage = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFormData((prev) => ({ ...prev, image: file }));
+    setPreviewUrl(URL.createObjectURL(file));
+    setImageRemoved(false);
+  };
+
+  const removeImage = () => {
+    setFormData((prev) => ({ ...prev, image: null }));
+    setPreviewUrl("");
+    setImageRemoved(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,13 +94,18 @@ const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) =>
 
     setSaving(true);
     try {
-      await updateCategory(category.id, {
-        name: formData.name.trim(),
-        description: formData.description.trim(),
-        image: formData.image,
-        featured: formData.featured,
-        status: formData.status,
-      });
+      const payload = new FormData();
+      payload.append("Name", formData.name.trim());
+      payload.append("Description", formData.description.trim());
+      payload.append("Featured", formData.featured);
+      payload.append("Status", formData.status);
+      if (formData.image) {
+        payload.append("ImageFile", formData.image);
+      } else if (imageRemoved) {
+        payload.append("RemoveImage", "true");
+      }
+
+      await updateCategory(category.id, payload);
       toast.success("Category updated successfully.");
       await refreshCategories();
       closeModal();
@@ -160,13 +182,35 @@ const EditCategoryModal = ({ category, refreshCategories, setOpenEditModal }) =>
           </div>
 
           <div className="form-group">
-            <label>Image URL</label>
+            <label>Category Image</label>
 
             <input
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
+              id="edit-upload-category-image"
+              type="file"
+              accept="image/*"
+              onChange={handleImage}
+              hidden
             />
+
+            {previewUrl ? (
+              <div className="category-image-preview">
+                <img src={previewUrl} alt="Category preview" />
+                <button type="button" onClick={removeImage}>
+                  <FiX />
+                </button>
+              </div>
+            ) : (
+              <label htmlFor="edit-upload-category-image" className="upload-content">
+                <FiUpload />
+                <span>Click to upload an image</span>
+              </label>
+            )}
+
+            {previewUrl && (
+              <label htmlFor="edit-upload-category-image" className="change-image-link">
+                Change image
+              </label>
+            )}
 
             {errors.image && (
               <small className="error-text">{errors.image}</small>

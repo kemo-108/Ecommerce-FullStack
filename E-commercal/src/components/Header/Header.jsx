@@ -78,7 +78,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className={`header  ${scrolled ? "active" : ""}`}>
+    <div className={`header ${scrolled ? "active" : ""}`}>
       {/* ================= Top utility bar ================= */}
       <div className="header-topbar">
         <div className="topbar-marquee">

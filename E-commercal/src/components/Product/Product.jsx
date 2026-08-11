@@ -3,6 +3,7 @@ import { FiPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import "./Product.css";
 import { useEffect, useState } from "react";
+import { getImageUrl } from "../../utils/imageUrl";
 import { AddToCart } from "../../services/CartService";
 import {
   AddToWishlist,
@@ -74,7 +75,7 @@ const Product = ({ product, showExtraBtn }) => {
         price: product.price,
         Qty: 1,
       });
-      toast.success(` ${product.productName} added to cart`);
+      toast.success(`${product.productName} added to cart`);
       window.dispatchEvent(new Event("cart-updated"));
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -88,7 +89,7 @@ const Product = ({ product, showExtraBtn }) => {
   const savings = hasDiscount ? product.oldPrice - product.price : 0;
 
   return (
-    <Link to={`/single-product/ ${product.productId}`} className="product-card">
+    <Link to={`/single-product/${product.productId}`} className="product-card">
       <div className="pcard-image">
         {hasDiscount && (
           <span className="save-badge">Save {savings.toFixed(0)} EGP</span>
@@ -116,7 +117,7 @@ const Product = ({ product, showExtraBtn }) => {
           </button>
         )}
         <img
-          src={`https://localhost:7069/${product.imageUrl}`}
+          src={getImageUrl(product.imageUrl)}
           alt={product.productName}
         />
       </div>

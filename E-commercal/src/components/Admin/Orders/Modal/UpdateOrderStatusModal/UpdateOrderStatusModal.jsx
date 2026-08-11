@@ -58,7 +58,7 @@ const UpdateOrderStatusModal = ({
           <div className="status-info">
             <span>Current Status</span>
 
-            <div className={`status-badge  ${order.status.toLowerCase()}`}>
+            <div className={`status-badge ${order.status.toLowerCase()}`}>
               {order.status}
             </div>
           </div>

@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const API = "https://localhost:7069/api/inventory";
+const API = `${API_BASE_URL}/api/inventory`;
 
 export const GetInventory = async () => {
   const response = await axios.get(API);
@@ -8,16 +9,16 @@ export const GetInventory = async () => {
 };
 
 export const UpdateInventory = async (id, data) => {
-  const response = await axios.put(` ${API}/ ${id}`, data);
+  const response = await axios.put(`${API}/${id}`, data);
   return response.data;
 };
 
 export const RestockInventory = async (id, data) => {
-  const response = await axios.post(` ${API}/ ${id}/restock`, data);
+  const response = await axios.post(`${API}/${id}/restock`, data);
   return response.data;
 };
 
 export const GetStockMovements = async (id) => {
-  const response = await axios.get(` ${API}/ ${id}/movements`);
+  const response = await axios.get(`${API}/${id}/movements`);
   return response.data;
 };

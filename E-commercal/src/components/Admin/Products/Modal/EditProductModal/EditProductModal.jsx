@@ -6,6 +6,7 @@ import { updateProduct } from "../../../../../services/ProductService";
 import { getCategories } from "../../../../../services/CategoryService";
 
 import "./EditProductModal.css";
+import { getImageUrl } from "../../../../../utils/imageUrl";
 
 const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
   const [categories, setCategories] = useState([]);
@@ -51,7 +52,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
     });
 
     if (product.imageUrl) {
-      setPreviewImage(`https://localhost:7069${product.imageUrl}`);
+      setPreviewImage(getImageUrl(product.imageUrl));
     }
 
     setColors(
@@ -59,7 +60,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
         name: c.name,
         hex: c.hexCode || "#000000",
         image: null,
-        previewUrl: c.imageUrl ? `https://localhost:7069/${c.imageUrl}` : "",
+        previewUrl: c.imageUrl ? getImageUrl(c.imageUrl) : "",
         existingImageUrl: c.imageUrl || "",
       })),
     );

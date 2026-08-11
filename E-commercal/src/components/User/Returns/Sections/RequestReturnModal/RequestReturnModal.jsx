@@ -106,7 +106,7 @@ const RequestReturnModal = ({ onClose, onCreated }) => {
               <option value="">-- Select a delivered order --</option>
               {orders.map((order) => (
                 <option key={order.orderId} value={order.orderId}>
-                  #{order.orderId} - ${Number(order.total).toFixed(2)}
+                  #{order.orderId} - EGP {Number(order.total).toFixed(2)}
                 </option>
               ))}
             </select>

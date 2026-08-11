@@ -181,6 +181,9 @@
     overflow:hidden;
     cursor:pointer;
     transition:.3s;
+    padding:0;
+    background:none;
+    display:block;
 }
 
 .sp-gallery-thumb:hover{

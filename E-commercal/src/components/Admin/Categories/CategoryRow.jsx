@@ -1,5 +1,6 @@
 import { FiEye, FiEdit2, FiTrash2, FiStar } from "react-icons/fi";
 import "./CategoryRow.css";
+import { getImageUrl } from "../../../utils/imageUrl";
 
 const CategoryRow = ({
   category,
@@ -15,7 +16,7 @@ const CategoryRow = ({
       <td>
         <div className="category-cell">
           <img
-            src={category.image}
+            src={getImageUrl(category.image)}
             alt={category.name}
             className="category-image"
           />
@@ -39,7 +40,7 @@ const CategoryRow = ({
       {/* Featured */}
 
       <td>
-        <span className={`featured-badge  ${category.featured ? "yes" : "no"}`}>
+        <span className={`featured-badge ${category.featured ? "yes" : "no"}`}>
           <FiStar />
           {category.featured ? "Yes" : "No"}
         </span>
@@ -49,7 +50,7 @@ const CategoryRow = ({
 
       <td>
         <span
-          className={`status-badge  ${
+          className={`status-badge ${
             category.status === "Active" ? "active" : "hidden"
           }`}
         >

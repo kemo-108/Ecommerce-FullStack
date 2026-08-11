@@ -1,6 +1,7 @@
 import "./OrderDetailsModal.css";
 import { FiX } from "react-icons/fi";
 import { useEffect } from "react";
+import { getImageUrl } from "../../../../../utils/imageUrl";
 const OrderDetailsModal = ({ order, onClose }) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -31,7 +32,7 @@ const OrderDetailsModal = ({ order, onClose }) => {
     <img
       src={
         item.imageUrl
-          ? `https://localhost:7069/${item.imageUrl}`
+          ? getImageUrl(item.imageUrl)
           : ""
       }
       alt={item.productName}

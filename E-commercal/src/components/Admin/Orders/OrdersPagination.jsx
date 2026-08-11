@@ -24,7 +24,7 @@ const OrdersPagination = ({
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index}
-            className={`page-number  ${
+            className={`page-number ${
               currentPage === index + 1 ? "active" : ""
             }`}
             onClick={() => setCurrentPage(index + 1)}

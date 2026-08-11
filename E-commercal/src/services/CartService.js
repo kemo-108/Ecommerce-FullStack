@@ -1,5 +1,6 @@
 import axios from "axios";
-const API = "https://localhost:7069/api/cart";
+import { API_BASE_URL } from "../config/api";
+const API = `${API_BASE_URL}/api/cart`;
 
 const notifyCartUpdated = () => {
   window.dispatchEvent(new Event("cart-updated"));

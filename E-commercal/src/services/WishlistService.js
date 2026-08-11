@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const API = "https://localhost:7069/api/wishlist";
+const API = `${API_BASE_URL}/api/wishlist`;
 
 const notifyWishlistUpdated = () => {
   window.dispatchEvent(new Event("wishlist-updated"));
@@ -18,7 +19,7 @@ export const AddToWishlist = async (productId) => {
 };
 
 export const RemoveFromWishlist = async (id) => {
-  const response = await axios.delete(` ${API}/ ${id}`);
+  const response = await axios.delete(`${API}/${id}`);
   notifyWishlistUpdated();
   return response.data;
 };

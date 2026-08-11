@@ -19,7 +19,7 @@ const ReturnRow = ({ item }) => {
 
       <span>{item.displayDate}</span>
 
-      <span className={`status  ${item.status.toLowerCase()}`}>
+      <span className={`status ${item.status.toLowerCase()}`}>
         {item.status}
       </span>
     </div>

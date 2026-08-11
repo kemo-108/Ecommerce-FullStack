@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const API = "https://localhost:7069/api/refunds";
+const API = `${API_BASE_URL}/api/refunds`;
 
 export const GetAllRefunds = async () => {
   const response = await axios.get(API);
@@ -8,7 +9,7 @@ export const GetAllRefunds = async () => {
 };
 
 export const GetMyRefunds = async () => {
-  const response = await axios.get(` ${API}/my-refunds`);
+  const response = await axios.get(`${API}/my-refunds`);
   return response.data;
 };
 
@@ -18,6 +19,6 @@ export const CreateRefund = async (data) => {
 };
 
 export const UpdateRefundStatus = async (id, status) => {
-  const response = await axios.patch(` ${API}/ ${id}/status`, { status });
+  const response = await axios.patch(`${API}/${id}/status`, { status });
   return response.data;
 };

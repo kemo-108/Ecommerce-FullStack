@@ -123,10 +123,10 @@ const AddressSection = () => {
                   {address.addressLine},
                   <br />
                   {address.city}
-                  {address.governorate ? `,  ${address.governorate}` : ""}
+                  {address.governorate ? `, ${address.governorate}` : ""}
                   <br />
                   {address.country}
-                  {address.postalCode ? ` -  ${address.postalCode}` : ""}
+                  {address.postalCode ? ` - ${address.postalCode}` : ""}
                   {address.phone && (
                     <>
                       <br />

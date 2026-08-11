@@ -1,36 +1,37 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const API = "https://localhost:7069/api/auth";
+const API = `${API_BASE_URL}/api/auth`;
 
 export const Login = async (credentials) => {
-  const response = await axios.post(` ${API}/login`, credentials);
+  const response = await axios.post(`${API}/login`, credentials);
   return response.data;
 };
 
 export const Register = async (userData) => {
-  const response = await axios.post(` ${API}/register`, userData);
+  const response = await axios.post(`${API}/register`, userData);
   return response.data;
 };
 
 export const Logout = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
-  const response = await axios.post(` ${API}/logout`, { refreshToken });
+  const response = await axios.post(`${API}/logout`, { refreshToken });
   return response.data;
 };
 
 export const RefreshToken = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
-  const response = await axios.post(` ${API}/refresh-token`, { refreshToken });
+  const response = await axios.post(`${API}/refresh-token`, { refreshToken });
   return response.data;
 };
 
 export const ForgotPassword = async (email) => {
-  const response = await axios.post(` ${API}/forgot-password`, { email });
+  const response = await axios.post(`${API}/forgot-password`, { email });
   return response.data;
 };
 
 export const ResetPassword = async (token, newPassword) => {
-  const response = await axios.post(` ${API}/reset-password`, {
+  const response = await axios.post(`${API}/reset-password`, {
     token,
     newPassword,
   });
@@ -38,17 +39,17 @@ export const ResetPassword = async (token, newPassword) => {
 };
 
 export const GetMe = async () => {
-  const response = await axios.get(` ${API}/me`);
+  const response = await axios.get(`${API}/me`);
   return response.data;
 };
 
 export const UpdateMe = async (data) => {
-  const response = await axios.put(` ${API}/me`, data);
+  const response = await axios.put(`${API}/me`, data);
   return response.data;
 };
 
 export const ChangePassword = async (data) => {
-  const response = await axios.post(` ${API}/change-password`, data);
+  const response = await axios.post(`${API}/change-password`, data);
   return response.data;
 };
 

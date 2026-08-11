@@ -7,6 +7,7 @@ import {
 } from "react-icons/fi";
 
 import "./ViewCategoryModal.css";
+import { getImageUrl } from "../../../../utils/imageUrl";
 
 const ViewCategoryModal = ({ category, setOpenViewModal }) => {
   if (!category) return null;
@@ -28,7 +29,7 @@ const ViewCategoryModal = ({ category, setOpenViewModal }) => {
 
         <div className="modal-body">
           <div className="category-preview">
-            <img src={category.image} alt={category.name} />
+            <img src={getImageUrl(category.image)} alt={category.name} />
 
             <div>
               <h2>{category.name}</h2>

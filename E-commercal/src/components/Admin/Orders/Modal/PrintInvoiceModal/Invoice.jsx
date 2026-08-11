@@ -123,7 +123,7 @@ const Invoice = ({ order }) => {
 
                 <td>
                   {" "}
-                  ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
+ ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
                 </td>
               </tr>
             ))}

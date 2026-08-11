@@ -35,7 +35,7 @@ const ViewCustomerModal = ({
             <img src={customer.avatar} alt={customer.customerName} />
 
             <span
-              className={`online-dot  ${customer.status.toLowerCase()}`}
+              className={`online-dot ${customer.status.toLowerCase()}`}
             ></span>
           </div>
 
@@ -90,7 +90,7 @@ const ViewCustomerModal = ({
               <span>Status</span>
 
               <h4>
-                <span className={`status  ${customer.status.toLowerCase()}`}>
+                <span className={`status ${customer.status.toLowerCase()}`}>
                   {customer.status}
                 </span>
               </h4>

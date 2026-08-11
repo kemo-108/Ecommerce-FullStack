@@ -80,7 +80,7 @@ const CustomersStats = ({ customers }) => {
   return (
     <div className="customers-stats">
       {cards.map((card, index) => (
-        <div className={`customer-stat-card  ${card.className}`} key={index}>
+        <div className={`customer-stat-card ${card.className}`} key={index}>
           <div className="card-number">
             {String(index + 1).padStart(2, "0")}
           </div>

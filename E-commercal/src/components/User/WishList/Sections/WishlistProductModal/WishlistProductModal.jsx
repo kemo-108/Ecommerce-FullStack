@@ -38,7 +38,7 @@ const WishlistProductModal = ({ product, onClose }) => {
           </p>
 
           <div
-            className={`wishlist-modal-stock  ${
+            className={`wishlist-modal-stock ${
               product.stock === "Out of Stock" ? "out" : ""
             }`}
           >

@@ -1,9 +1,12 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
+
+axios.defaults.baseURL = API_BASE_URL;
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
-    config.headers.Authorization = `Bearer  ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });

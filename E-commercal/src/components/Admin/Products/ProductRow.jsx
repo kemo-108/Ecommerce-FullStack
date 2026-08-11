@@ -1,4 +1,5 @@
 import { FiEye, FiEdit, FiTrash2 } from "react-icons/fi";
+import { getImageUrl } from "../../../utils/imageUrl";
 
 const getStockInfo = (qty) => {
   if (qty === 0) return { label: "Out Of Stock", className: "out-of-stock" };
@@ -19,7 +20,7 @@ const ProductRow = ({
     <tr>
       <td className="product-info">
         <img
-          src={`https://localhost:7069/${product.imageUrl}`}
+          src={getImageUrl(product.imageUrl)}
           alt={product.productName}
         />
 
@@ -36,7 +37,7 @@ const ProductRow = ({
       <td>{product.qty}</td>
 
       <td>
-        <span className={`status  ${stock.className}`}>{stock.label}</span>
+        <span className={`status ${stock.className}`}>{stock.label}</span>
       </td>
 
       <td>{product.createdAt}</td>

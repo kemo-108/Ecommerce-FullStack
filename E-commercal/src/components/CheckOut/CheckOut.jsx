@@ -5,7 +5,8 @@ import { PlaceOrder } from "../../services/OrderService";
 import { applyCoupon } from "../../services/CouponsService";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import vodafoneCash from "../../image/vodafone-cash.png";
+import instaPay from "../../image/instapay.png";
 const COUPON_STORAGE_KEY = "cartCouponCode";
 
 const initialForm = {
@@ -301,19 +302,33 @@ const CheckOut = () => {
                 checked={paymentMethod === "check"}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
-              Check Payment
+              Cash on Delivery (COD)
             </label>
 
             <label>
               <input
                 type="radio"
                 name="payment"
-                value="paypal"
-                checked={paymentMethod === "paypal"}
+                value="cash_transfer"
+                checked={paymentMethod === "cash_transfer"}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
-              Paypal
+              Vodafone Cash or InstaPay
             </label>
+
+            {paymentMethod === "cash_transfer" && (
+              <div className="payment-info">
+                <div className="payment-option">
+                  <img src={vodafoneCash} alt="Vodafone Cash" />
+                  <span>01014884658</span>
+                </div>
+
+                <div className="payment-option">
+                  <img src={instaPay} alt="InstaPay" />
+                  <span>01142570416</span>
+                </div>
+              </div>
+            )}
 
             <button
               onClick={handlePlaceOrder}

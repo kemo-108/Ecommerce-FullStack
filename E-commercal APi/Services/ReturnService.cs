@@ -98,10 +98,63 @@ namespace E_commercal_APi.Services
                 .FirstOrDefaultAsync(r => r.ReturnId == returnId)
                 ?? throw new KeyNotFoundException("Return not found.");
 
+            var wasAlreadyApproved = string.Equals(ret.Status, "approved", StringComparison.OrdinalIgnoreCase);
+            var isNowApproved = string.Equals(dto.Status, "approved", StringComparison.OrdinalIgnoreCase);
+
             ret.Status = dto.Status;
+
+            // The item is physically back with the store once a return is
+            // approved, but nothing ever put it back into Inventory - the
+            // stock stayed deducted from the original sale forever. Restore
+            // it here, once, the moment the return first becomes approved.
+            if (isNowApproved && !wasAlreadyApproved)
+            {
+                foreach (var item in ret.Items)
+                {
+                    await RestoreStockAsync(item.ProductId, item.Quantity);
+                }
+            }
+
             await _db.SaveChangesAsync();
 
             return ToDto(ret);
+        }
+
+        // عكس الخصم اللي حصل وقت البيع - بيرجع الكمية للمخزن لما المرتجع
+        // يتوافق عليه.
+        private async Task RestoreStockAsync(int productId, int quantity)
+        {
+            if (quantity <= 0) return;
+
+            var record = await _db.Inventory.FirstOrDefaultAsync(i => i.ProductId == productId);
+
+            if (record != null)
+            {
+                record.Stock += quantity;
+                record.LastUpdated = DateTime.UtcNow;
+                return;
+            }
+
+            // No inventory row at all (shouldn't normally happen). Fall back
+            // to creating one so the stock isn't silently lost.
+            var defaultWarehouse = await _db.Warehouses.FirstOrDefaultAsync();
+            if (defaultWarehouse == null)
+            {
+                defaultWarehouse = new Warehouse { Name = "Main Warehouse", Address = "N/A", Phone = "N/A", Status = "active" };
+                _db.Warehouses.Add(defaultWarehouse);
+                await _db.SaveChangesAsync();
+            }
+
+            _db.Inventory.Add(new Inventory
+            {
+                ProductId = productId,
+                WarehouseId = defaultWarehouse.Id,
+                Sku = $"SKU-{productId}",
+                Barcode = "N/A",
+                Stock = quantity,
+                MinStock = 5,
+                LastUpdated = DateTime.UtcNow,
+            });
         }
     }
 }

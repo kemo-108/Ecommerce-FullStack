@@ -8,10 +8,12 @@ namespace E_commercal_APi.Services
     public class ProductService : IProductService
     {
         private readonly AppDbContext _db;
+        private readonly ICloudinaryService _cloudinary;
 
-        public ProductService(AppDbContext db)
+        public ProductService(AppDbContext db, ICloudinaryService cloudinary)
         {
             _db = db;
+            _cloudinary = cloudinary;
         }
 
         private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -65,6 +67,10 @@ namespace E_commercal_APi.Services
                 Id = s.Id,
                 Name = s.Name
             }).OrderBy(s => s.Id).ToList() ?? new List<ProductSizeDto>(),
+            GalleryImages = p.Images?
+                .OrderBy(i => i.SortOrder)
+                .Select(i => i.ImageUrl)
+                .ToList() ?? new List<string>(),
         };
 
         public async Task<(List<ProductDto> Products, int TotalCount)> GetAllAsync(string? search = null, int page = 1, int pageSize = 12, int? categoryId = null)
@@ -74,6 +80,7 @@ namespace E_commercal_APi.Services
                 .Include(p => p.InventoryRecords)
                 .Include(p => p.Colors)
                 .Include(p => p.Sizes)
+                .Include(p => p.Images)
                 .AsQueryable();
 
             if (categoryId.HasValue)
@@ -109,6 +116,7 @@ namespace E_commercal_APi.Services
                 .Include(p => p.InventoryRecords)
                 .Include(p => p.Colors)
                 .Include(p => p.Sizes)
+                .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
 
             return product == null ? null : ToDto(product);
@@ -121,22 +129,11 @@ namespace E_commercal_APi.Services
 
             if (dto.Images != null && dto.Images.Count > 0)
             {
-                var uploadsFolder = Path.Combine(webRootPath, "uploads", "products");
-                Directory.CreateDirectory(uploadsFolder);
-
                 for (int i = 0; i < dto.Images.Count; i++)
                 {
                     var file = dto.Images[i];
                     ValidateImage(file);
-                    var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-
-                    var url = $"uploads/products/{fileName}";
+                    var url = await _cloudinary.UploadImageAsync(file, "ecommerce/products");
 
                     if (i == 0)
                         imageUrl = url; // first image = thumbnail
@@ -182,9 +179,6 @@ namespace E_commercal_APi.Services
             var colors = new List<ProductColor>();
             if (dto.ColorNames != null && dto.ColorNames.Count > 0)
             {
-                var colorFolder = Path.Combine(webRootPath, "uploads", "products", "colors");
-                Directory.CreateDirectory(colorFolder);
-
                 for (int i = 0; i < dto.ColorNames.Count; i++)
                 {
                     var colorName = dto.ColorNames[i];
@@ -197,15 +191,7 @@ namespace E_commercal_APi.Services
                     {
                         var file = dto.ColorImages[i];
                         ValidateImage(file);
-                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                        var filePath = Path.Combine(colorFolder, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
-
-                        colorImageUrl = $"uploads/products/colors/{fileName}";
+                        colorImageUrl = await _cloudinary.UploadImageAsync(file, "ecommerce/products/colors");
                     }
 
                     colors.Add(new ProductColor
@@ -267,24 +253,46 @@ namespace E_commercal_APi.Services
             if (!string.IsNullOrWhiteSpace(dto.ImageUrl))
                 product.ImageUrl = dto.ImageUrl;
 
+            // A new main-image file was uploaded from the edit form - replace
+            // the thumbnail and clean up the old Cloudinary image so it
+            // doesn't just sit there unused forever.
+            if (dto.Images != null && dto.Images.Count > 0 && dto.Images[0]?.Length > 0)
+            {
+                var file = dto.Images[0];
+                ValidateImage(file);
+                var oldImageUrl = product.ImageUrl;
+                var newImageUrl = await _cloudinary.UploadImageAsync(file, "ecommerce/products");
+                product.ImageUrl = newImageUrl;
+
+                if (!string.IsNullOrWhiteSpace(oldImageUrl) && oldImageUrl != newImageUrl)
+                {
+                    try { await _cloudinary.DeleteImageAsync(oldImageUrl); }
+                    catch { /* best-effort cleanup - don't fail the update over it */ }
+                }
+            }
+
             if (dto.CategoryId.HasValue)
             {
                 product.CategoryId = dto.CategoryId.Value;
             }
 
+            // Stock is owned by the Inventory page (InventoryController /
+            // InventoryService.RestockAsync), not by this product edit form.
+            // This used to overwrite inventory.Stock with dto.Qty on every
+            // save, but the edit form never actually collects a quantity -
+            // so dto.Qty was always the int default (0), and saving *any*
+            // product edit (e.g. just fixing a typo) silently zeroed out
+            // its stock. Don't touch Stock here at all.
+            //
+            // We still make sure a row exists, though - a product that
+            // predates the Warehouse fix above may never have gotten an
+            // Inventory row, and without one it can't be managed from the
+            // Inventory page at all.
             var inventory = await _db.Inventory
                 .FirstOrDefaultAsync(i => i.ProductId == id);
 
-            if (inventory != null)
+            if (inventory == null)
             {
-                inventory.Stock = dto.Qty;
-                inventory.LastUpdated = DateTime.UtcNow;
-            }
-            else
-            {
-                // This product predates the Warehouse fix above and never got
-                // an Inventory row, so there was nothing here to update and
-                // Stock edits were silently ignored. Create it now instead.
                 var defaultWarehouse = await _db.Warehouses.FirstOrDefaultAsync();
                 if (defaultWarehouse == null)
                 {
@@ -299,7 +307,7 @@ namespace E_commercal_APi.Services
                     WarehouseId = defaultWarehouse.Id,
                     Sku = product.Code ?? $"SKU-{id}",
                     Barcode = "N/A",
-                    Stock = dto.Qty,
+                    Stock = 0, // set the real quantity from the Inventory page
                     MinStock = 5,
                     LastUpdated = DateTime.UtcNow,
                 });
@@ -307,14 +315,30 @@ namespace E_commercal_APi.Services
             if (dto.ColorNames != null)
             {
                 var existingColors = await _db.ProductColors.Where(c => c.ProductId == id).ToListAsync();
+
+                // URLs the frontend explicitly asked to keep (unchanged colors).
+                // Anything else on the old rows — a replaced image, or a color
+                // that got removed entirely — is now orphaned on Cloudinary,
+                // so clean it up instead of leaving it there forever.
+                var keepUrls = new HashSet<string>(
+                    (dto.ColorExistingImageUrls ?? new List<string>())
+                        .Where(u => !string.IsNullOrWhiteSpace(u)),
+                    StringComparer.OrdinalIgnoreCase);
+
+                foreach (var old in existingColors)
+                {
+                    if (!string.IsNullOrWhiteSpace(old.ImageUrl) && !keepUrls.Contains(old.ImageUrl))
+                    {
+                        try { await _cloudinary.DeleteImageAsync(old.ImageUrl); }
+                        catch { /* best-effort cleanup - don't fail the update over it */ }
+                    }
+                }
+
                 if (existingColors.Count > 0)
                     _db.ProductColors.RemoveRange(existingColors);
 
                 if (dto.ColorNames.Count > 0)
                 {
-                    var colorFolder = Path.Combine(webRootPath, "uploads", "products", "colors");
-                    Directory.CreateDirectory(colorFolder);
-
                     for (int i = 0; i < dto.ColorNames.Count; i++)
                     {
                         var colorName = dto.ColorNames[i];
@@ -329,15 +353,7 @@ namespace E_commercal_APi.Services
                         {
                             var file = dto.ColorImages[i];
                             ValidateImage(file);
-                            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                            var filePath = Path.Combine(colorFolder, fileName);
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
-
-                            colorImageUrl = $"uploads/products/colors/{fileName}";
+                            colorImageUrl = await _cloudinary.UploadImageAsync(file, "ecommerce/products/colors");
                         }
 
                         _db.ProductColors.Add(new ProductColor
@@ -386,6 +402,8 @@ namespace E_commercal_APi.Services
                 .Include(p => p.WishlistedBy)
                 .Include(p => p.OrderItems)
                 .Include(p => p.Reviews)
+                .Include(p => p.Images)
+                .Include(p => p.Colors)
                 .FirstOrDefaultAsync(p => p.ProductId == id)
                 ?? throw new KeyNotFoundException("Product not found.");
 
@@ -399,8 +417,22 @@ namespace E_commercal_APi.Services
             if (product.WishlistedBy.Any())
                 _db.Wishlists.RemoveRange(product.WishlistedBy);
 
+            // Collect every Cloudinary image this product owns before it's
+            // gone from the DB, so we don't leave orphaned files behind.
+            var imagesToDelete = new List<string>();
+            if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+                imagesToDelete.Add(product.ImageUrl);
+            imagesToDelete.AddRange(product.Images?.Select(i => i.ImageUrl).Where(u => !string.IsNullOrWhiteSpace(u)) ?? Enumerable.Empty<string>());
+            imagesToDelete.AddRange(product.Colors?.Select(c => c.ImageUrl).Where(u => !string.IsNullOrWhiteSpace(u)) ?? Enumerable.Empty<string>());
+
             _db.Products.Remove(product);
             await _db.SaveChangesAsync();
+
+            foreach (var url in imagesToDelete)
+            {
+                try { await _cloudinary.DeleteImageAsync(url); }
+                catch { /* best-effort cleanup - the product is already deleted either way */ }
+            }
         }
     }
 }

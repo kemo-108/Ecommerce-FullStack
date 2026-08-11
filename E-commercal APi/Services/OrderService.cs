@@ -65,6 +65,46 @@ namespace E_commercal_APi.Services
             }   
         }
 
+        // عكس DeductStockAsync - بيرجع الكمية للمخزن لما أوردر يتلغي أو
+        // مرتجع يتوافق عليه. بيحط الكمية كلها في أول سجل مخزون للمنتج (أو
+        // بينشئ واحد لو مفيش، حالة نادرة جدًا لأن المنتج أصلاً كان معاه
+        // مخزون وقت البيع).
+        private async Task RestoreStockAsync(int productId, int quantity)
+        {
+            if (quantity <= 0) return;
+
+            var record = await _db.Inventory.FirstOrDefaultAsync(i => i.ProductId == productId);
+
+            if (record != null)
+            {
+                record.Stock += quantity;
+                record.LastUpdated = DateTime.UtcNow;
+                return;
+            }
+
+            // No inventory row at all (shouldn't normally happen - the sale
+            // that's being reversed had to deduct from somewhere). Fall back
+            // to creating one so the stock isn't silently lost.
+            var defaultWarehouse = await _db.Warehouses.FirstOrDefaultAsync();
+            if (defaultWarehouse == null)
+            {
+                defaultWarehouse = new Warehouse { Name = "Main Warehouse", Address = "N/A", Phone = "N/A", Status = "active" };
+                _db.Warehouses.Add(defaultWarehouse);
+                await _db.SaveChangesAsync();
+            }
+
+            _db.Inventory.Add(new Inventory
+            {
+                ProductId = productId,
+                WarehouseId = defaultWarehouse.Id,
+                Sku = $"SKU-{productId}",
+                Barcode = "N/A",
+                Stock = quantity,
+                MinStock = 5,
+                LastUpdated = DateTime.UtcNow,
+            });
+        }
+
         // بيتحقق إن كل سطر في الأوردر لسه متوفر بنفس الكمية المطلوبة
         private async Task EnsureStockAvailableAsync(IEnumerable<(int ProductId, string ProductName, int Quantity)> lines)
         {
@@ -305,8 +345,13 @@ namespace E_commercal_APi.Services
 
         public async Task UpdateStatusAsync(int orderId, string status)
         {
-            var order = await _db.Orders.FindAsync(orderId)
+            var order = await _db.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId)
                 ?? throw new KeyNotFoundException("Order not found.");
+
+            var wasAlreadyCancelled = string.Equals(order.Status, "cancelled", StringComparison.OrdinalIgnoreCase);
+            var isNowCancelled = string.Equals(status, "cancelled", StringComparison.OrdinalIgnoreCase);
 
             order.Status = status;
 
@@ -318,9 +363,21 @@ namespace E_commercal_APi.Services
             {
                 order.PaymentStatus = "paid";
             }
-            else if (string.Equals(status, "cancelled", StringComparison.OrdinalIgnoreCase))
+            else if (isNowCancelled)
             {
                 order.PaymentStatus = "failed";
+            }
+
+            // PlaceOrderAsync/AdminCreateOrderAsync deduct stock the moment the
+            // order is placed, but nothing ever gave it back - cancelling an
+            // order used to permanently lose that inventory. Restore it here,
+            // once, the moment the order first becomes cancelled.
+            if (isNowCancelled && !wasAlreadyCancelled)
+            {
+                foreach (var item in order.Items)
+                {
+                    await RestoreStockAsync(item.ProductId, item.Quantity);
+                }
             }
 
             await _db.SaveChangesAsync();

@@ -41,14 +41,14 @@ namespace E_commercal_APi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto dto)
+        public async Task<IActionResult> CreateCategory([FromForm] CategoryCreateDto dto)
         {
             var created = await _categoryService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetCategoryById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryCreateDto dto)
+        public async Task<IActionResult> UpdateCategory(int id, [FromForm] CategoryCreateDto dto)
         {
             try
             {

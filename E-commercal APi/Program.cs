@@ -67,18 +67,38 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IReportsService, ReportsService>();
-builder.Services.AddScoped<CloudinaryService>();
+
+// ================= Cloudinary =================
+// This MUST happen before builder.Build() below — Configure<T>() only has an
+// effect while the service collection is still being assembled. Calling it
+// after Build() (as this used to) silently no-ops, so CloudinaryService would
+// receive a CloudinarySettings with null CloudName/ApiKey/ApiSecret.
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 // ================= CORS =================
+// Origins used to be hardcoded to localhost only, so the API would reject
+// every request from a deployed frontend (a different domain) with a CORS
+// error. Extra production origins can now be added via config/env instead
+// of editing this file - see "Cors:AllowedOrigins" in appsettings.json, or
+// set the Cors__AllowedOrigins__0, Cors__AllowedOrigins__1, ... env vars.
+var configuredOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? Array.Empty<string>();
+
+var corsOrigins = new[]
+{
+    "http://localhost:5173",
+    "https://localhost:5173",
+    "http://localhost:5000",
+    "https://localhost:5000"
+}.Concat(configuredOrigins).Distinct().ToArray();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:5173",
-                "https://localhost:5173",
-                "http://localhost:5000",
-                "https://localhost:5000"
-            )
+        policy.WithOrigins(corsOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -134,9 +154,6 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "E-commercial API v1");
     });
 }
-// ===============Cloudinary Settings===================
-builder.Services.Configure<CloudinarySettings>(
-    builder.Configuration.GetSection("CloudinarySettings"));
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();

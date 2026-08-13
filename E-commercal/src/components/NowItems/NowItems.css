@@ -31,3 +31,25 @@ padding: 60px 0;
     height: 120px;
 padding-top: 10px;}
 
+@media(max-width:768px){
+    .now-items .container h1{
+        font-size: 3rem;
+    }
+    .now-items .container h4{
+        font-size: 1rem;
+    }
+    .now-items .container .title-section{
+        height: 90px;
+    }
+}
+
+@media(max-width:480px){
+    .now-items .container h1{
+        font-size: 2rem;
+    }
+    .now-items .now-item img{
+        width: 70px;
+        height: 70px;
+    }
+}
+

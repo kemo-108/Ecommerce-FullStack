@@ -1,5 +1,6 @@
 .delete-category-modal{
     width:420px;
+    max-width:90%;
     background:#fff;
     border-radius:20px;
     padding:35px 30px;

@@ -21,3 +21,18 @@
 
     max-width: 500px;
 }
+
+@media(max-width:768px){
+    .advertisement h1{
+        font-size: 34px;
+        max-width: 70%;
+    }
+}
+
+@media(max-width:480px){
+    .advertisement h1{
+        font-size: 24px;
+        left: 6%;
+        max-width: 80%;
+    }
+}

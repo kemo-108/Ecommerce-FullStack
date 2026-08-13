@@ -1,5 +1,6 @@
 import axios from "axios";
-import { API_BASE_URL } from "http://brother-group-api.runasp.net";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://brother-group-api.runasp.net";
 
 axios.defaults.baseURL = API_BASE_URL;
 
@@ -25,3 +26,5 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export default axios;

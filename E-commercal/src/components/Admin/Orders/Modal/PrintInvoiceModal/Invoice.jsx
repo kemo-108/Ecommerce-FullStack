@@ -41,7 +41,7 @@ const Invoice = ({ order }) => {
 
           <div className="info-row">
             <span>Store</span>
-            <strong>الاصدقاء للفوم</strong>
+            <strong>مكتبة الاصدقاء</strong>
           </div>
 
           <div className="info-row">

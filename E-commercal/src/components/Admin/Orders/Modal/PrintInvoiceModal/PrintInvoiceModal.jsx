@@ -123,7 +123,7 @@ const PrintInvoiceModal = ({ order, setOpenPrintModal }) => {
         <div className="invoice-bottom">
           <p>
             This invoice is generated automatically by
-            <strong> ART CORNER Dashboard</strong>.
+            <strong> مكتبة الاصدقاء Dashboard</strong>.
           </p>
         </div>
       </div>

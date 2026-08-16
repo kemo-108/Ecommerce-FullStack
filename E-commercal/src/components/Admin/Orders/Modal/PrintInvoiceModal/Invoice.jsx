@@ -8,7 +8,7 @@ const Invoice = ({ order }) => {
       {/* ================= Header ================= */}
       <div className="invoice-header">
         <div className="invoice-company">
-          <h1>الاصدقاء للفوم</h1>
+          <h1>مكتبة الاصدقاء</h1>
 
           <p>Premium Art & Home Decoration</p>
 

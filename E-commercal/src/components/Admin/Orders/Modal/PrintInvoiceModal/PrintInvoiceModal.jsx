@@ -14,52 +14,70 @@ const PrintInvoiceModal = ({ order, setOpenPrintModal }) => {
   const invoiceRef = useRef(null); // the printed page (outer box)
   const contentRef = useRef(null); // the actual invoice content (gets scaled)
 
-  const handlePrint = useReactToPrint({
+  // Measures the invoice height and shrinks it just enough to
+  // guarantee it always prints on a single page. Runs synchronously
+  // so the DOM is already updated by the time react-to-print reads it —
+  // this sidesteps version differences in exactly which callback
+  // (onBeforePrint / onBeforeGetContent) fires before content capture.
+  const applyPrintScale = () => {
+    const page = invoiceRef.current;
+    const content = contentRef.current;
+
+    if (!page || !content) return;
+
+    // Reset any leftover scaling before measuring
+    content.style.transform = "none";
+    page.style.height = "auto";
+
+    const naturalHeight = content.scrollHeight;
+    const scale =
+      naturalHeight > A4_HEIGHT_PX ? A4_HEIGHT_PX / naturalHeight : 1;
+
+    content.style.transformOrigin = "top center";
+    content.style.transform = `scale( ${scale})`;
+
+    // Shrink the page box to match the scaled content so the
+    // browser doesn't leave a blank second page behind it.
+    page.style.height = ` ${naturalHeight * scale}px`;
+    page.style.overflow = "hidden";
+  };
+
+  // Restore normal on-screen sizing after printing/cancelling.
+  const resetPrintScale = () => {
+    const page = invoiceRef.current;
+    const content = contentRef.current;
+
+    if (page && content) {
+      content.style.transform = "none";
+      page.style.height = "auto";
+      page.style.overflow = "visible";
+    }
+  };
+
+  const reactToPrintFn = useReactToPrint({
     contentRef: invoiceRef,
     documentTitle: `Invoice- ${order?.orderId}`,
-
-    // Runs right before the print dialog opens.
-    // Measures the invoice height and shrinks it just enough
-    // to guarantee it always prints on a single page.
+    // Kept as a safety net in case this react-to-print version defers
+    // content-gathering — the real work happens synchronously below.
+    // react-to-print calls .then() on whatever these return, so they
+    // must resolve to a Promise rather than just returning undefined.
+    onBeforeGetContent: () => {
+      applyPrintScale();
+      return Promise.resolve();
+    },
     onBeforePrint: () => {
-      return new Promise((resolve) => {
-        const page = invoiceRef.current;
-        const content = contentRef.current;
-
-        if (page && content) {
-          // Reset any leftover scaling before measuring
-          content.style.transform = "none";
-          page.style.height = "auto";
-
-          const naturalHeight = content.scrollHeight;
-          const scale =
-            naturalHeight > A4_HEIGHT_PX ? A4_HEIGHT_PX / naturalHeight : 1;
-
-          content.style.transformOrigin = "top center";
-          content.style.transform = `scale( ${scale})`;
-
-          // Shrink the page box to match the scaled content so the
-          // browser doesn't leave a blank second page behind it.
-          page.style.height = ` ${naturalHeight * scale}px`;
-          page.style.overflow = "hidden";
-        }
-
-        requestAnimationFrame(() => resolve());
-      });
+      applyPrintScale();
+      return Promise.resolve();
     },
-
-    // Restore normal on-screen sizing after printing/cancelling.
-    onAfterPrint: () => {
-      const page = invoiceRef.current;
-      const content = contentRef.current;
-
-      if (page && content) {
-        content.style.transform = "none";
-        page.style.height = "auto";
-        page.style.overflow = "visible";
-      }
-    },
+    onAfterPrint: resetPrintScale,
   });
+
+  // Scale BEFORE handing off to react-to-print, so the shrunk layout
+  // is already in the DOM no matter when the library snapshots it.
+  const handlePrint = () => {
+    applyPrintScale();
+    reactToPrintFn();
+  };
 
   if (!order) return null;
 

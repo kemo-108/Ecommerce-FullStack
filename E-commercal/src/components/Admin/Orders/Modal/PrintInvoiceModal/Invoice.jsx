@@ -8,11 +8,11 @@ const Invoice = ({ order }) => {
       {/* ================= Header ================= */}
       <div className="invoice-header">
         <div className="invoice-company">
-          <h1>ART CORNER</h1>
+          <h1>الاصدقاء للفوم</h1>
 
           <p>Premium Art & Home Decoration</p>
 
-          <span>www.artcorner.com</span>
+          <span>www.مكتبة الاصدقاء.com</span>
         </div>
 
         <div className="invoice-meta">
@@ -36,54 +36,54 @@ const Invoice = ({ order }) => {
       </div>
       {/* ================= Customer ================= */}
       <div className="invoice-info-grid">
-        <div className="invoice-info-card">
+        <div className="info-card">
           <h3>Store Information</h3>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Store</span>
-            <strong>ART CORNER</strong>
+            <strong>الاصدقاء للفوم</strong>
           </div>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Phone</span>
             <strong>01014884658</strong>
           </div>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Email</span>
-            <strong>support@artcorner.com</strong>
+            <strong>support@مكتبة الاصدقاء.com</strong>
           </div>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Address</span>
             <strong>El Mokattam - Cairo</strong>
           </div>
         </div>
 
-        <div className="invoice-info-card">
+        <div className="info-card">
           <h3>Customer Information</h3>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Name</span>
             <strong>{order.customerName}</strong>
           </div>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Email</span>
             <strong>{order.customerEmail}</strong>
           </div>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Status</span>
             <strong>{order.status}</strong>
           </div>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Payment</span>
             <strong>{order.paymentStatus}</strong>
           </div>
 
-          <div className="invoice-info-row">
+          <div className="info-row">
             <span>Shipping Address</span>
             <strong>{order.address || "—"}</strong>
           </div>
@@ -104,7 +104,7 @@ const Invoice = ({ order }) => {
 
           <tbody>
             {(order.items || []).map((item, index) => (
-              <tr key={item.productId ?? index}>
+              <tr key={`${item.productId ?? "item"}-${index}`}>
                 <td>{index + 1}</td>
 
                 <td className="product-name">
@@ -195,11 +195,11 @@ const Invoice = ({ order }) => {
 
           <p>• Please keep this invoice as proof of purchase.</p>
 
-          <p>• For any questions please contact الاصدقاء للفوم support.</p>
+          <p>• For any questions please contact مكتبة الاصدقاء support.</p>
         </div>
 
         <div className="invoice-contact">
-          <h2>الاصدقاء للفوم</h2>
+          <h2>مكتبة الاصدقاء</h2>
 
           <span>Thank you for choosing us ❤️</span>
 
@@ -210,7 +210,7 @@ const Invoice = ({ order }) => {
 
           <div className="contact-row">
             <strong>Email</strong>
-            <p>support@mohamed.com</p>
+            <p>support@مكتبة الاصدقاء.com</p>
           </div>
 
           <div className="contact-row">

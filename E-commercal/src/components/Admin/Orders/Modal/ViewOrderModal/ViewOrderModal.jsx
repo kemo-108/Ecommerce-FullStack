@@ -101,7 +101,7 @@ const ViewOrderModal = ({ order, setOpenViewModal, setOpenStatusModal }) => {
     </thead>
     <tbody>
       {(order.items || []).map((item, index) => (
-        <tr key={item.productId ?? index}>
+        <tr key={`${item.productId ?? "item"}-${index}`}>
           <td>
             {item.productName}
             {item.colorName && (

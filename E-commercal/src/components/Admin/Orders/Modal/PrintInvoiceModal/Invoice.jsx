@@ -36,54 +36,54 @@ const Invoice = ({ order }) => {
       </div>
       {/* ================= Customer ================= */}
       <div className="invoice-info-grid">
-        <div className="info-card">
+        <div className="invoice-info-card">
           <h3>Store Information</h3>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Store</span>
             <strong>ART CORNER</strong>
           </div>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Phone</span>
             <strong>01014884658</strong>
           </div>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Email</span>
             <strong>support@artcorner.com</strong>
           </div>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Address</span>
             <strong>El Mokattam - Cairo</strong>
           </div>
         </div>
 
-        <div className="info-card">
+        <div className="invoice-info-card">
           <h3>Customer Information</h3>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Name</span>
             <strong>{order.customerName}</strong>
           </div>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Email</span>
             <strong>{order.customerEmail}</strong>
           </div>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Status</span>
             <strong>{order.status}</strong>
           </div>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Payment</span>
             <strong>{order.paymentStatus}</strong>
           </div>
 
-          <div className="info-row">
+          <div className="invoice-info-row">
             <span>Shipping Address</span>
             <strong>{order.address || "—"}</strong>
           </div>
@@ -108,14 +108,20 @@ const Invoice = ({ order }) => {
                 <td>{index + 1}</td>
 
                 <td className="product-name">
-  {item.productName}
-  {item.colorName && (
-    <span className="invoice-item-color"> — {item.colorName}</span>
-  )}
-  {item.sizeName && (
-    <span className="invoice-item-color"> — {item.sizeName}</span>
-  )}
-</td>
+                  {item.productName}
+                  {item.colorName && (
+                    <span className="invoice-item-color">
+                      {" "}
+                      — {item.colorName}
+                    </span>
+                  )}
+                  {item.sizeName && (
+                    <span className="invoice-item-color">
+                      {" "}
+                      — {item.sizeName}
+                    </span>
+                  )}
+                </td>
 
                 <td>{item.quantity}</td>
 
@@ -123,7 +129,7 @@ const Invoice = ({ order }) => {
 
                 <td>
                   {" "}
- ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                  ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
                 </td>
               </tr>
             ))}
@@ -189,11 +195,11 @@ const Invoice = ({ order }) => {
 
           <p>• Please keep this invoice as proof of purchase.</p>
 
-          <p>• For any questions please contact ART CORNER support.</p>
+          <p>• For any questions please contact الاصدقاء للفوم support.</p>
         </div>
 
         <div className="invoice-contact">
-          <h2>ART CORNER</h2>
+          <h2>الاصدقاء للفوم</h2>
 
           <span>Thank you for choosing us ❤️</span>
 
@@ -204,7 +210,7 @@ const Invoice = ({ order }) => {
 
           <div className="contact-row">
             <strong>Email</strong>
-            <p>support@artcorner.com</p>
+            <p>support@mohamed.com</p>
           </div>
 
           <div className="contact-row">

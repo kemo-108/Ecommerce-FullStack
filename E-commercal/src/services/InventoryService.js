@@ -8,8 +8,18 @@ export const GetInventory = async () => {
   return response.data;
 };
 
+export const AddInventory = async (data) => {
+  const response = await axios.post(API, data);
+  return response.data;
+};
+
 export const UpdateInventory = async (id, data) => {
   const response = await axios.put(`${API}/${id}`, data);
+  return response.data;
+};
+
+export const DeleteInventory = async (id) => {
+  const response = await axios.delete(`${API}/${id}`);
   return response.data;
 };
 

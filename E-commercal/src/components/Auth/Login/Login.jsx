@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { FiMail, FiLock } from "react-icons/fi";
 import "./Login.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Login as LoginRequest, SaveSession } from "../../../services/AuthService";
 import { toast } from "react-toastify";
 import logo from "../../../image/image.png";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || null;
   const [form, setForm] = useState({ email: "", password: "" });
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ const Login = () => {
       if (data.user?.role === "admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/account/profile");
+        navigate(from || "/account/profile");
       }
     } catch (error) {
       const message =
@@ -123,7 +125,10 @@ const Login = () => {
 
             <div className="register-link">
               <p>
-                Don't have an account? <Link to="/register">Register</Link>
+                Don't have an account?{" "}
+                <Link to="/register" state={from ? { from } : undefined}>
+                  Register
+                </Link>
               </p>
             </div>
 

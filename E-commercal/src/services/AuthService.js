@@ -58,18 +58,32 @@ export const GetCurrentUser = () => {
   return raw ? JSON.parse(raw) : null;
 };
 
-export const IsAuthenticated = () => {
+// True for both real logged-in sessions AND throwaway guest cart
+// sessions. Use this for things guests are allowed to do (e.g. showing
+// the cart badge count) - use IsAuthenticated() for anything that should
+// require a real account (checkout, wishlist, "my account", etc.)
+export const HasAccessToken = () => {
   return !!localStorage.getItem("accessToken");
+};
+
+export const IsAuthenticated = () => {
+  return (
+    !!localStorage.getItem("accessToken") &&
+    localStorage.getItem("isGuestSession") !== "true"
+  );
 };
 
 export const SaveSession = (data) => {
   if (data.accessToken) localStorage.setItem("accessToken", data.accessToken);
   if (data.refreshToken) localStorage.setItem("refreshToken", data.refreshToken);
   if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+  // A real login/register response - this is no longer a guest session.
+  localStorage.removeItem("isGuestSession");
 };
 
 export const ClearSession = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
   localStorage.removeItem("user");
+  localStorage.removeItem("isGuestSession");
 };

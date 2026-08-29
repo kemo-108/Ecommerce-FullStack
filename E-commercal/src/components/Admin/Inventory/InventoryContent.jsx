@@ -8,9 +8,11 @@ import InventoryFilters from "./Sections/InventoryFilters/InventoryFilters";
 import InventoryTable from "./Sections/InventoryTable/InventoryTable";
 import InventoryPagination from "./Sections/InventoryPagination/InventoryPagination";
 
+import AddInventoryModal from "./Sections/Modals/AddInventoryModal/AddInventoryModal";
 import ViewInventoryModal from "./Sections/Modals/ViewInventoryModal/ViewInventoryModal";
 import EditInventoryModal from "./Sections/Modals/EditInventoryModal/EditInventoryModal";
 import UpdateStockModal from "./Sections/Modals/UpdateStockModal/UpdateStockModal";
+import DeleteInventoryModal from "./Sections/Modals/DeleteInventoryModal/DeleteInventoryModal";
 
 const InventoryContent = () => {
   const {
@@ -18,12 +20,16 @@ const InventoryContent = () => {
     selectedProduct,
     loading,
 
+    closeAddModal,
     closeViewModal,
     closeEditModal,
     closeUpdateStockModal,
+    closeDeleteModal,
 
+    saveAdd,
     saveEdit,
     saveStock,
+    deleteInventoryItem,
   } = useInventory();
 
   return (
@@ -45,6 +51,17 @@ const InventoryContent = () => {
       {loading ? <p>Loading inventory...</p> : <InventoryTable />}
 
       <InventoryPagination />
+
+      {/* Add Modal */}
+      {modals.add && (
+        <AddInventoryModal
+          onClose={closeAddModal}
+          onSave={async (payload) => {
+            await saveAdd(payload);
+            closeAddModal();
+          }}
+        />
+      )}
 
       {/* View Modal */}
       {modals.view && (
@@ -74,6 +91,18 @@ const InventoryContent = () => {
           onSave={async (payload) => {
             await saveStock(payload);
             closeUpdateStockModal();
+          }}
+        />
+      )}
+
+      {/* Delete Modal */}
+      {modals.delete && (
+        <DeleteInventoryModal
+          product={selectedProduct}
+          onClose={closeDeleteModal}
+          onDelete={async (productId) => {
+            await deleteInventoryItem(productId);
+            closeDeleteModal();
           }}
         />
       )}

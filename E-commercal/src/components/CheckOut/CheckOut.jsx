@@ -7,7 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import vodafoneCash from "../../image/vodafone-cash.png";
 import instaPay from "../../image/instapay.png";
+import { IsAuthenticated } from "../../services/AuthService";
 const COUPON_STORAGE_KEY = "cartCouponCode";
+const CHECKOUT_FORM_STORAGE_KEY = "checkoutFormDraft";
 
 const initialForm = {
   firstName: "",
@@ -22,9 +24,20 @@ const initialForm = {
   shipToDifferent: false,
 };
 
+const loadSavedForm = () => {
+  try {
+    const saved = sessionStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
+    return saved ? { ...initialForm, ...JSON.parse(saved) } : initialForm;
+  } catch {
+    return initialForm;
+  }
+};
+
 const CheckOut = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState(initialForm);
+  // Restored from sessionStorage so the billing details the customer
+  // already typed survive the redirect to Register/Login and back.
+  const [form, setForm] = useState(loadSavedForm);
   const [cartItems, setCartItems] = useState([]);
   const [loadingCart, setLoadingCart] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -106,6 +119,23 @@ const CheckOut = () => {
       return;
     }
 
+    // Guests must create an account (or log in to an existing one) before
+    // the order is actually placed. Logged-in customers pass straight
+    // through. We send new customers to Register (which links back to
+    // Login), and remember /checkout as "from" so either page can return
+    // them here afterwards instead of dropping them on their profile.
+    if (!IsAuthenticated()) {
+      try {
+        sessionStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(form));
+      } catch {
+        // ignore storage failures (e.g. private browsing quota) - worst
+        // case the customer just retypes their details, nothing breaks.
+      }
+      toast.info("Please create an account to complete your order");
+      navigate("/register", { state: { from: "/checkout" } });
+      return;
+    }
+
     setPlacingOrder(true);
     try {
       await PlaceOrder({
@@ -132,6 +162,7 @@ const CheckOut = () => {
       // The order has been placed (with the coupon usage recorded server-side
       // if one applied), so clear it for the next cart.
       localStorage.removeItem(COUPON_STORAGE_KEY);
+      sessionStorage.removeItem(CHECKOUT_FORM_STORAGE_KEY);
       toast.success("Order placed successfully!");
       navigate("/account/orders");
     } catch (error) {

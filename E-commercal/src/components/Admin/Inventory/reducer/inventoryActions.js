@@ -9,6 +9,11 @@ export const setProducts = (products) => ({
   payload: products,
 });
 
+export const addProduct = (product) => ({
+  type: INVENTORY_ACTIONS.ADD_PRODUCT,
+  payload: product,
+});
+
 export const updateProduct = (product) => ({
   type: INVENTORY_ACTIONS.UPDATE_PRODUCT,
   payload: product,

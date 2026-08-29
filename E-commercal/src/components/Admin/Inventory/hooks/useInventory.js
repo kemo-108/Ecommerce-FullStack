@@ -4,6 +4,7 @@ import { InventoryContext } from "../context/InventoryContext";
 
 import {
   setProducts,
+  addProduct,
   updateProduct,
   deleteProduct as removeProduct,
   openModal,
@@ -17,8 +18,10 @@ import { getInventoryStats } from "../utils/inventoryHelpers";
 import { toast } from "react-toastify";
 import {
   GetInventory,
+  AddInventory,
   UpdateInventory,
   RestockInventory,
+  DeleteInventory,
 } from "../../../../services/InventoryService";
 
 const mapRecord = (r) => ({
@@ -69,6 +72,29 @@ const useInventory = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const saveAdd = async (payload) => {
+    setSaving(true);
+    try {
+      const created = await AddInventory({
+        productId: payload.productId,
+        sku: payload.sku,
+        barcode: payload.barcode,
+        category: payload.category,
+        warehouse: payload.warehouse,
+        stock: payload.stock,
+        minStock: payload.minStock,
+      });
+      dispatch(addProduct(mapRecord(created)));
+      toast.success("Product added to inventory successfully.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to add product."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const saveEdit = async (payload) => {
     setSaving(true);
     try {
@@ -100,6 +126,21 @@ const useInventory = () => {
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to update stock."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const deleteInventoryItem = async (productId) => {
+    setSaving(true);
+    try {
+      await DeleteInventory(productId);
+      dispatch(removeProduct(productId));
+      toast.success("Product deleted from inventory successfully.");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to delete product."
       );
     } finally {
       setSaving(false);
@@ -257,6 +298,15 @@ const useInventory = () => {
   // ==========================================
   // Modal Handlers
   // ==========================================
+  const openAddModal = () => {
+    dispatch(setSelectedProduct(null));
+    dispatch(openModal("add"));
+  };
+
+  const closeAddModal = () => {
+    dispatch(closeModal("add"));
+  };
+
   const openViewModal = (product) => {
     dispatch(setSelectedProduct(product));
     dispatch(openModal("view"));
@@ -325,6 +375,10 @@ const useInventory = () => {
 
     selectedProduct: state.selectedProduct,
 
+    openAddModal,
+
+    closeAddModal,
+
     openViewModal,
 
     openEditModal,
@@ -341,9 +395,13 @@ const useInventory = () => {
 
     closeDeleteModal,
 
+    saveAdd,
+
     saveEdit,
 
     saveStock,
+
+    deleteInventoryItem,
 
     saving,
 

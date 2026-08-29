@@ -15,6 +15,12 @@ export const inventoryReducer = (
         products: action.payload,
       };
 
+    case INVENTORY_ACTIONS.ADD_PRODUCT:
+      return {
+        ...state,
+        products: [action.payload, ...state.products],
+      };
+
     case INVENTORY_ACTIONS.UPDATE_PRODUCT:
       return {
         ...state,

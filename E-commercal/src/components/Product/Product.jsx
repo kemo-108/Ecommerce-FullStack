@@ -8,31 +8,25 @@ import { AddToCart } from "../../services/CartService";
 import {
   AddToWishlist,
   RemoveFromWishlist,
-  GetWishlist,
 } from "../../services/WishlistService";
 import { IsAuthenticated } from "../../services/AuthService";
 import { toast } from "react-toastify";
 
-const Product = ({ product, showExtraBtn }) => {
-  const [favorite, setFavorite] = useState(false);
-  const [wishlistId, setWishlistId] = useState(null);
+const Product = ({ product, showExtraBtn, wishlist = [] }) => {
   const [addingToCart, setAddingToCart] = useState(false);
   const [togglingWishlist, setTogglingWishlist] = useState(false);
 
+  // Derived from the wishlist the parent page already fetched once,
+  // instead of every card fetching its own copy of the whole list.
+  const match = wishlist.find((item) => item.productId === product.productId);
+  const [favorite, setFavorite] = useState(!!match);
+  const [wishlistId, setWishlistId] = useState(match?.id ?? null);
+
   useEffect(() => {
-    if (!IsAuthenticated()) return;
-    GetWishlist()
-      .then((items) => {
-        const match = (items || []).find(
-          (item) => item.productId === product.productId,
-        );
-        if (match) {
-          setFavorite(true);
-          setWishlistId(match.id);
-        }
-      })
-      .catch(() => {});
-  }, [product.productId]);
+    setFavorite(!!match);
+    setWishlistId(match?.id ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [match?.id, product.productId]);
 
   const handleFavorite = async (e) => {
     e.preventDefault();
@@ -79,7 +73,11 @@ const Product = ({ product, showExtraBtn }) => {
       window.dispatchEvent(new Event("cart-updated"));
     } catch (error) {
       console.error("Error adding to cart:", error);
-      toast.error("Could not add product to cart");
+      if (error.response?.status === 401) {
+        toast.error("Please create an account to add items to your cart");
+      } else {
+        toast.error("Could not add product to cart");
+      }
     } finally {
       setAddingToCart(false);
     }
@@ -119,6 +117,8 @@ const Product = ({ product, showExtraBtn }) => {
         <img
           src={getImageUrl(product.imageUrl)}
           alt={product.productName}
+          loading="lazy"
+          decoding="async"
         />
       </div>
 

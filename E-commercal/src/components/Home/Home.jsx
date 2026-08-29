@@ -22,6 +22,7 @@ import {
 import getProducts from "../../services/ProductService";
 import { getCategories } from "../../services/CategoryService";
 import Product from "../Product/Product";
+import { useWishlist } from "../../hooks/useWishlist";
 
 // Used only as a fallback image when a category from the API has no image
 const FALLBACK_IMAGES = [Category1, Category2, Category3, Category4];
@@ -29,6 +30,7 @@ const FALLBACK_IMAGES = [Category1, Category2, Category3, Category4];
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const wishlist = useWishlist();
 
   const stripRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -86,9 +88,9 @@ const Home = () => {
 
   const dealsProducts = products
     .filter((p) => p.oldPrice && p.oldPrice > p.price)
-    .slice(0, 10);
+    .slice(0, 25);
 
-  const newProducts = products.slice(0, 10);
+  const newProducts = products.slice(0, 25);
 
   return (
     <>
@@ -220,6 +222,7 @@ const Home = () => {
                 key={product.productId}
                 product={product}
                 showExtraBtn={true}
+                wishlist={wishlist}
               />
             ))}
           </div>
@@ -263,6 +266,7 @@ const Home = () => {
                 key={product.productId}
                 product={product}
                 showExtraBtn={true}
+                wishlist={wishlist}
               />
             ))}
           </div>

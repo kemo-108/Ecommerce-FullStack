@@ -6,7 +6,7 @@ import useInventory from "../../hooks/useInventory";
 import { setSearch } from "../../reducer/inventoryActions";
 
 const InventoryToolbar = () => {
-  const { search, dispatch } = useInventory();
+  const { search, dispatch, openAddModal } = useInventory();
 
   const handleSearch = (e) => {
     dispatch(setSearch(e.target.value));
@@ -25,9 +25,9 @@ const InventoryToolbar = () => {
         />
       </div>
 
-      <button className="restock-btn">
+      <button className="restock-btn" onClick={openAddModal}>
         <FiPlus />
-        <span>Restock Product</span>
+        <span>Add Product</span>
       </button>
     </div>
   );

@@ -15,7 +15,7 @@ import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { GetCart } from "../../services/CartService";
 import { GetWishlist } from "../../services/WishlistService";
-import { IsAuthenticated, GetCurrentUser } from "../../services/AuthService";
+import { HasAccessToken, IsAuthenticated, GetCurrentUser } from "../../services/AuthService";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -32,7 +32,10 @@ const Header = () => {
   };
 
   const refreshCartCount = () => {
-    if (!IsAuthenticated()) {
+    // Guests get a cart too (via a transparent guest session) - only bail
+    // out early if there's no token of any kind yet, meaning the cart is
+    // genuinely empty and hasn't been touched.
+    if (!HasAccessToken()) {
       setTimeout(() => setCartCount(0), 0);
       return;
     }

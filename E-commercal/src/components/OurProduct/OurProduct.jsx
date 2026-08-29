@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import getProducts from "../../services/ProductService";
 import Product from "../Product/Product";
+import { useWishlist } from "../../hooks/useWishlist";
 
 const ITEMS_PER_PAGE = 4;
 
 const OurProduct = () => {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
+  const wishlist = useWishlist();
 
   useEffect(() => {
     getProducts().then((data) => setProducts(data || []));
@@ -54,6 +56,7 @@ const OurProduct = () => {
                 key={product.productId}
                 product={product}
                 showExtraBtn={true}
+                wishlist={wishlist}
               />
             ))}
           </div>

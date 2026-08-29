@@ -117,7 +117,11 @@ const [manualImage, setManualImage] = useState(null);
       toast.success(`${product.productName} added to cart`);
     } catch (error) {
       console.error(error);
-      toast.error("Could not add product to cart");
+      if (error.response?.status === 401) {
+        toast.error("Please create an account to add items to your cart");
+      } else {
+        toast.error("Could not add product to cart");
+      }
     } finally {
       setAddingToCart(false);
     }

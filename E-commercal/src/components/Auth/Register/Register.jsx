@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { FiUser, FiLock, FiMail, FiPhone } from "react-icons/fi";
 import "../Login/Login.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Register as RegisterRequest, SaveSession } from "../../../services/AuthService";
 import { toast } from "react-toastify";
 import logo from "../../../image/image.png";
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || null;
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -49,7 +51,7 @@ const Register = () => {
       });
       SaveSession(data);
       toast.success("Account created successfully");
-      navigate("/account/profile");
+      navigate(from || "/account/profile");
     } catch (error) {
       const message =
         error.response?.data?.message || "Could not create account";
@@ -168,7 +170,10 @@ const Register = () => {
 
             <div className="register-link">
               <p>
-                Already have an account? <Link to="/login">Login</Link>
+                Already have an account?{" "}
+                <Link to="/login" state={from ? { from } : undefined}>
+                  Login
+                </Link>
               </p>
             </div>
 

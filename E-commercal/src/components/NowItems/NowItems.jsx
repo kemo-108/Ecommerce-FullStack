@@ -6,8 +6,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import getProducts from "../../services/ProductService";
 import { Autoplay, Pagination } from "swiper/modules";
+import { useWishlist } from "../../hooks/useWishlist";
 const NowItems = () => {
   const [products, setProducts] = useState([]);
+  const wishlist = useWishlist();
   useEffect(() => {
     getProducts().then(setProducts);
   }, []);
@@ -39,7 +41,7 @@ const NowItems = () => {
         >
           {products.map((product) => (
             <SwiperSlide key={product.productId}>
-              <Product product={product} showExtraBtn={false} />
+              <Product product={product} showExtraBtn={false} wishlist={wishlist} />
             </SwiperSlide>
           ))}
         </Swiper>

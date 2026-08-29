@@ -120,6 +120,16 @@
     border-color: var(--primary);
     color: #fff;
 }
+.pagination-dots {
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-light);
+    font-weight: 600;
+    user-select: none;
+}
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));

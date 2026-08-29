@@ -63,3 +63,7 @@
     background:#ff4d6d;
     color:#fff;
 }
+
+.actions .delete-btn:hover{
+    background:#ef4444;
+}

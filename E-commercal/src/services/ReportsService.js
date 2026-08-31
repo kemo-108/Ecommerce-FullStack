@@ -17,3 +17,11 @@ export const GetCustomersReport = async () => {
   const response = await axios.get(`${API}/customers`);
   return response.data;
 };
+
+export const GetLedgerSummary = async (from, to) => {
+  const params = {};
+  if (from) params.from = from;
+  if (to) params.to = to;
+  const response = await axios.get(`${API}/ledger`, { params });
+  return response.data;
+};

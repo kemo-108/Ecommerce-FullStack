@@ -4,10 +4,12 @@ import "./UpdateStockModal.css";
 
 const UpdateStockModal = ({ product, onClose, onSave }) => {
   const [quantity, setQuantity] = useState(0);
+  const [unitCost, setUnitCost] = useState("");
 
   useEffect(() => {
     if (product) {
       setQuantity(0);
+      setUnitCost("");
     }
   }, [product]);
 
@@ -20,6 +22,7 @@ const UpdateStockModal = ({ product, onClose, onSave }) => {
       id: product.id,
       productId: product.productId,
       quantity: Number(quantity),
+      unitCost: unitCost ? Number(unitCost) : null,
     });
   };
 
@@ -73,6 +76,27 @@ const UpdateStockModal = ({ product, onClose, onSave }) => {
                 onChange={(e) => setQuantity(e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="form-group">
+            <label>Unit Cost Paid (optional)</label>
+
+            <div className="quantity-input">
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="e.g. 55.00"
+                value={unitCost}
+                onChange={(e) => setUnitCost(e.target.value)}
+              />
+            </div>
+            <span className="field-hint">
+              Leave blank to keep this product's current cost. Fill it in if
+              this batch cost you a different amount — it updates the
+              product's cost going forward and keeps the profit numbers in
+              Accounting accurate.
+            </span>
           </div>
 
           <div className="new-stock">

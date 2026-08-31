@@ -27,6 +27,7 @@ const OrdersTable = ({
             <th>Total</th>
             <th>Payment</th>
             <th>Status</th>
+            <th>Channel</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
@@ -47,7 +48,7 @@ const OrdersTable = ({
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="orders-no-data">
+              <td colSpan="8" className="orders-no-data">
                 No orders found.
               </td>
             </tr>

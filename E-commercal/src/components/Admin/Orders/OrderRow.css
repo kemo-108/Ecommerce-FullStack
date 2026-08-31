@@ -67,7 +67,8 @@
 }
 
 .payment-badge,
-.status-badge {
+.status-badge,
+.source-badge {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -76,6 +77,16 @@
   border-radius: 30px;
   font-size: 13px;
   font-weight: 600;
+}
+
+.source-badge.online {
+  background: #eaf1fd;
+  color: #2563eb;
+}
+
+.source-badge.instore {
+  background: #f3ecfd;
+  color: #7c3aed;
 }
 
 .payment-badge.paid {

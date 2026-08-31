@@ -11,6 +11,7 @@ const AddOrderModal = ({ setOpenAddModal, refreshOrders }) => {
     total: "",
     paymentStatus: "Pending",
     status: "Pending",
+    source: "InStore",
   });
 
   const [saving, setSaving] = useState(false);
@@ -35,6 +36,7 @@ const AddOrderModal = ({ setOpenAddModal, refreshOrders }) => {
         total: Number(formData.total),
         paymentStatus: formData.paymentStatus,
         status: formData.status,
+        source: formData.source,
         items: [],
       });
       toast.success("Order created successfully.");
@@ -111,6 +113,19 @@ const AddOrderModal = ({ setOpenAddModal, refreshOrders }) => {
                 <option>Failed</option>
               </select>
             </div>
+          </div>
+
+          <div className="form-group">
+            <label>Sale Channel</label>
+
+            <select
+              name="source"
+              value={formData.source}
+              onChange={handleChange}
+            >
+              <option value="InStore">In-Store (walk-in)</option>
+              <option value="Online">Online (phone/manual)</option>
+            </select>
           </div>
 
           <div className="form-group">

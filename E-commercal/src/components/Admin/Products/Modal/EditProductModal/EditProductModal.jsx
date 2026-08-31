@@ -18,6 +18,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
     code: "",
     sku: "",
     price: "",
+    cost: "",
     oldPrice: "",
     discount: "",
     description: "",
@@ -45,6 +46,7 @@ const EditProductModal = ({ setOpenEditModal, product, onSaved }) => {
       code: product.code || "",
       sku: product.sku || "",
       price: product.price || "",
+      cost: product.cost || "",
       oldPrice: product.oldPrice || "",
       discount: product.discount || "",
       description: product.description || "",
@@ -169,6 +171,7 @@ const removeSizeRow = (index) => setSizes((prev) => prev.filter((_, i) => i !== 
 
       payload.append("ProductName", formData.productName);
       payload.append("Price", formData.price);
+      payload.append("Cost", formData.cost || 0);
       payload.append("OldPrice", formData.oldPrice || 0);
       payload.append("Discount", formData.discount || 0);
       payload.append("Brand", formData.brand);
@@ -313,6 +316,20 @@ const removeSizeRow = (index) => setSizes((prev) => prev.filter((_, i) => i !== 
               {errors.price && (
                 <span className="error-text">{errors.price}</span>
               )}
+            </div>
+
+            <div className="input-group">
+              <label>Cost Price</label>
+
+              <input
+                type="number"
+                name="cost"
+                value={formData.cost}
+                onChange={handleChange}
+              />
+              <span className="field-hint">
+                What you paid per unit — used only for profit reports.
+              </span>
             </div>
 
             <div className="input-group">

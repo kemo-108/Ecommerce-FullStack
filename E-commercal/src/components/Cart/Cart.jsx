@@ -204,7 +204,7 @@ const Cart = () => {
                     <tbody>
                       {items.map((item) => (
                         <tr key={item.id}>
-                          <td>
+                          <td className="remove-cell">
                             <button
                               className="remove-btn"
                               onClick={() => handleRemove(item.id)}
@@ -237,8 +237,8 @@ const Cart = () => {
                                   )}
                             </div>
                           </td>
-                          <td> EGP {Number(item.price || 0).toFixed(2)}</td>
-                          <td>
+                          <td data-label="Price"> EGP {Number(item.price || 0).toFixed(2)}</td>
+                          <td data-label="Quantity">
                             <div className="qty-control">
                               <button
                                 type="button"
@@ -259,7 +259,7 @@ const Cart = () => {
                               </button>
                             </div>
                           </td>
-                          <td>
+                          <td data-label="Total">
                             EGP
                             {(
                               Number(item.price || 0) * (item.qty || 1)

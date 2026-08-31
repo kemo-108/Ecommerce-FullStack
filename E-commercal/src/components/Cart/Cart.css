@@ -209,13 +209,69 @@ gap: 20px;
     .checkout-btn{
         width: 100%;
     }
-    .cart-table th,
-    .cart-table td{
-        padding: 10px;
+}
+
+/* Below 600px, a data table (Product | Price | Qty | Total) stops being
+   usable — columns get squeezed to unreadable widths or force horizontal
+   scrolling, which is exactly the "uncomfortable to buy on your phone"
+   problem. Instead, each row becomes its own card: product on top, then
+   price/quantity/total stacked as labelled lines underneath. */
+@media (max-width: 600px) {
+    .table-wrapper {
+        overflow-x: visible;
+        max-height: none;
+    }
+    .cart-table thead {
+        display: none;
+    }
+    .cart-table,
+    .cart-table tbody,
+    .cart-table tr,
+    .cart-table td {
+        display: block;
+        width: 100%;
+    }
+    .cart-table tr {
+        position: relative;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 14px 44px 12px 14px;
+        margin-bottom: 14px;
+        background: #fff;
+    }
+    .cart-table td {
+        border-bottom: none;
+        padding: 6px 0;
+        text-align: left;
+    }
+    .cart-table td.product-cell {
+        padding-bottom: 10px;
+        margin-bottom: 6px;
+        border-bottom: 1px dashed #eee;
+    }
+    /* Price / Quantity / Total rows: label on the left, value on the
+       right, using the data-label attribute added in Cart.jsx. */
+    .cart-table td[data-label] {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         font-size: 14px;
     }
-    .cart-table img{
-        width: 50px;
-        height: 50px;
+    .cart-table td[data-label]::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #888;
+        font-size: 12.5px;
+    }
+    .cart-table td.remove-cell {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: auto;
+        padding: 0;
+    }
+    .cart-table img {
+        width: 60px;
+        height: 60px;
     }
 }

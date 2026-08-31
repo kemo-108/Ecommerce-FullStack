@@ -7,6 +7,8 @@ const OrdersFilters = ({
   setSelectedStatus,
   selectedPayment,
   setSelectedPayment,
+  selectedSource,
+  setSelectedSource,
   sortBy,
   setSortBy,
 }) => {
@@ -41,6 +43,16 @@ const OrdersFilters = ({
         <option value="Paid">Paid</option>
         <option value="Pending">Pending</option>
         <option value="Failed">Failed</option>
+      </select>
+
+      <select
+        className="orders-filter-select"
+        value={selectedSource}
+        onChange={(e) => setSelectedSource(e.target.value)}
+      >
+        <option value="All Channels">All Channels</option>
+        <option value="Online">Online</option>
+        <option value="InStore">In-Store</option>
       </select>
 
       <select

@@ -1,15 +1,24 @@
 import "./InventoryToolbar.css";
 
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiPrinter } from "react-icons/fi";
 
 import useInventory from "../../hooks/useInventory";
 import { setSearch } from "../../reducer/inventoryActions";
+import { printStocktakeSheet } from "../../utils/printStocktakeSheet";
 
 const InventoryToolbar = () => {
-  const { search, dispatch, openAddModal } = useInventory();
+  const { search, dispatch, openAddModal, filteredProducts } = useInventory();
 
   const handleSearch = (e) => {
     dispatch(setSearch(e.target.value));
+  };
+
+  const handlePrintStocktake = () => {
+    // Uses filteredProducts (not the paginated slice) so printing respects
+    // whatever warehouse/category/status filter is active - e.g. filter
+    // to one warehouse first if you're only counting that location today -
+    // but still includes every matching item, not just the current page.
+    printStocktakeSheet(filteredProducts);
   };
 
   return (
@@ -24,6 +33,11 @@ const InventoryToolbar = () => {
           onChange={handleSearch}
         />
       </div>
+
+      <button className="print-stocktake-btn" onClick={handlePrintStocktake}>
+        <FiPrinter />
+        <span>Print Stocktake Sheet</span>
+      </button>
 
       <button className="restock-btn" onClick={openAddModal}>
         <FiPlus />

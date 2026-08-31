@@ -66,6 +66,12 @@ const OrderRow = ({
     </span>
   </td>
 
+  <td>
+    <span className={`source-badge ${(order.source || "online").toLowerCase()}`}>
+      {order.source === "InStore" ? "In-Store" : "Online"}
+    </span>
+  </td>
+
   <td className="admin-order-date">{order.orderDate}</td>
 
   <td>

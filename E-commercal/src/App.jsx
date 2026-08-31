@@ -31,6 +31,7 @@ import Addresses from "./components/User/Addresses/Addresses";
 import Security from "./components/User/Security/Security";
 import Returns from "./components/User/Returns/Returns";
 import Refunds from "./components/Admin/Refunds/Refunds";
+import Accounting from "./components/Admin/Accounting/Accounting";
 import { RequireAuth, RequireAdmin } from "./components/Auth/RouteGuards/RouteGuards";
 
 function App() {
@@ -101,6 +102,7 @@ function App() {
               <Route path="reports" element={<Reports />} />
               <Route path="settings" element={<Settings />} />
               <Route path="refunds" element={<Refunds />} />
+              <Route path="accounting" element={<Accounting />} />
             </Route>
           </Route>
           <Route path="*" element={<h1>404 Not Found</h1>} />

@@ -1,5 +1,6 @@
 import "./Inventory.css";
 
+import { useEffect } from "react";
 import useInventory from "./hooks/useInventory";
 
 import InventoryStats from "./Sections/InventoryStats/InventoryStats";
@@ -30,7 +31,16 @@ const InventoryContent = () => {
     saveEdit,
     saveStock,
     deleteInventoryItem,
+    refreshInventory,
   } = useInventory();
+
+  // Single source of truth for the initial fetch — every other component
+  // under this page just reads the shared state via useInventory(), it
+  // does not re-fetch on its own.
+  useEffect(() => {
+    refreshInventory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <section className="inventory">

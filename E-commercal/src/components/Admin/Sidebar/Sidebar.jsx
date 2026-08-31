@@ -11,6 +11,7 @@ import {
   FaTicketAlt,
   FaWarehouse,
   FaUndoAlt,
+  FaFileInvoiceDollar,
 } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -131,6 +132,16 @@ const Sidebar = () => {
       >
         <FaChartBar />
         <span>Reports</span>
+      </NavLink>
+
+      <NavLink
+        to="/admin/accounting"
+        className={({ isActive }) =>
+          isActive ? "sidebar-link active" : "sidebar-link"
+        }
+      >
+        <FaFileInvoiceDollar />
+        <span>Accounting</span>
       </NavLink>
 
       <NavLink

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
 import { InventoryContext } from "../context/InventoryContext";
 
@@ -67,10 +67,14 @@ const useInventory = () => {
     }
   };
 
-  useEffect(() => {
-    loadInventory();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // NOTE: fetching on mount used to live here, but useInventory() is called
+  // by six+ separate components (Content, Table, Row, Filters, Toolbar,
+  // Stats, Pagination). Each mount fired its own loadInventory() call,
+  // independently flipping the shared `loading` flag true/false at
+  // slightly different times as each request resolved — which is what
+  // caused the inventory table to flicker on/off. The single fetch-on-load
+  // now lives in InventoryContent.jsx instead; this hook only exposes
+  // `refreshInventory` for manual re-fetching (e.g. after save/delete).
 
   const saveAdd = async (payload) => {
     setSaving(true);
@@ -120,6 +124,7 @@ const useInventory = () => {
       const updated = await RestockInventory(payload.id, {
         quantity: payload.quantity,
         reason: "Manual restock",
+        unitCost: payload.unitCost || null,
       });
       dispatch(updateProduct(mapRecord(updated)));
       toast.success("Stock updated successfully.");

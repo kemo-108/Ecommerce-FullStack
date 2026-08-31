@@ -25,6 +25,7 @@ const Orders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [selectedPayment, setSelectedPayment] = useState("All Payment");
+  const [selectedSource, setSelectedSource] = useState("All Channels");
   const [sortBy, setSortBy] = useState("Newest");
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,7 +65,11 @@ const Orders = () => {
         selectedPayment === "All Payment" ||
         order.paymentStatus === selectedPayment;
 
-      return matchesSearch && matchesStatus && matchesPayment;
+      const matchesSource =
+        selectedSource === "All Channels" ||
+        (order.source || "Online") === selectedSource;
+
+      return matchesSearch && matchesStatus && matchesPayment && matchesSource;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -91,6 +96,8 @@ const Orders = () => {
         setSelectedStatus={setSelectedStatus}
         selectedPayment={selectedPayment}
         setSelectedPayment={setSelectedPayment}
+        selectedSource={selectedSource}
+        setSelectedSource={setSelectedSource}
         sortBy={sortBy}
         setSortBy={setSortBy}
       />

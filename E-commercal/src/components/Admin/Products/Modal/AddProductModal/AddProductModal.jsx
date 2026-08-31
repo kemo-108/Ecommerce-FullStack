@@ -16,6 +16,7 @@ const AddProductModal = ({ setOpenAddModal, onSaved }) => {
     brand: "",
     code: "",
     price: "",
+    cost: "",
     discount: "",
     stock: "",
     description: "",
@@ -123,6 +124,7 @@ const removeSizeRow = (index) => setSizes((prev) => prev.filter((_, i) => i !== 
 
       payload.append("ProductName", formData.name);
       payload.append("Price", formData.price);
+      payload.append("Cost", formData.cost || 0);
       payload.append("Discount", formData.discount || 0);
       payload.append("Brand", formData.brand);
 
@@ -317,6 +319,23 @@ const removeSizeRow = (index) => setSizes((prev) => prev.filter((_, i) => i !== 
                 {errors.price && (
                   <span className="error-text">{errors.price}</span>
                 )}
+              </div>
+            </div>
+
+            <div className="double-input">
+              <div className="input-group">
+                <label>Cost Price</label>
+
+                <input
+                  type="number"
+                  name="cost"
+                  value={formData.cost}
+                  onChange={handleChange}
+                  placeholder="0.00"
+                />
+                <span className="field-hint">
+                  What you paid per unit — used only for profit reports, never shown to customers.
+                </span>
               </div>
             </div>
 

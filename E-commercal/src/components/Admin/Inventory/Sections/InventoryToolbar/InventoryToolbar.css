@@ -53,3 +53,23 @@
 .restock-btn:hover {
   background: #e6395c;
 }
+
+.print-stocktake-btn {
+  height: 50px;
+  padding: 0 22px;
+  border: 1px solid #ff4d6d;
+  border-radius: 14px;
+  background: #fff;
+  color: #ff4d6d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+.print-stocktake-btn:hover {
+  background: #fff0f2;
+}
